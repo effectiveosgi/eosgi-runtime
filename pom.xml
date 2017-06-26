@@ -12,6 +12,8 @@
     <module>_distro</module>
     <module>_index</module>
     <module>_assembly</module>
+    <module>com.effectiveosgi.rt.config</module>
+    <module>com.effectiveosgi.rt.config.test</module>
   </modules>
 
   <!-- Declare a profile for CI builds, where indexes are not permitted to

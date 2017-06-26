@@ -22,6 +22,11 @@
     </dependency>
 
     <!-- Workspace Dependencies -->
+    <dependency>
+    	<groupId>${project.groupId}</groupId>
+    	<artifactId>com.effectiveosgi.rt.config</artifactId>
+    	<version>${project.version}</version>
+    </dependency>
     <!-- TODO: reference your workspace projects to be indexed here -->
 
   </dependencies>

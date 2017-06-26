@@ -1,0 +1,3 @@
+-conditionalpackage: \
+	com.google.gson.*,\
+	org.apache.commons.codec.*

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>eosgi-runtime-parent</artifactId>
+    <groupId>com.effectiveosgi</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <groupId>com.effectiveosgi</groupId>
+  <artifactId>com.effectiveosgi.rt.config.test</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <dependencies>
+    <!-- Compile dependencies -->
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>osgi.core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>osgi.cmpn</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.servicemix.bundles</groupId>
+      <artifactId>org.apache.servicemix.bundles.junit</artifactId>
+      <version>4.12_1</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.effectiveosgi.rt.config</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- Runtime dependencies -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>_distro</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+      <type>pom</type>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-testing-maven-plugin</artifactId>
+        <configuration>
+          <bndruns>
+            <bndrun>com.effectiveosgi.rt.config.test.bndrun</bndrun>
+          </bndruns>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

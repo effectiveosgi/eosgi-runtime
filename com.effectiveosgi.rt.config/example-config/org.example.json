@@ -1,0 +1,21 @@
+{
+	// Required: the bundle from which the JDBC classes are loaded
+	"osgi.jdbc.driver.bundle" : "com.mysql.cj",
+	"osgi.jdbc.driver.bundle.version" : "[6.0.5,6.1)"
+	,
+	
+	// The JDBC Driver class provided by the vendor (this property is required)
+	"osgi.jdbc.driver.class" : "com.mysql.cj.jdbc.NonRegisteringDriver"
+	,
+	// A JDBC DataSource class provided by the vendor
+	"osgi.jdbc.datasource.class" : "com.mysql.cj.jdbc.MysqlDataSource"
+	/*
+	,
+	// A JDBC XADataSource class provided by the vendor
+	"osgi.jdbc.xadatasource.class" : "com.mysql.cj.jdbc.MysqlXADataSource"
+	,
+	// A JDBC ConnectionPoolDataSource class provided by the vendor
+	"osgi.jdbc.pooled.datasource.class" : "com.mysql.cj.jdbc.MysqlConnectionPoolDataSource"
+	*/
+
+}
