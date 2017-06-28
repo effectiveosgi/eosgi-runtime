@@ -125,8 +125,17 @@ public class JsonConfigTest {
             put("number", 0.0d);
             put("float", 0.1d);
             put("boolean", true);
+            put("stringlist", Arrays.asList(new String[] {"a", "b", "c"}));
+            put("numberlist", Arrays.asList(new Double[] { 1.0, 2.0, 3.0}));
         }};
-        final File jsonFile = writeConfigFile("{'string':'string', 'number' : 0, 'float' : 0.1, 'boolean' : true }", "org.example.json");
+        final File jsonFile = writeConfigFile("{" +
+                "'string':'string', " +
+                "'number' : 0, " +
+                "'float' : 0.1, " +
+                "'boolean' : true, " +
+                "'stringlist' : ['a','b', 'c'], " +
+                "'numberlist' : [1, 2, 3]" +
+                "}", "org.example.json");
         assertTrue(installer.canHandle(jsonFile));
 
         installer.install(jsonFile);
@@ -174,6 +183,35 @@ public class JsonConfigTest {
         assertConfigsEqual(expected, configAdmin.listConfigurations(null));
 
         // Uninstall
+        installer.uninstall(jsonFile);
+        Thread.sleep(1000);
+        assertConfigsEqual("configs should be empty after json file uninstall", Collections.emptySet(), configAdmin.listConfigurations(null));
+    }
+
+    @Test
+    public void testDuplicateRecordsInArray() throws Exception {
+        Set<Dictionary<String,Object>> expected = new HashSet<>();
+        // Only one record is expected
+        expected.add(new Hashtable<String,Object>(){{
+            put("service.factoryPid", "org.example");
+            put("foo", "bar");
+            put("bar", "baz");
+        }});
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("[");
+        // Add an entry...
+        builder.append("{'foo':'bar','bar':'baz'}").append(',');
+        // Repeat with whitespace changes...
+        builder.append("{\n\t'foo' : 'bar',\n\t'bar' : 'baz'\n}");
+        builder.append("]");
+
+        File jsonFile = writeConfigFile(builder.toString(), "org.example.json");
+
+        installer.install(jsonFile);
+        Thread.sleep(1000);
+        assertConfigsEqual(expected, configAdmin.listConfigurations(null));
+
         installer.uninstall(jsonFile);
         Thread.sleep(1000);
         assertConfigsEqual("configs should be empty after json file uninstall", Collections.emptySet(), configAdmin.listConfigurations(null));
