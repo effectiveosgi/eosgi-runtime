@@ -1,0 +1,27 @@
+-standalone: target/index.xml
+
+-runfw: org.apache.felix.framework;version=5.6
+-runee: JavaSE-1.8
+-runprovidedcapabilities: ${native_capability}
+
+-resolve.effective: active; skip:="osgi.service"
+
+-runvm: -Dfelix.fileinstall.log.level=4
+
+-runrequires: \
+        osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.command)',\
+        osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.shell)',\
+        osgi.identity;filter:='(osgi.identity=org.apache.felix.log)',\
+        osgi.identity;filter:='(osgi.identity=org.apache.felix.configadmin)',\
+        osgi.identity;filter:='(osgi.identity=org.apache.felix.fileinstall)',\
+        osgi.identity;filter:='(osgi.identity=com.effectiveosgi.rt.inspect)'
+
+-runbundles: \
+        com.effectiveosgi.rt.inspect;version='[1.0.0,1.0.1)',\
+        org.apache.felix.configadmin;version='[1.8.14,1.8.15)',\
+        org.apache.felix.fileinstall;version='[3.6.0,3.6.1)',\
+        org.apache.felix.gogo.command;version='[1.0.2,1.0.3)',\
+        org.apache.felix.gogo.runtime;version='[1.0.6,1.0.7)',\
+        org.apache.felix.gogo.shell;version='[1.0.0,1.0.1)',\
+        org.apache.felix.log;version='[1.0.1,1.0.2)',\
+        org.apache.felix.scr;version='[2.0.10,2.0.11)'
