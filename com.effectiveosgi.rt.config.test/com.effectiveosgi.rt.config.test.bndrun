@@ -10,8 +10,8 @@
         osgi.identity;filter:='(osgi.identity=com.effectiveosgi.rt.config.test)'
 
 -runbundles: \
-	com.effectiveosgi.rt.config;version='[1.0.0,1.0.1)',\
-	com.effectiveosgi.rt.config.test;version='[1.0.0,1.0.1)',\
+	com.effectiveosgi.rt.config;version='[0.0.1,0.0.2)',\
+	com.effectiveosgi.rt.config.test;version='[0.0.1,0.0.2)',\
 	org.apache.felix.configadmin;version='[1.8.14,1.8.15)',\
 	org.apache.felix.fileinstall;version='[3.5.4,3.5.5)',\
 	org.apache.felix.log;version='[1.0.1,1.0.2)',\
