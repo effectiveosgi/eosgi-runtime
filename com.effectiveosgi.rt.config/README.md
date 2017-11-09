@@ -1,15 +1,14 @@
 Effective OSGi Runtime: Configuration Processor
 ===============================================
 
-This bundle extends [Felix FileInstall][1] to process configuration files in a
-number of hierarchical formats. Currently supported formats are listed below.
+This bundle extends [Apache Felix File Install][1] to process configuration
+files in a number of hierarchical formats. Currently supported formats are
+listed below.
 
-[1]: https://felix.apache.org/documentation/subprojects/apache-felix-file-install.html
-
-INI Format
+Ini Format
 ----------
 
-The INI file format will be familiar to Windows users. The format is essentially
+The Ini file format will be familiar to Windows users. The format is essentially
 a Java properties file but with labelled sections, for example:
 
     [http]
@@ -23,27 +22,87 @@ a Java properties file but with labelled sections, for example:
     protocol=https
     keyStorePath=${user.name}/.keystore
 
-If zero sections appear in the file then the properties from the "root" of the
-file are used to populate a single configuration with a PID derived from file
-name. If one or more named sections appear then each section defines a single
-configuration record inside a Factory Configuration. Blah blah blah blah 
+If zero section headers are present then the properties in the file are used to
+populate a Singleton Configuration with a PID derived from the file name. If one
+or more named sections appear then each section defines a single configuration
+record inside a Factory Configuration.
 
-In each case, the PID or the Factory PID is derived by the filename by dropping
-the ".ini" extension.
+A file using this format must be named with the `.ini` extension. The PID or the
+Factory PID is derived from the filename by dropping the extension.
 
-### File Name Convention
+### Property Value Types
 
-Files must be created in the `load` directory defined by FileInstall and end
-with the extension `.json`. The `.json` suffix is dropped from the filename to
-derive the configuration PID or factory PID. For example a file named
-`org.example.json` shall be mapped to the PID `org.example`.
+The Ini file reader loads each property value either as a string
+(`java.lang.String` or a string array (`java.lang.String[]`). No other property
+types are supported — if more flexible types are needed then it is recommended
+to use the Configurator JSON format (see [below](#configurator-json-format)).
+
+To create a String array value, simply repeat the property name, e.g.:
+
+    languages: en
+    languages: fr
+    languages: de
+
+The `languages` property will have the value `{"en", "fr", "de"}`. It is not
+possible to create a single-element string array as this will always be
+interpreted as a simple string.
+
+### Property Substitution
+
+Property substitution is supported using the format
+`${section/property[index]}`, which can be embedded anywhere in a property
+value. Where the section name is omitted then the current section is assumed and
+where the index is omitted the last value is used. So in the following example:
+
+    [http.server]
+    host=localhost
+    host=10.0.0.1
+    port=8080
+
+    [http.client]
+    path=/index.html
+    url=http://${http.server/host[0]}:${http.server/port}${path}
+
+... the `url` property in the `http.client` section shall be resolved as
+`http://localhost:8080/index.html`.
+
+The following special section names can be used:
+
+* `?` refers to the root context, i.e. outside of any section. In a factory
+  configuration file this root section is not used directly, so it is a good
+  place to store any shared values.
+* `@prop` refers to Java system properties;
+* `@env`refers to environment variables.
+
+For example:
+
+    # Common values...
+    app=myapp
+    global.logDir=${@env/SYSTEM_LOG}/${app}/logs
+    local.logDir=${@prop/user.home}/.${app}/logs
+
+    [server1]
+    accessLog=${?/global.logDir}/access.log
+
+    [server2]
+    accessLog=${?/log.dir}/access.log
+
+* `server1/accessLog` resolves to the value of the SYSTEM_LOG environment
+  variable plus `myapp/logs/access.log`.
+* `server2/accessLog` resolves to the user's home directory plus
+  `.myapp/logs/access.log`.
+
+### Acknowledgement
+
+The Ini file format reader is implemented with [\[ini4j\]][2] and embedded under
+the terms of the Apache License Version 2.0.
 
 Configurator JSON Format
 ------------------------
 
-This file format is specified by the [OSGi Compendium Release 7][2]
-specification, Chapter 150 ("Configurator"). **NB** The Configurator
-specification is currently in Draft and subject to change.
+This file format is specified by the [OSGi Compendium Release 7][3]
+specification, Chapter 150 ("Configurator"). **N.B.:** The Configurator
+specification is currently in draft and subject to change.
 
 Example:
 
@@ -66,8 +125,13 @@ Example:
       }
     }
 
-Note that this format explicitly supports comments -- both single line using `//`
-and multi-line using `/*...*/` -- even though comments are not technically
-supported in standard JSON.
+Note that this format explicitly supports comments, both single line using `//`
+and multi-line using `/*...*/`, even though comments are not strictly supported
+in standard JSON.
 
-[2]: https://www.osgi.org/developer/specifications/drafts/
+[1]: https://felix.apache.org/documentation/subprojects/apache-felix-file-install.html
+     "Apache Felix File Install"
+[2]: http://ini4j.sourceforge.net
+     "[ini4j]"
+[3]: https://www.osgi.org/developer/specifications/drafts/
+     "OSGi Compendium Release 7 Specification"
