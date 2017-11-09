@@ -48,6 +48,16 @@ public class IniConfigTest {
 		assertEquals("Auf Wiedersehen", record.getProperties().get("goodbye"));
 	}
 	
+	@Test
+	public void testMultiValueProperty() throws Exception {
+		List<ParsedRecord> records = load("org.example3");
+		assertEquals(1, records.size());
+		ParsedRecord record = records.get(0);
+		assertEquals("org.example3", record.getId().getId());
+		assertNull(record.getId().getFactoryId());
+		assertArrayEquals(new String[] { "bar", "baz", "wibble" }, (String[]) record.getProperties().get("foo"));
+	}
+	
 	private static List<ParsedRecord> load(String pid) throws IOException {
 		final IniConfigReader reader = new IniConfigReader();
 		String path = pid + ".ini";
