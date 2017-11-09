@@ -1,0 +1,20 @@
+{
+	":configurator:resource-version" : 1,
+	
+	// Single line comment
+	
+	"pid.a" : {
+		"key" : "val",
+		"some_long" : 123,
+		"some_double" : 123.4
+	},
+	
+	/*
+	 * Multi line
+	 * comment
+	 */
+	"pid.b" : {
+		"a_boolean" : true
+	}
+
+}

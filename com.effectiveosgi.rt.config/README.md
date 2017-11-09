@@ -1,82 +1,73 @@
-Effective OSGi RT: JSON Configuration Processor
+Effective OSGi Runtime: Configuration Processor
 ===============================================
 
-This bundle extends [Felix FileInstall](https://felix.apache.org/documentation/subprojects/apache-felix-file-install.html) to process configuration files in JSON format.
+This bundle extends [Felix FileInstall][1] to process configuration files in a
+number of hierarchical formats. Currently supported formats are listed below.
 
-## File Name Convention
+[1]: https://felix.apache.org/documentation/subprojects/apache-felix-file-install.html
 
-Files must be created in the `load` directory defined by FileInstall and end with the extension `.json`.
+INI Format
+----------
 
-The `.json` suffix is dropped from the filename to derive the configuration PID or factory PID. For example a file named `org.example.json` shall be mapped to the PID `org.example`.
+The INI file format will be familiar to Windows users. The format is essentially
+a Java properties file but with labelled sections, for example:
 
-## JSON Structure
+    [http]
+    host=127.0.0.1
+    port=80
+    protocol=http
 
-The structure of the file must be either a single top-level JSON object or a JSON array of objects.
+    [https]
+    host=0.0.0.0
+    port=80
+    protocol=https
+    keyStorePath=${user.name}/.keystore
 
-Where the content is a single object, a singleton configuration record is created/updated using the properties of that object. For example:
+If zero sections appear in the file then the properties from the "root" of the
+file are used to populate a single configuration with a PID derived from file
+name. If one or more named sections appear then each section defines a single
+configuration record inside a Factory Configuration. Blah blah blah blah 
+
+In each case, the PID or the Factory PID is derived by the filename by dropping
+the ".ini" extension.
+
+### File Name Convention
+
+Files must be created in the `load` directory defined by FileInstall and end
+with the extension `.json`. The `.json` suffix is dropped from the filename to
+derive the configuration PID or factory PID. For example a file named
+`org.example.json` shall be mapped to the PID `org.example`.
+
+Configurator JSON Format
+------------------------
+
+This file format is specified by the [OSGi Compendium Release 7][2]
+specification, Chapter 150 ("Configurator"). **NB** The Configurator
+specification is currently in Draft and subject to change.
+
+Example:
 
     {
-      "host.ip" : "127.0.0.1",
-      "host.port" : 8080,
-      "enableSSL" : false
+      // A singleton config with PID org.example.server
+      "org.example.server" : {
+        "key" : "val",
+        "my_long" : 123,             // Parsed as a java.lang.Long
+        "my_double", : 123.4         // Parsed as a java.lang.Double
+        "my_float:float", 123.4      // Parsed as a java.lang.Float
+
+        "my_array:int[]" : [1,2,3],
+        "my_collection:Collection<String>" : ["one", "two", "three"]
+      },
+
+      // A factory config with Factory PID org.example.threadpool
+      "org.example.threadpool-main" : {
+        "threads" : 50,
+        // ...
+      }
     }
 
-Where the content is an array of objects, a factory configuration is created with one record per object in the array. For example:
+Note that this format explicitly supports comments -- both single line using `//`
+and multi-line using `/*...*/` -- even though comments are not technically
+supported in standard JSON.
 
-    [
-      {
-        "host.ip" : "0.0.0.0",
-        "host.port" : 80,
-        "enableSSL" : false
-      }
-      ,
-      {
-        "host.ip" : "0.0.0.0",
-        "host.port" : 443,
-        "enableSSL" : true,
-        "ssl.keystore" : "server.jks"
-      }
-    ]
-
-## JSON Types
-
-Types in JSON documents are mapped to Java as follows:
-
-* JSON strings are mapped to Java String.
-* JSON numbers are mapped to Java Double.
-* JSON booleans are mapped to Java Boolean.
-* Arrays of JSON strings are mapped to List<String>.
-* Arrays of JSON numbers are mapped to List<Double>.
-
-## Update Handling for Factory Configurations
-
-In FileInstall's normal operation, factory configuration instances are correlated to individual files on the filesystem -- this makes it easy to detect when a single instances has been updated, since the last-updated timestamp of the correlated file will have changed.
-
-Under our JSON-based system, the last-updated timestamp of the file tells us that at least one record has changed, added, or removed. But it does not tell us *which* record has changed. This is a problem because in a large file with many records, an edit action on the file usually only affects a small subset of those records.
-
-We address this by generating a content hash of each JSON array entry and storing this in a hidden property of the configuration record. When the file is updated we regenerate the content hashes for every entry, and those that have not changed will not be updated in Configuration Admin. Entries that have changed will have a new content hash, so the configuration record for the old hash is deleted and a new one created.
-
-This scheme has the following minor drawbacks:
-
-1. Factory configuration records are never updated as such, but only added or deleted. If a DS component defines a @Modified method to optimise dynamic reconfiguration, that method is never called.
-
-2. Duplicate entries with the exact same content cannot be created. However, if it is desired to create two identically configured component instances, then a simple dummy property can be used, e.g.:
-
-
-    [
-      {
-        "message" : "Hello",
-        "language" : "en",
-        ".dummy" : 1
-      }
-      ,
-      {
-        "message" : "Hello",
-        "language" : "en",
-        ".dummy" : 2
-      }
-    ]
-
-The revision to Configuration Admin in OSGi Release 7 is expected to address these issues.
-
-N.B.: content hash generation is based on the **logical** JSON content, so adding whitespace does not affect it.
+[2]: https://www.osgi.org/developer/specifications/drafts/
