@@ -17,6 +17,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Stream;
 
 import org.apache.felix.fileinstall.ArtifactInstaller;
 import org.osgi.framework.Constants;
@@ -32,6 +33,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.osgi.service.log.LogService;
 
 import com.effectiveosgi.rt.config.ConfigFileReader;
+import com.effectiveosgi.rt.config.ParsedRecord;
 import com.effectiveosgi.rt.config.RecordIdentity;
 
 @Component(
@@ -123,7 +125,6 @@ public class HierarchicalConfigInstaller implements ArtifactInstaller {
 			for (Iterator<RankedReaderService> iter = rankedReaders.iterator(); iter.hasNext(); ) {
 				RankedReaderService entry = iter.next();
 				if (serviceId == entry.serviceId) {
-					System.out.println("Removing " + entry);
 					iter.remove();
 				}
 			}
@@ -181,7 +182,8 @@ public class HierarchicalConfigInstaller implements ArtifactInstaller {
 		Map<RecordIdentity, Configuration> existingConfigs = loadExistingConfigs(artifact);
 
 		// Read the configs from the file and heal ConfigurationAdmin
-		reader.load(artifact).forEach(record -> {
+		Stream<ParsedRecord> loadedRecords = reader.load(artifact);
+		loadedRecords.forEach(record -> {
 			Configuration existingConfig = existingConfigs.remove(record.getId());
 
 			try {

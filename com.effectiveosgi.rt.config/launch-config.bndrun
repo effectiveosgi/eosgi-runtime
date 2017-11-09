@@ -19,16 +19,11 @@
 	org.apache.felix.gogo.command;version='[1.0.2,1.0.3)',\
 	org.apache.felix.gogo.runtime;version='[1.0.6,1.0.7)',\
 	org.apache.felix.scr;version='[2.0.10,2.0.11)',\
-	org.apache.felix.log;version='[1.0.1,1.0.2)',\
-	ch.qos.logback.classic;version='[1.2.2,1.2.3)',\
-	ch.qos.logback.core;version='[1.2.2,1.2.3)',\
-	slf4j.api;version='[1.7.25,1.7.26)'
+	org.apache.felix.log;version='[1.0.1,1.0.2)'
 
 -runrequires: \
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.shell)',\
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.command)',\
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.fileinstall)',\
 	osgi.identity;filter:='(osgi.identity=com.effectiveosgi.rt.config)',\
-	osgi.identity;filter:='(osgi.identity=org.apache.felix.log)',\
-	osgi.identity;filter:='(osgi.identity=ch.qos.logback.classic)',\
-	osgi.identity;filter:='(osgi.identity=ch.qos.logback.core)'
+	osgi.identity;filter:='(osgi.identity=org.apache.felix.log)'
