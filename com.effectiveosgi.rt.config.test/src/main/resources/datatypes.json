@@ -1,0 +1,61 @@
+{
+  "my.pid" : {
+    "int1:Integer" : 300,
+    "int2:int" : 300,
+
+    "long1:long" : 400,
+    "long2:Long" : 400,
+
+    "float1:Float" : 123,
+    "float2:float" : 123,
+
+    "double1:Double" : 123,
+    "double2:double" : 123,
+
+    "byte1:Byte" : 321,
+    "byte2:byte" : 321,
+
+    "short1:Short" : 111,
+    "short2:short" : 111,
+
+    "char1:Character" : 40000, // too big for a short
+    "char2:char" : 40000,
+
+    "bool1:Boolean" : 1,
+    "bool2:boolean" : 1,
+    "bool3:boolean" : 0,
+    "bool4:boolean" : true,
+    "bool5:boolean" : "true",
+    "bool6:boolean" : "false",
+
+    "int_array1:int[]" : 123,
+    "int_array2:int[]" : [1, 2, 3],
+
+    "long_array1:long[]" : 123,
+    "long_array2:long[]" : [1, 2, 3],
+
+    "float_array1:float[]" : 123.1,
+    "float_array2:float[]" : [1.0, 2.0, 3.0],
+
+    "double_array1:double[]" : 123.1,
+    "double_array2:double[]" : [1.0, 2.0, 3.0],
+
+    "byte_array1:byte[]" : 123,
+    "byte_array2:byte[]" : [1, 2, 3],
+
+    "short_array1:short[]" : 123,
+    "short_array2:short[]" : [1, 2, 3],
+
+    "char_array1:char[]" : 123,
+    "char_array2:char[]" : [1, 2, 3],
+
+    "boolean_array1:boolean[]" : true,
+    "boolean_array2:boolean[]" : [true, false, true],
+
+    "int_coll1:Collection<Integer>" : 123,
+    "int_coll2:Collection<Integer>" : [1, 2, 3],
+
+    "string_coll1:Collection<String>" : "one",
+    "string_coll2:Collection<String>" : ["one", "two", "three"]
+  }
+}

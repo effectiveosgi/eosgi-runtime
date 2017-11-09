@@ -1,3 +1,4 @@
 -conditionalpackage: \
 	com.google.gson.*,\
-	org.apache.commons.codec.*
+	org.apache.commons.codec.*,\
+	org.ini4j.*

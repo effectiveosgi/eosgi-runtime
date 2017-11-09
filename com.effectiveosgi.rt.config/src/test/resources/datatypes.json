@@ -1,0 +1,26 @@
+{
+  // Default
+    "def1" : "stringval"
+  , "def2" : 123
+  , "def3" : 123.4
+
+  // Primitives
+  , "int1:Integer" : 300
+  , "int2:int" : 300
+  , "long1:Long" : 400
+  , "long2:long" : 400
+  , "float1:float" : 123
+  , "float2:Float" : 123
+
+  // Arrays
+  , "int_array1:int[]" : 123
+  , "int_array2:int[]" : [1, 2, 3]
+  , "long_array1:long[]" : 123
+  , "long_array2:long[]" : [1, 2, 3]
+  , "string_array:String[]" : ["one"]
+
+  // Collections
+  , "int_collection1:Collection<Integer>" : [1,2,3]
+  , "int_collection2:Collection<int>" : [1, 2, 3]
+
+}
