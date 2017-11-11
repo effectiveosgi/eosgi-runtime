@@ -1,4 +1,5 @@
 -conditionalpackage: \
 	com.google.gson.*,\
 	org.apache.commons.codec.*,\
-	org.ini4j.*
+	org.ini4j.*,\
+	org.yaml.snakeyaml.*

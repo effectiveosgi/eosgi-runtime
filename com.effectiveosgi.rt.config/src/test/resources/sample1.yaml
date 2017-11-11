@@ -1,0 +1,26 @@
+org.example:
+  foo: bar
+  bar: baz
+  Deutsch: &id01 # String array
+    - Ein
+    - Zwei
+    - Drei
+  German: *id01 # A reference to the above anchor
+  numbers: # an Integer array
+    - 1
+    - 2
+    - 3
+  intVal: 123
+  longVal: 2147483648 # bigger than Integer.MAX
+  floatVal: 123.0
+  anotherFloat: !!float 123
+
+org.example.server-one:
+  host: 0.0.0.0 # comment
+  port: 8080
+
+org.example.server-two:
+  host: 127.0.0.1
+  port: 443
+  useSsl: Yes
+  logRequests: No

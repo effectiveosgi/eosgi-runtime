@@ -2,6 +2,7 @@ package com.effectiveosgi.rt.config;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public final class ParsedRecord {
 
@@ -14,6 +15,10 @@ public final class ParsedRecord {
 
 	public static ParsedRecord factory(String id, String factoryId, Map<String, ? extends Object> properties) {
 		return new ParsedRecord(new RecordIdentity(id, factoryId), properties);
+	}
+	
+	public ParsedRecord(Entry<RecordIdentity, Map<String, Object>> entry) {
+		this(entry.getKey(), entry.getValue());
 	}
 
 	public ParsedRecord(RecordIdentity id, Map<String, ? extends Object> properties) {
