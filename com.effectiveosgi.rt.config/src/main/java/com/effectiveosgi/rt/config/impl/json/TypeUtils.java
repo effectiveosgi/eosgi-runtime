@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.effectiveosgi.rt.config.impl.EntryImpl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -14,33 +15,11 @@ final class TypeUtils {
 
     static final Function<JsonElement,JsonElement> ID = Function.identity();
 
-    private static final class EntryImpl<K,V> implements Map.Entry<K,V> {
-        private final K key;
-        private V value;
-        private EntryImpl(K key, V value) {
-            this.key = key; this.value = value;
-        }
-        @Override
-        public K getKey() {
-            return key;
-        }
-        @Override
-        public V getValue() {
-            return value;
-        }
-        @Override
-        public V setValue(V value) {
-            V oldValue = this.value;
-            this.value = value;
-            return oldValue;
-        }
-    }
-
     static Map.Entry<String, Object> parseEntry(Map.Entry<String, JsonElement> entry) {
         return parse(entry.getKey(), entry.getValue());
     }
 
-    static Map.Entry parse(String label, JsonElement element) {
+    static Map.Entry<String,Object> parse(String label, JsonElement element) {
         final String name;
         final String typeName;
         int colonIndex = label.indexOf(":");
@@ -52,7 +31,7 @@ final class TypeUtils {
             typeName = label.substring(colonIndex + 1);
         }
         Type<?> type = findType(typeName);
-        return new EntryImpl(name, type.parse(element));
+        return new EntryImpl<String, Object>(name, type.parse(element));
     }
 
     static class Type<T> {
@@ -168,7 +147,8 @@ final class TypeUtils {
             parser = ID.andThen(TypeUtils::toPrimitive).andThen(primitiveParser);
         }
 
-        Type<?> result = new Type(outputType, parser);
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+		Type<?> result = new Type(outputType, parser);
         return result;
     }
 

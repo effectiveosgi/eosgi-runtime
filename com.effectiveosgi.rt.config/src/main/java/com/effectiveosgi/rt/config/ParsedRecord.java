@@ -15,7 +15,7 @@ public final class ParsedRecord {
 	public static ParsedRecord factory(String id, String factoryId, Map<String, ? extends Object> properties) {
 		return new ParsedRecord(new RecordIdentity(id, factoryId), properties);
 	}
-
+	
 	public ParsedRecord(RecordIdentity id, Map<String, ? extends Object> properties) {
 		assert id != null : "id cannot be null";
 		assert properties != null : "properties cannot be null";
