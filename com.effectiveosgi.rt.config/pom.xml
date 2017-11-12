@@ -7,6 +7,7 @@
 		<version>0.0.1</version>
 	</parent>
 	<artifactId>com.effectiveosgi.rt.config</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.osgi</groupId>
@@ -51,4 +52,13 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+					<groupId>biz.aQute.bnd</groupId>
+					<artifactId>bnd-baseline-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>

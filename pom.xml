@@ -154,6 +154,23 @@
         </plugin>
 
         <plugin>
+            <groupId>biz.aQute.bnd</groupId>
+            <artifactId>bnd-baseline-maven-plugin</artifactId>
+            <version>${bnd.maven.version}</version>
+            <configuration>
+              <fullReport>true</fullReport>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>baseline</id>
+                    <goals>
+                        <goal>baseline</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+
+        <plugin>
           <groupId>biz.aQute.bnd</groupId>
           <artifactId>bnd-export-maven-plugin</artifactId>
           <version>${bnd.maven.version}</version>
