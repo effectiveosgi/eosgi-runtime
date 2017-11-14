@@ -1,3 +1,5 @@
+Export-Package: org.apache.felix.fileinstall
+
 -conditionalpackage: \
 	com.google.gson.*,\
 	org.apache.commons.codec.*,\

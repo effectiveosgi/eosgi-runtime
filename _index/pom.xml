@@ -9,14 +9,15 @@
     <version>0.0.1</version>
   </parent>
   <artifactId>_index</artifactId>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
+  <version>0.0.1</version>
 
   <dependencies>
     <!-- Distribution Dependency -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>_distro</artifactId>
-      <version>${project.version}</version>
+      <version>0.0.1</version>
       <scope>runtime</scope>
       <type>pom</type>
     </dependency>
