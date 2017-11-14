@@ -29,6 +29,9 @@ import org.osgi.service.cm.ConfigurationListener;
 
 public class TestBase {
 
+	private static final String PROP_PID = "_com.effectiveosgi.rt.config";
+	private static final String PROP_RECORD_ID = PROP_PID + ".identity";
+
 	private final BundleContext context = FrameworkUtil.getBundle(TestBase.class).getBundleContext();
 
 	protected File configDir;
@@ -191,8 +194,8 @@ public class TestBase {
 		if (result != 0) return result;
 
 		result = orderNullSafe(
-				(String) left.get(HierarchicalConfigInstaller.PROP_IDENTITY),
-				(String) right.get(HierarchicalConfigInstaller.PROP_IDENTITY));
+				(String) left.get(PROP_RECORD_ID),
+				(String) right.get(PROP_RECORD_ID));
 
 		return result;
 	}
@@ -207,8 +210,8 @@ public class TestBase {
 	}
 
 	protected static int compareDictionariesOnRecordID(Dictionary<String, Object> left, Dictionary<String, Object> right) {
-		String leftId = (String) left.get(HierarchicalConfigInstaller.PROP_IDENTITY);
-		String rightId = (String) right.get(HierarchicalConfigInstaller.PROP_IDENTITY);
+		String leftId = (String) left.get(PROP_RECORD_ID);
+		String rightId = (String) right.get(PROP_RECORD_ID);
 		if (leftId == null) {
 			return rightId != null ? 1 : 0;
 		}
@@ -224,7 +227,7 @@ public class TestBase {
         Dictionary<String, Object> copy = new Hashtable<>();
         for (Enumeration<String> e = dict.keys(); e.hasMoreElements(); ) {
             String key = e.nextElement();
-            if (key.startsWith("_com.effectiveosgi.rt.config"))
+            if (key.startsWith(PROP_PID))
             		continue;
             if (factory && "service.pid".equals(key))
             		continue;
@@ -236,7 +239,7 @@ public class TestBase {
     protected Configuration findFactoryConfig(String factoryPid, String recordId) throws IOException, InvalidSyntaxException {
     		Configuration[] configs = configAdmin.listConfigurations(String.format("(&(%s=%s)(%s=%s))",
     				ConfigurationAdmin.SERVICE_FACTORYPID, factoryPid,
-    				HierarchicalConfigInstaller.PROP_IDENTITY, recordId));
+    				PROP_RECORD_ID, recordId));
     		if (configs == null || configs.length == 0)
     			return null;
     		if (configs.length > 1)
