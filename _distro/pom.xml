@@ -9,6 +9,7 @@
     <version>0.0.1</version>
   </parent>
   <artifactId>_distro</artifactId>
+  <version>0.0.1</version>
   <packaging>pom</packaging>
 
   <dependencies>
