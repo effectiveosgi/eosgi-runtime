@@ -56,10 +56,55 @@
 
   <properties>
     <local.index.policy>REQUIRED</local.index.policy>
-    <bnd.maven.version>3.5.0</bnd.maven.version>
+    <bnd.maven.version>4.0.0-SNAPSHOT</bnd.maven.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
+
+
+  <repositories>
+    <!-- These SNAPSHOT repositories are required for OSGi R7 usage in advance of the official release -->
+    <repository>
+        <id>OSGi Snapshots</id>
+        <url>https://oss.sonatype.org/content/groups/osgi/</url>
+        <releases>
+            <enabled>false</enabled>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+    <repository>
+      <id>Apache Snapshots</id>
+      <url>https://repository.apache.org/snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <!-- Uncomment to enable Knopflerfish repository
+    <repository>
+      <id>Knopflerfish 6 Repository</id>
+      <name>Knopflerfish 6 Releases Repository</name>
+      <url>http://resources.knopflerfish.org/repo/maven2/release</url> 
+    </repository>
+    -->
+  </repositories>
+
+
+  <pluginRepositories>
+    <!-- The bnd SNAPSHOT repository is required for OSGi R7 usage in advance of the official release -->
+    <pluginRepository>
+      <id>bnd.master</id>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <url>https://bndtools.ci.cloudbees.com/job/bnd.master/lastSuccessfulBuild/artifact/dist/bundles</url>
+    </pluginRepository>
+  </pluginRepositories>
+
 
   <dependencyManagement>
     <dependencies>
@@ -73,13 +118,19 @@
       <dependency>
         <groupId>org.osgi</groupId>
         <artifactId>osgi.cmpn</artifactId>
-        <version>6.0.0</version>
+        <version>7.0.0-SNAPSHOT</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.osgi</groupId>
         <artifactId>osgi.annotation</artifactId>
-        <version>6.0.1</version>
+        <version>7.0.0-SNAPSHOT</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.service.component.annotations</artifactId>
+        <version>1.4.0-SNAPSHOT</version>
         <scope>provided</scope>
       </dependency>
 
