@@ -15,11 +15,11 @@ org.example:
   floatVal: 123.0
   anotherFloat: !!float 123
 
-org.example.server-one:
+org.example.server~one:
   host: 0.0.0.0 # comment
   port: 8080
 
-org.example.server-two:
+org.example.server~two:
   host: 127.0.0.1
   port: 443
   useSsl: Yes

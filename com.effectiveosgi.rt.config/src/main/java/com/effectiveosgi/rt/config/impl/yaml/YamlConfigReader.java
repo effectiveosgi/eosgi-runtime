@@ -65,7 +65,7 @@ public class YamlConfigReader implements ConfigFileReader {
 
 	private RecordIdentity splitRecordId(String key) {
 		final RecordIdentity id;
-		int index = key.indexOf('-');
+		int index = key.indexOf('~');
 		if (index < 0) {
 			id = new RecordIdentity(key, null);
 		} else {

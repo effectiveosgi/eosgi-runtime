@@ -104,7 +104,7 @@ public class JsonConfigReader implements ConfigFileReader {
 	}
 	
 	private static RecordIdentity parseEntryKey(String key) {
-		String[] parts = key.split("-", 2);
+		String[] parts = key.split("~", 2);
 		return (parts.length > 1)
 				? new RecordIdentity(parts[1], parts[0])
 				: new RecordIdentity(parts[0], null);

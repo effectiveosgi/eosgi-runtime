@@ -20,7 +20,7 @@ Example:
       },
 
       // A factory config with Factory PID org.example.threadpool
-      "org.example.threadpool-main" : {
+      "org.example.threadpool~main" : {
         "threads" : 50,
         // ...
       }

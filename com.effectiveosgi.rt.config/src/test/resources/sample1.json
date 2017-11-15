@@ -1,0 +1,24 @@
+{
+    "org.example" : {
+        "foo" : "bar",
+        "Deutsch:Collection<String>" : ["Ein", "Zwei", "Drei"],
+        "German:Collection<String>" : ["Ein", "Zwei", "Drei"],
+        "numbers:Collection<Integer>" : [1,2,3],
+        "intVal:int" : 123,
+        "longVal:long" : 2147483648,
+        "floatVal:Double" : 123,
+        "anotherFloat:Double" : 123
+    },
+
+    "org.example.server~one" : {
+        "host" : "0.0.0.0",
+        "port" : 8080
+    },
+
+    "org.example.server~two" : {
+        "host" : "127.0.0.1",
+        "port" : 443,
+        "useSsl" : true,
+        "logRequests" : false
+    }
+}

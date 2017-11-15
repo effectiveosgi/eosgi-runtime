@@ -20,13 +20,13 @@ The YAML processor allows configuration files to be read in
 
     # A factory config with Factory PID "org.example"
     # and PID "one".
-    org.example.server-one:
+    org.example.server~one:
       host: 0.0.0.0
       port: 8080
 
     # A factory config with Factory PID "org.example"
     # and PID "two".
-    org.example.server-two:
+    org.example.server~two:
       host: 127.0.0.1
       port: 443
       useSsl: Yes
