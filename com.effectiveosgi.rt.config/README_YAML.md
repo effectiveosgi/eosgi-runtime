@@ -8,12 +8,12 @@ The YAML processor allows configuration files to be read in
     org.example:
       foo: bar
       bar: baz
-      Deutsch: &id01   # String array
+      Deutsch: &id01       # String array with an anchor
         - Ein
         - Zwei
         - Drei
-      German: *id01   # A reference to the above anchor
-      numbers:   # an Integer array
+      German: *id01        # A reference to the above anchor
+      numbers:             # an Integer array
         - 1
         - 2
         - 3
@@ -65,7 +65,7 @@ Acknowledgement
 ---------------
 
 The YAML file format reader is implemented with [SnakeYAML][2], which is
-embedded under the temrs of the Apache License Version 2.0.
+embedded under the terms of the Apache License Version 2.0.
 
 [1]: http://yaml.org/
      "YAML Ain't Markup Language"
