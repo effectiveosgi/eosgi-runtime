@@ -38,7 +38,6 @@ class HierarchicalConfigInstaller extends ServiceTracker<ConfigFileReader, Confi
 	static final String PID = "com.effectiveosgi.rt.config";
 
 	private static final String PROP_PREFIX = "_" + PID;
-	static final String PROP_IDENTITY = PROP_PREFIX + ".identity";
 	static final String PROP_FILE_PATH = PROP_PREFIX + ".filePath";
 	
 	private final class RankedReaderService implements Comparable<RankedReaderService> {
@@ -195,7 +194,7 @@ class HierarchicalConfigInstaller extends ServiceTracker<ConfigFileReader, Confi
 					// Create a new configuration
 					Configuration config;
 					if (record.getId().getFactoryId() != null) {
-						config = configAdmin.createFactoryConfiguration(record.getId().getFactoryId(), "?");
+						config = configAdmin.getFactoryConfiguration(record.getId().getFactoryId(), record.getId().getId(), "?");
 					} else {
 						config = configAdmin.getConfiguration(record.getId().getId(), "?");
 					}
@@ -219,7 +218,6 @@ class HierarchicalConfigInstaller extends ServiceTracker<ConfigFileReader, Confi
 	private Dictionary<String, Object> buildConfigDict(File artifact, String id, Map<String, ? extends Object> map) {
 		Dictionary<String,Object> dict = new Hashtable<>(map);
 		dict.put(PROP_FILE_PATH, artifact.getAbsolutePath());
-		dict.put(PROP_IDENTITY, id);
 		return dict;
 	}
 
@@ -231,15 +229,19 @@ class HierarchicalConfigInstaller extends ServiceTracker<ConfigFileReader, Confi
 				map = new HashMap<>(configs.length);
 				for (Configuration config : configs) {
 					Dictionary<String,Object> dict = config.getProperties();
-					Object identityObj = dict.get(PROP_IDENTITY);
+					String configPid = config.getPid();
 
-					if (!(identityObj instanceof String)) {
-						log(LogService.LOG_WARNING, String.format("Deleting unidentified configuration record, pid=%s factoryPid=%s (missing %s property)", config.getPid(), config.getFactoryPid(), PROP_IDENTITY), null);
-						deleteConfigNoException(config);
-						continue;
+					String factoryId;
+					String id;
+					int tildeIndex = configPid.indexOf('~');
+					if (tildeIndex >= 0) {
+						factoryId = configPid.substring(0, tildeIndex);
+						id = configPid.substring(tildeIndex + 1);
+					} else {
+						factoryId = null;
+						id = configPid;
 					}
-					String identityStr = (String) identityObj;
-					RecordIdentity identity = new RecordIdentity(identityStr, config.getFactoryPid());
+					RecordIdentity identity = new RecordIdentity(id, factoryId);
 					map.put(identity, config);
 				}
 			} else {

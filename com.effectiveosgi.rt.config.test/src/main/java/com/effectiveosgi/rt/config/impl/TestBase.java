@@ -20,52 +20,53 @@ import java.util.stream.Stream;
 
 import org.apache.felix.fileinstall.ArtifactInstaller;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.osgi.framework.*;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.cm.ConfigurationListener;
+import org.osgi.util.tracker.ServiceTracker;
 
 public class TestBase {
 
 	private static final String PROP_PID = "_com.effectiveosgi.rt.config";
 	private static final String PROP_RECORD_ID = PROP_PID + ".identity";
 
-	private final BundleContext context = FrameworkUtil.getBundle(TestBase.class).getBundleContext();
+	private static final BundleContext context = FrameworkUtil.getBundle(TestBase.class).getBundleContext();
 
 	protected File configDir;
 
-	private ServiceReference<ArtifactInstaller> installerRef;
-	protected ArtifactInstaller installer;
-
-	private ServiceReference<ConfigurationAdmin> configAdminRef;
-	protected ConfigurationAdmin configAdmin;
+	private static ServiceTracker<ArtifactInstaller, ArtifactInstaller> installerTracker;
+	private static ServiceTracker<ConfigurationAdmin, ConfigurationAdmin> configAdminTracker;
 	
+	protected ArtifactInstaller installer;
+	protected ConfigurationAdmin configAdmin;
+
 	protected ConfigurationListener configListener;
 	private ServiceRegistration<ConfigurationListener> configListenerReg;
 
 	
 	@BeforeClass
 	public static void beforeAll() throws Exception {
-		Thread.sleep(1000);
+		configAdminTracker = new ServiceTracker<>(context, ConfigurationAdmin.class, null);
+		configAdminTracker.open();
+		
+		installerTracker = new ServiceTracker<>(context, FrameworkUtil.createFilter(String.format("(&(objectClass=%s)(type=hierarchical))", ArtifactInstaller.class.getName())), null);
+		installerTracker.open();
 	}
-
+	
 	@Before
 	public void setup() throws Exception {
 		configDir = Files.createTempDirectory("load").toFile();
 		configDir.deleteOnExit();
+		
+		installer = installerTracker.waitForService(5000);
+		assertNotNull("Missing installer service", installer);
 
-		configAdminRef = context.getServiceReference(ConfigurationAdmin.class);
-		configAdmin = context.getService(configAdminRef);
-		assertNotNull("ConfigurationAdmin service unavailable", configAdmin);
-
-		Collection<ServiceReference<ArtifactInstaller>> installerRefs = context.getServiceReferences(ArtifactInstaller.class, "(type=hierarchical)");
-		assertNotNull("ArtifactInstaller not registered", installerRefs);
-		assertEquals("Should be one ArtifactInstaller with type=hierarchical", 1, installerRefs.size());
-		installerRef = installerRefs.iterator().next();
-		installer = context.getService(installerRef);
-		assertNotNull("ArtifactInstaller unregistered", installer);
+		configAdmin = configAdminTracker.waitForService(1000);
+		assertNotNull("Missing config admin service", configAdmin);
 
 		Configuration[] configs = configAdmin.listConfigurations(null);
 		boolean deleted = false;
@@ -84,9 +85,13 @@ public class TestBase {
 	@After
 	public void shutdown() throws Exception {
 		configListenerReg.unregister();
-		context.ungetService(installerRef);
-		context.ungetService(configAdminRef);
 		recurseDelete(configDir);
+	}
+
+	@AfterClass
+	public static void afterAll() throws Exception {
+		configAdminTracker.close();
+		installerTracker.close();
 	}
 
 	private void recurseDelete(File dir) throws IOException {
@@ -236,10 +241,9 @@ public class TestBase {
         return copy;
     }
     
-    protected Configuration findFactoryConfig(String factoryPid, String recordId) throws IOException, InvalidSyntaxException {
-    		Configuration[] configs = configAdmin.listConfigurations(String.format("(&(%s=%s)(%s=%s))",
-    				ConfigurationAdmin.SERVICE_FACTORYPID, factoryPid,
-    				PROP_RECORD_ID, recordId));
+    protected Configuration findFactoryConfig(String factoryPid, String recordId) throws IOException, InvalidSyntaxException, InterruptedException {
+    		Configuration[] configs = configAdminTracker.waitForService(1000).listConfigurations(String.format("(&(%s=%s)(%s=%s))",
+    				ConfigurationAdmin.SERVICE_FACTORYPID, factoryPid, Constants.SERVICE_PID, factoryPid + "~" + recordId));
     		if (configs == null || configs.length == 0)
     			return null;
     		if (configs.length > 1)

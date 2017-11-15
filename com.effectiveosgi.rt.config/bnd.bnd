@@ -12,3 +12,7 @@ Bundle-Activator: com.effectiveosgi.rt.config.impl.Activator
 	org.apache.commons.codec.*,\
 	org.ini4j.*,\
 	org.yaml.snakeyaml.*
+
+Require-Capability: \
+	osgi.implementation;\
+		filter:='(&(osgi.implementation=osgi.cm)(version>=1.6)(!(version>=2.0)))' 
