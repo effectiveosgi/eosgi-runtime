@@ -4,33 +4,35 @@ Effective OSGi Runtime: YAML Configuration
 The YAML processor allows configuration files to be read in
 [YAML 1.1][1] format. For example:
 
-    # A singleton config with PID "org.example"
-    org.example:
-      foo: bar
-      bar: baz
-      Deutsch: &id01       # String array with an anchor
-        - Ein
-        - Zwei
-        - Drei
-      German: *id01        # A reference to the above anchor
-      numbers:             # an Integer array
-        - 1
-        - 2
-        - 3
+```yaml
+# A singleton config with PID "org.example"
+org.example:
+  foo: bar
+  bar: baz
+  Deutsch: &id01       # String array with an anchor
+    - Ein
+    - Zwei
+    - Drei
+  German: *id01        # A reference to the above anchor
+  numbers:             # an Integer array
+    - 1
+    - 2
+    - 3
 
-    # A factory config with Factory PID "org.example"
-    # and PID "one".
-    org.example.server~one:
-      host: 0.0.0.0
-      port: 8080
+# A factory config with Factory PID "org.example"
+# and PID "one".
+org.example.server~one:
+  host: 0.0.0.0
+  port: 8080
 
-    # A factory config with Factory PID "org.example"
-    # and PID "two".
-    org.example.server~two:
-      host: 127.0.0.1
-      port: 443
-      useSsl: Yes
-      logRequests: No
+# A factory config with Factory PID "org.example"
+# and PID "two".
+org.example.server~two:
+  host: 127.0.0.1
+  port: 443
+  useSsl: Yes
+  logRequests: No
+```
 
 Implementation Notes
 --------------------

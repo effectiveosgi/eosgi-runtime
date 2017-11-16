@@ -31,15 +31,17 @@ This bundle can be used without File Install to programmatically install, update
 and uninstall configurations. Simply bind to the `ArtifactInstaller` service and
 invoke it as follows:
 
-    @Reference(target = "(type=hierarchical)")
-    ArtifactInstaller installer;
+```java
+@Reference(target = "(type=hierarchical)")
+ArtifactInstaller installer;
 
-    public void doInstall() {
-      File yamlFile = // get file
-      installer.install(yamlFile);
-      // Later...
-      installer.uninstall(yamlFile);
-    }
+public void doInstall() {
+  File yamlFile = // get file
+  installer.install(yamlFile);
+  // Later...
+  installer.uninstall(yamlFile);
+}
+```
 
 Note that the `ArtifactInstaller` interface is exported by a File Install API
 package, `org.apache.felix.fileinstall`. However, this bundle also exports that
