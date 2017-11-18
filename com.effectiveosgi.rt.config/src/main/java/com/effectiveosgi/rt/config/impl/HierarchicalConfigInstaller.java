@@ -39,8 +39,12 @@ import com.effectiveosgi.rt.config.RecordIdentity;
 @Component(
 		name = HierarchicalConfigInstaller.PID,
 		property = {
-				"type=hierarchical"
-		})
+				"type=hierarchical",
+				"osgi.command.scope=config",
+				"osgi.command.function=install",
+				"osgi.command.function=update",
+				"osgi.command.function=uninstall"
+			})
 public class HierarchicalConfigInstaller implements ArtifactInstaller {
 	
 	static final String PID = "com.effectiveosgi.rt.config";

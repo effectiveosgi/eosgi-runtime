@@ -200,27 +200,5 @@ public class ComponentCommands implements Converter {
         return repeat((int) Math.floor(Math.log10(number)) + 1, character);
     }
     
-    static int compareConfigurations(Configuration a, Configuration b) {
-    	String factoryA = a.getFactoryPid();
-    	String factoryB = b.getFactoryPid();
-    	
-    	int result = 0;
-    	
-    	if (factoryA != null) {
-    		if (factoryB == null)
-    			result = -1;
-    		else
-    			result = factoryA.compareTo(factoryB);
-    	} else {
-    		if (factoryB == null)
-    			result = 0;
-    		else
-    			result = 1;
-    	}
-    	
-    	if (result == 0)
-    		result = a.getPid().compareTo(b.getPid());
 
-    	return result;
-    }
 }

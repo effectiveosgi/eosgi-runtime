@@ -21,6 +21,11 @@
 			<groupId>org.osgi</groupId>
 			<artifactId>osgi.annotation</artifactId>
 		</dependency>
+        <dependency>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>org.apache.felix.gogo.runtime</artifactId>
+          <version>1.0.6</version>
+        </dependency>
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.fileinstall</artifactId>
@@ -58,13 +63,20 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-all</artifactId>
+          <version>1.10.19</version>
+          <scope>test</scope>
+        </dependency>
+
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-					<groupId>biz.aQute.bnd</groupId>
-					<artifactId>bnd-baseline-maven-plugin</artifactId>
+				<groupId>biz.aQute.bnd</groupId>
+				<artifactId>bnd-baseline-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

@@ -1,5 +1,9 @@
 Export-Package: org.apache.felix.fileinstall
 
+Import-Package: \
+	org.apache.felix.service.command; resolution:=optional,\
+	*
+
 -conditionalpackage: \
 	com.google.gson.*,\
 	org.apache.commons.codec.*,\

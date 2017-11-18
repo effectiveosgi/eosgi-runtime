@@ -49,20 +49,4 @@
     </dependency>
   </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>biz.aQute.bnd</groupId>
-        <artifactId>bnd-export-maven-plugin</artifactId>
-        <configuration>
-          <resolve>true</resolve>
-          <failOnChanges>true</failOnChanges>
-          <bndruns>
-            <bndrun>launch.bndrun</bndrun>
-          </bndruns>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
 </project>
