@@ -5,34 +5,44 @@
 -runprovidedcapabilities: ${native_capability}
 -runproperties:\
 	felix.fileinstall.noInitialDelay=true,\
-	felix.fileinstall.log.level=4,\
+	felix.fileinstall.log.level=4
+
+# Disable Jetty from running on the default port (wait for config)
+x-runproperties:\
 	org.osgi.service.http.port=-1
 
 -resolve.effective: active; skip:="osgi.service"
 
 -runrequires: \
-	osgi.identity;filter:='(osgi.identity=org.apache.felix.fileinstall)',\
-	osgi.identity;filter:='(osgi.identity=com.effectiveosgi.rt.inspect)',\
-	osgi.identity;filter:='(osgi.identity=com.effectiveosgi.rt.config)',\
-	osgi.identity;filter:='(osgi.identity=com.effectiveosgi.rt.aws)',\
 	bnd.identity;id='org.apache.felix.log',\
+	bnd.identity;id='org.apache.felix.fileinstall',\
 	bnd.identity;id='org.apache.felix.gogo.command',\
-	bnd.identity;id='org.apache.felix.gogo.shell'
+	bnd.identity;id='org.apache.felix.gogo.shell',\
+	bnd.identity;id='org.apache.felix.log',\
+	bnd.identity;id='com.effectiveosgi.rt.aws',\
+	bnd.identity;id='com.effectiveosgi.rt.config',\
+	bnd.identity;id='com.effectiveosgi.rt.inspect.web.scr',\
+	bnd.identity;id='com.effectiveosgi.rt.inspect'
 
 -runbundles: \
 	com.effectiveosgi.rt.aws;version='[0.0.2,0.0.3)',\
-	com.effectiveosgi.rt.config;version='[1.0.1,1.0.2)',\
-	com.effectiveosgi.rt.inspect;version='[0.0.3,0.0.4)',\
+	com.effectiveosgi.rt.config;version='[0.1.0,0.1.1)',\
+	com.effectiveosgi.rt.inspect;version='[0.0.1,0.0.2)',\
+	com.effectiveosgi.rt.inspect.web.scr;version='[0.0.1,0.0.2)',\
 	com.fasterxml.jackson.core.jackson-annotations;version='[2.6.0,2.6.1)',\
 	com.fasterxml.jackson.core.jackson-core;version='[2.6.6,2.6.7)',\
 	com.fasterxml.jackson.core.jackson-databind;version='[2.6.6,2.6.7)',\
 	org.apache.commons.codec;version='[1.9.0,1.9.1)',\
 	org.apache.commons.logging;version='[1.1.3,1.1.4)',\
 	org.apache.felix.configadmin;version='[1.8.14,1.8.15)',\
+	org.apache.felix.eventadmin;version='[1.4.8,1.4.9)',\
 	org.apache.felix.fileinstall;version='[3.6.0,3.6.1)',\
 	org.apache.felix.gogo.command;version='[1.0.2,1.0.3)',\
 	org.apache.felix.gogo.runtime;version='[1.0.6,1.0.7)',\
 	org.apache.felix.gogo.shell;version='[1.0.0,1.0.1)',\
+	org.apache.felix.http.jetty;version='[3.4.6,3.4.7)',\
+	org.apache.felix.http.servlet-api;version='[1.1.2,1.1.3)',\
 	org.apache.felix.log;version='[1.0.1,1.0.2)',\
 	org.apache.felix.scr;version='[2.0.14,2.0.15)',\
-	org.apache.servicemix.bundles.aws-java-sdk;version='[1.11.136,1.11.137)'
+	org.apache.servicemix.bundles.aws-java-sdk;version='[1.11.136,1.11.137)',\
+	org.osgi.service.component;version='[1.3.0,1.3.1)'

@@ -1,0 +1,13 @@
+-conditionalpackage: \
+	com.google.gson.*
+
+-includeresource: {src/main/processed-resources}
+
+Require-Capability:\
+	osgi.implementation; filter:="(&(osgi.implementation=osgi.http)(version>=1.0)(!(version>=2.0)))",\
+	osgi.enroute.webresource; filter:="(osgi.implementation.webresource=/eosgi-components/scr)"
+
+Provide-Capability:\
+	osgi.enroute.webresource; \
+		osgi.implementation.webresource="/eosgi-components/scr";\
+		root=eosgi-components

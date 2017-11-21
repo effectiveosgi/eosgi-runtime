@@ -1,0 +1,5 @@
+Test-Cases: ${classes;NAMED;*Test}
+
+Require-Capability:\
+	osgi.enroute.webresource;\
+		filter:="(osgi.enroute.webresource=/testing/webresource1)"

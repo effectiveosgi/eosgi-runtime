@@ -1,0 +1,34 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+<dom-module id="scr-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+    <paper-button class="pink">This is a Paper-Button</paper-button>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PolymerTestApp extends Polymer.Element {
+      static get is() { return 'scr-list'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'scr-list'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(PolymerTestApp.is, PolymerTestApp);
+  </script>
+</dom-module>

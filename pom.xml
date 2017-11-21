@@ -52,6 +52,11 @@
     <module>com.effectiveosgi.rt.config.test</module>
     <module>com.effectiveosgi.rt.aws</module>
     <module>com.effectiveosgi.rt.inspect</module>
+    <module>com.effectiveosgi.rt.webresource.polymer</module>
+    <module>com.effectiveosgi.rt.inspect.web.scr</module>
+    <module>com.effectiveosgi.rt.web</module>
+    <module>com.effectiveosgi.rt.web.test1</module>
+    <module>com.effectiveosgi.rt.web.test2</module>
   </modules>
 
   <properties>

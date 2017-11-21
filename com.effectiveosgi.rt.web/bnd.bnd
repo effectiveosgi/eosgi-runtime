@@ -1,0 +1,5 @@
+Provide-Capability:\
+	osgi.implementation; osgi.implementation=osgi.enroute.webresource; version:Version=1.0.0
+
+Require-Capability:\
+	osgi.implementation; filter:="(&(osgi.implementation=osgi.http)(version>=1.0)(!(version>=2.0)))"

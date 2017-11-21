@@ -1,0 +1,11 @@
+Test-Cases: ${classes;NAMED;*Test}
+
+Require-Capability:\
+    osgi.enroute.webresource;\
+        filter:='(&(osgi.enroute.webresource=/google/polymer)(version>=2.2.0)(!(version>=3.0.0)))'
+
+Provide-Capability: \
+	osgi.enroute.webresource;\
+		osgi.enroute.webresource=/testing/webresource1;\
+		version:Version=1.0.0;\
+		root=/static
