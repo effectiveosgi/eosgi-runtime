@@ -25,6 +25,10 @@
       <artifactId>osgi.annotation</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.servicemix.bundles</groupId>
       <artifactId>org.apache.servicemix.bundles.junit</artifactId>
       <version>4.12_1</version>
@@ -35,6 +39,7 @@
       <version>1.1.2</version>
     </dependency>
 
+    <!-- RUNTIME -->
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
       <artifactId>_distro</artifactId>
@@ -42,8 +47,6 @@
       <scope>runtime</scope>
       <type>pom</type>
     </dependency>
-
-    <!-- RUNTIME -->
     <dependency>
       <groupId>org.apache.felix</groupId>
       <artifactId>org.apache.felix.http.jetty</artifactId>

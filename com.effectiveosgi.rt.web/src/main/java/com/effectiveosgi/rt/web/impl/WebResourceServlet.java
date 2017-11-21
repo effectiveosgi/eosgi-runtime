@@ -27,13 +27,12 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 @Component(
+	name = "com.effectiveosgi.rt.webresource",
 	property = {
-			HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "=/osgi.enroute.webresource/*",
+			HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "=/" + WebResourceConstants.WEBRESOURCE_NAMESPACE + "/*",
 			HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_NAME + "=/WebResources"
 	})
 public class WebResourceServlet extends HttpServlet implements Servlet {
-
-	private static final String NS_WEBRESOURCE = "osgi.enroute.webresource";
 
 	private static final long serialVersionUID = 1L;
 	
@@ -96,7 +95,7 @@ public class WebResourceServlet extends HttpServlet implements Servlet {
 	}
 	
 	private Stream<BundleWire> getWires(Bundle bundle) {
-		List<BundleWire> wires = bundle.adapt(BundleWiring.class).getRequiredWires(NS_WEBRESOURCE);
+		List<BundleWire> wires = bundle.adapt(BundleWiring.class).getRequiredWires(WebResourceConstants.WEBRESOURCE_NAMESPACE);
 		return wires != null ? wires.stream() : Stream.empty();
 	}
 

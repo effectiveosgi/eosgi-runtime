@@ -1,5 +1,7 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<link rel="import" href="scr-component-description.html">
 
 <dom-module id="scr-list">
   <template>
@@ -8,8 +10,21 @@
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]!</h2>
-    <paper-button class="pink">This is a Paper-Button</paper-button>
+
+    <h2>Service Component List</h2>
+
+    <iron-ajax auto
+      url="/api/scr"
+      handle-as="json"
+      last-response="{{ajaxResponse}}"
+      debounce-duration="300"
+    ></iron-ajax>
+
+    <template is="dom-repeat" items="[[ajaxResponse]]">
+      <scr-component-description component-description="[[item]]">
+      </scr-component-description>
+    </template>
+
   </template>
 
   <script>
@@ -17,18 +32,9 @@
      * @customElement
      * @polymer
      */
-    class PolymerTestApp extends Polymer.Element {
+    class ScrListComponent extends Polymer.Element {
       static get is() { return 'scr-list'; }
-      static get properties() {
-        return {
-          prop1: {
-            type: String,
-            value: 'scr-list'
-          }
-        };
-      }
     }
-
-    window.customElements.define(PolymerTestApp.is, PolymerTestApp);
+    window.customElements.define(ScrListComponent.is, ScrListComponent);
   </script>
 </dom-module>

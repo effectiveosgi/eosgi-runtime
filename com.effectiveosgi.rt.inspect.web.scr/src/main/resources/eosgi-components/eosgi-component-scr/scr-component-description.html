@@ -1,0 +1,33 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-card/paper-card.html">
+
+<dom-module id="scr-component-description">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <paper-card heading="[[componentDescription.name]]">
+      <div class="card-content">
+        Component class <code>[[componentDescription.implementationClass]]</code>
+      </div>
+    </paper-card>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class ScrComponentDescriptionComponent extends Polymer.Element {
+      static get is() { return 'scr-component-description'; }
+      static get properties() {
+          return {
+              componentDescription: Object
+          };
+      }
+    }
+    window.customElements.define(ScrComponentDescriptionComponent.is, ScrComponentDescriptionComponent);
+  </script>
+</dom-module>
