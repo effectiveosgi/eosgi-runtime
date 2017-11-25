@@ -58,6 +58,16 @@
       <artifactId>com.effectiveosgi.rt.web</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>com.effectiveosgi.rt.webresource.polymer</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>com.effectiveosgi.rt.webresource.vaadin-elements</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
     <!-- TODO: reference your workspace projects to be indexed here -->
 
   </dependencies>

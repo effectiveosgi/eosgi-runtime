@@ -1,0 +1,20 @@
+version: 1.0.0
+
+polymerVersion: 2.2.0
+polymerVersionNext: ${versionmask;+;${polymerVersion}}
+
+webResourceVersion: 1.0.0
+webResourceVersionNext ${versionmask;+;${webResourceVersion}}
+
+Provide-Capability:\
+	osgi.enroute.webresource;\
+		osgi.enroute.webresource="/vaadin/vaadin-elements";\
+		version:Version=${version};\
+		root="/bower_components"
+
+Require-Capability: \
+    osgi.implementation; \
+        filter:="(&(osgi.implementation=osgi.enroute.webresource)(version>=${webResourceVersion})(!(version>=${webResourceVersionNext})))" \
+    , \
+    osgi.enroute.webresource; \
+        filter:="(&(osgi.enroute.webresource=/google/polymer)(version>=${polymerVersion})(!(version>=${polymerVersionNext})))"

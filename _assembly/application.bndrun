@@ -9,6 +9,9 @@
 	felix.fileinstall.log.level=4,\
 	logback.configurationFile=logback-config.xml
 
+-runvm:\
+	-Dsun.zip.disableMemoryMapping=true
+
 -resolve.effective: active; skip:="osgi.service"
 
 -runrequires: \
@@ -24,10 +27,15 @@
 	bnd.identity;id='org.apache.felix.fileinstall'
 
 -runbundles: \
+	ch.qos.logback.classic;version='[1.2.2,1.2.3)',\
+	ch.qos.logback.core;version='[1.2.2,1.2.3)',\
 	com.effectiveosgi.rt.aws;version='[0.0.2,0.0.3)',\
 	com.effectiveosgi.rt.config;version='[0.1.0,0.1.1)',\
 	com.effectiveosgi.rt.inspect;version='[0.0.1,0.0.2)',\
 	com.effectiveosgi.rt.inspect.web.scr;version='[0.0.1,0.0.2)',\
+	com.effectiveosgi.rt.web;version='[0.0.1,0.0.2)',\
+	com.effectiveosgi.rt.webresource.polymer;version='[0.0.1,0.0.2)',\
+	com.effectiveosgi.rt.webresource.vaadin-elements;version='[0.0.1,0.0.2)',\
 	com.fasterxml.jackson.core.jackson-annotations;version='[2.6.0,2.6.1)',\
 	com.fasterxml.jackson.core.jackson-core;version='[2.6.6,2.6.7)',\
 	com.fasterxml.jackson.core.jackson-databind;version='[2.6.6,2.6.7)',\
@@ -44,4 +52,5 @@
 	org.apache.felix.log;version='[1.0.1,1.0.2)',\
 	org.apache.felix.scr;version='[2.0.14,2.0.15)',\
 	org.apache.servicemix.bundles.aws-java-sdk;version='[1.11.136,1.11.137)',\
-	org.osgi.service.component;version='[1.3.0,1.3.1)'
+	org.osgi.service.component;version='[1.3.0,1.3.1)',\
+	slf4j.api;version='[1.7.25,1.7.26)'
