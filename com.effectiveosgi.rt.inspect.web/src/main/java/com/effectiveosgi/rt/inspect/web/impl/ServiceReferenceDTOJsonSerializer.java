@@ -1,4 +1,4 @@
-package com.effectiveosgi.rt.inspect.web.scr.impl;
+package com.effectiveosgi.rt.inspect.web.impl;
 
 import java.lang.reflect.Type;
 

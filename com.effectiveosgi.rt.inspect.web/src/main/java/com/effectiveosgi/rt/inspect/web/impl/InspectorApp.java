@@ -1,4 +1,4 @@
-package com.effectiveosgi.rt.inspect.web.app.impl;
+package com.effectiveosgi.rt.inspect.web.impl;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
