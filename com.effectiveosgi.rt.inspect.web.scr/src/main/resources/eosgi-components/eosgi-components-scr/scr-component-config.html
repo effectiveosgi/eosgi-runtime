@@ -67,8 +67,8 @@
               <th>
                 [[[componentConfig.id]]] [[componentConfig.description.name]]
                 <div class="header-right">
-                  <iron-icon id="stateIcon" icon="[[stateUI.icon]]" class$="[[stateUI.clazz]]"></iron-icon>
-                  <paper-tooltip for="stateIcon">[[stateUI.tooltip]]</paper-tooltip>
+                    <iron-icon id="stateIcon" icon="[[stateUI.icon]]" class$="[[stateUI.clazz]]"></iron-icon>
+                    <paper-tooltip for="stateIcon">[[stateUI.tooltip]]</paper-tooltip>
                 </div>
               </th>
             </tr>
@@ -107,6 +107,11 @@
           return {
               componentConfig: Object,
 
+              stateUI: {
+                  type: String,
+                  computed: 'computeStateUI()'
+              },
+              
               expanded: {
                   type: Boolean,
                   value: false
@@ -115,11 +120,6 @@
               expandIcon: {
                   type: String,
                   computed: 'computeExpandIcon(expanded)'
-              },
-
-              stateUI: {
-                  type: String,
-                  computed: 'computeStateUI()'
               }
           };
       }
@@ -168,12 +168,13 @@
       }
       
       computeExpandIcon(expanded) {
-          return expanded ? "vaadin:caret-down" : "vaadin:caret-right";
+          return expanded ? "vaadin:chevron-down" : "vaadin:chevron-right";
       }
       
       invertExpanded() {
           this.expanded = !this.expanded;
       }
+
     }
     window.customElements.define(ScrComponentConfigComponent.is, ScrComponentConfigComponent);
   </script>

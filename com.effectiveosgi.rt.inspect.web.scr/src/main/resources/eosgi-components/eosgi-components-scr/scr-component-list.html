@@ -4,9 +4,9 @@
 <link rel="import" href="../paper-tooltip/paper-tooltip.html">
 
 <link rel="import" href="scr-component-config.html">
-<link rel="import" href="scr-component-description.html">
+<link rel="import" href="scr-component-unconfigured.html">
 
-<dom-module id="scr-list">
+<dom-module id="scr-component-list">
   <template>
     <style>
       :host {
@@ -17,11 +17,7 @@
         font-weight: 400;
         color: var(--paper-card-header-color, #000);
       }
-      
-      
     </style>
-
-    <h2>Configured Components</h2>
 
     <iron-ajax auto
       url="/api/scr"
@@ -33,22 +29,9 @@
     <template is="dom-repeat" items="[[ajaxResponse.configured]]">
       <p><scr-component-config component-config="[[item]]"></scr-component-config></p>
     </template>
-    
-    <h2>Unconfigured Components</h2>
     <template is="dom-repeat" items="[[ajaxResponse.unconfigured]]">
-      <paper-card>
-        <div class="card-content">
-          <div class="header-bar">
-            [[item.name]]
-          </div>
-          <p>
-            <scr-component-description component-description="[[item]]"[]]"></scr-component-description>
-            <property-table properties="[[item.properties]]"></property-table>
-          </p>
-        </div>
-      </paper-card>
+        <p><scr-component-unconfigured component-description="[[item]]"></scr-component-unconfigured>
     </template>
-
   </template>
 
   <script>
@@ -56,9 +39,9 @@
      * @customElement
      * @polymer
      */
-    class ScrListComponent extends Polymer.Element {
-      static get is() { return 'scr-list'; }
+    class ScrComponentListComponent extends Polymer.Element {
+      static get is() { return 'scr-component-list'; }
     }
-    window.customElements.define(ScrListComponent.is, ScrListComponent);
+    window.customElements.define(ScrComponentListComponent.is, ScrComponentListComponent);
   </script>
 </dom-module>
