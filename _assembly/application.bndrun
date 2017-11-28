@@ -22,7 +22,7 @@
 	bnd.identity;id='org.apache.felix.log',\
 	bnd.identity;id='com.effectiveosgi.rt.aws',\
 	bnd.identity;id='com.effectiveosgi.rt.config',\
-	bnd.identity;id='com.effectiveosgi.rt.inspect.web.scr',\
+	bnd.identity;id='com.effectiveosgi.rt.inspect.web',\
 	bnd.identity;id='com.effectiveosgi.rt.inspect',\
 	bnd.identity;id='org.apache.felix.fileinstall'
 
@@ -32,7 +32,7 @@
 	com.effectiveosgi.rt.aws;version='[0.0.2,0.0.3)',\
 	com.effectiveosgi.rt.config;version='[0.1.0,0.1.1)',\
 	com.effectiveosgi.rt.inspect;version='[0.0.1,0.0.2)',\
-	com.effectiveosgi.rt.inspect.web.scr;version='[0.0.1,0.0.2)',\
+	com.effectiveosgi.rt.inspect.web;version='[0.0.1,0.0.2)',\
 	com.effectiveosgi.rt.web;version='[0.0.1,0.0.2)',\
 	com.effectiveosgi.rt.webresource.polymer;version='[0.0.1,0.0.2)',\
 	com.effectiveosgi.rt.webresource.vaadin-elements;version='[0.0.1,0.0.2)',\

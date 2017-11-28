@@ -8,7 +8,7 @@
     <groupId>com.effectiveosgi</groupId>
     <version>0.0.1</version>
   </parent>
-  <artifactId>com.effectiveosgi.rt.inspect.web.scr</artifactId>
+  <artifactId>com.effectiveosgi.rt.inspect.web</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
   <dependencies>

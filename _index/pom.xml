@@ -50,7 +50,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>com.effectiveosgi.rt.inspect.web.scr</artifactId>
+      <artifactId>com.effectiveosgi.rt.inspect.web</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
