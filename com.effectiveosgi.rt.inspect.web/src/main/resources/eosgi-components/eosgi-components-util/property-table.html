@@ -1,7 +1,8 @@
 <link rel="import" href="../polymer/polymer-element.html">
-
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../vaadin-icons/vaadin-icons.html">
+
+<link rel="import" href="abbrev-span.html">
 
 <dom-module id="property-table">
   <template>
@@ -24,7 +25,9 @@
         background-color: var(--paper-grey-100);
       }
       td.column-left {
+        vertical-align: top;
         padding-right: 10px;
+        font-weight: bold;
       }
       .maxwidth {
         width: 100%;
@@ -35,13 +38,15 @@
         <col width="20px">
         <tr>
             <td class="expand"><iron-icon class="inline" icon="[[expandIcon]]" on-click="invertExpanded"></iron-icon></td>
-            <td hidden$="[[expanded]]">[[count]] properties...</td>
+            <td hidden$="[[expanded]]">[[count]] [[label]]&hellip;</td>
             <td hidden$="[[!expanded]]">
               <table class="maxwidth">
                 <template is="dom-repeat" items="[[propertiesArray]]">
                   <tr class="properties">
                     <td class="column-left"><code>[[item.name]]</code></td>
-                    <td><code>[[item.value]]</code></td>
+                    <td style="max-width: 800px">
+                        <code style="overflow-wrap: break-word"><abbrev-span limit="80">[[item.value]]</abbrev-span></code>
+                    </td>
                   </tr>
                 </template>
               </table>
@@ -60,6 +65,11 @@
       static get properties() {
           return {
               properties: Object,
+              
+              label: {
+                  type: String,
+                  value: "properties"
+              },
               
               propertiesArray: {
                   type: Array,
@@ -86,15 +96,16 @@
       // Convert an object such as {a:b, c:d} to an array of name-value pairs
       // e.g. [{name:a, value:b}, {name:c, value:d}]
       computePropertiesArray(obj) {
-          return Object.keys(obj).map(function (key) {
+          var result = Object.keys(obj).map(function (key) {
               return { "name" : key, "value" : obj[key] };
           });
+          return result;
       }
       computeRowCount(obj) {
           return Object.keys(obj).length;
       }
       computeExpandIcon(expanded) {
-          return expanded ? "vaadin:caret-down" : "vaadin:caret-right";
+          return expanded ? "vaadin:chevron-down-small" : "vaadin:chevron-right-small";
       }
       invertExpanded() {
           this.expanded = !this.expanded;

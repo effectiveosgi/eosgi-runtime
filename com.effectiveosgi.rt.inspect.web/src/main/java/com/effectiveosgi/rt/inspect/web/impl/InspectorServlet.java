@@ -3,11 +3,13 @@ package com.effectiveosgi.rt.inspect.web.impl;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -15,8 +17,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.dto.ServiceReferenceDTO;
+import org.osgi.framework.wiring.FrameworkWiring;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -33,34 +37,65 @@ import com.google.gson.stream.JsonWriter;
 @Component(
 		property = {
 				HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "=/api/*",
-				HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_NAME + "=Inspector Runtime Service"
+				HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_NAME + "=Inspector Runtime Service",
+				HttpWhiteboardConstants.HTTP_WHITEBOARD_RESOURCE_PATTERN + "=/inspector/*",
+				HttpWhiteboardConstants.HTTP_WHITEBOARD_RESOURCE_PREFIX + "=/web"
+
 		})
 public class InspectorServlet extends HttpServlet implements Servlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Type returnType = new TypeToken<Map<String, Collection<Object>>>() {}.getType();
+	private static final Type SCR_RETURN_TYPE = new TypeToken<Map<String, Collection<Object>>>() {}.getType();
+	private static final Type BUNDLES_RETURN_TYPE = new TypeToken<List<? extends Bundle>>() {}.getType();
 
+	private final CollectionJsonSerializer<Bundle> bundlesSerializer = new CollectionJsonSerializer<>(Bundle.class);
 	private Gson gson;
 	
 	@Reference
 	ServiceComponentRuntime scr;
+
+	private BundleContext context;
 	
 	@Activate
 	void activate(BundleContext context) {
+		this.context = context;
 		this.gson = new GsonBuilder()
 			.setPrettyPrinting()
 			.registerTypeAdapter(ServiceReferenceDTO.class, new ServiceReferenceDTOJsonSerializer(context))
+			.registerTypeAdapter(BundleJsonSerializer.TYPE, new BundleJsonSerializer(context))
+			.registerTypeAdapter(BUNDLES_RETURN_TYPE, bundlesSerializer)
+			 .registerTypeAdapter(BundleHeadersJsonSerializer.TYPE, new BundleHeadersJsonSerializer())
 			.create();
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String pathInfo = req.getPathInfo();
-		if ("/scr".equals(pathInfo))
+		if ("/bundles".equals(pathInfo))
+			doGetBundles(req, resp);
+		else if ("/scr".equals(pathInfo))
 			doGetScr(req, resp);
 		else {
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND, req.getRequestURI());
+		}
+	}
+
+	private void doGetBundles(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		FrameworkWiring wiring = context.getBundle(0).adapt(FrameworkWiring.class);
+		
+		List<Bundle> bundles = Stream
+			.concat(
+				Arrays.stream(context.getBundles()), // The currently installed bundles
+				wiring.getRemovalPendingBundles().stream()) // Add the uninstalled bundles
+			.sorted()
+			.distinct()
+			.collect(Collectors.toList());
+		
+		try (PrintWriter out = new PrintWriter(resp.getOutputStream())) {
+			JsonWriter writer = new JsonWriter(out);
+			gson.toJson(bundles, BUNDLES_RETURN_TYPE, writer);
+			out.flush();
 		}
 	}
 
@@ -82,7 +117,7 @@ public class InspectorServlet extends HttpServlet implements Servlet {
 		try (PrintWriter out = new PrintWriter(resp.getOutputStream())) {
 			JsonWriter jsonWriter = new JsonWriter(out);
 			
-			gson.toJson(result, returnType, jsonWriter);
+			gson.toJson(result, SCR_RETURN_TYPE, jsonWriter);
 			out.flush();
 		}
 	}

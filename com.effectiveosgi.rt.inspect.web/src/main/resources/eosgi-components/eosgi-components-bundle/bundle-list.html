@@ -1,0 +1,37 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<link rel="import" href="bundle-card.html">
+
+<dom-module id="bundle-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <iron-ajax auto
+      url="/api/bundles"
+      handle-as="json"
+      last-response="{{ajaxResponse}}"
+      debounce-duration="300"
+    ></iron-ajax>
+    
+    <h2>Bundles</h2>
+    <template is="dom-repeat" items="[[ajaxResponse]]">
+      <p><bundle-card bundle="[[item]]"></bundle-card></p>
+    </template>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class BundleListComponent extends Polymer.Element {
+      static get is() { return 'bundle-list'; }
+    }
+    window.customElements.define(BundleListComponent.is, BundleListComponent);
+  </script>
+</dom-module>

@@ -1,7 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
-<link rel="import" href="../paper-card/paper-card.html">
-<link rel="import" href="../paper-tooltip/paper-tooltip.html">
 
 <link rel="import" href="scr-component-config.html">
 <link rel="import" href="scr-component-unconfigured.html">
@@ -12,11 +10,6 @@
       :host {
         display: block;
       }
-      .header-bar {
-        font-size: 20px;
-        font-weight: 400;
-        color: var(--paper-card-header-color, #000);
-      }
     </style>
 
     <iron-ajax auto
@@ -26,6 +19,7 @@
       debounce-duration="300"
     ></iron-ajax>
 
+    <h2>Service Components</h2>
     <template is="dom-repeat" items="[[ajaxResponse.configured]]">
       <p><scr-component-config component-config="[[item]]"></scr-component-config></p>
     </template>

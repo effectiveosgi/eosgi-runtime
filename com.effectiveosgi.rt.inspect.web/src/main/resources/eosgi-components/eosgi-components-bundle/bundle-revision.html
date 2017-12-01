@@ -1,0 +1,93 @@
+x<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../vaadin-icons/vaadin-icons.html">
+<link rel="import" href="../paper-tooltip/paper-tooltip.html">
+
+<dom-module id="bundle-revision">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      th, td {
+        font-weight: inherit;
+        text-align: left;
+      }
+      .inline {
+        vertical-align: middle;
+      }
+      iron-icon.inline {
+        --iron-icon-width: 16px;
+        --iron-icon-height: 16px;
+      }
+      
+      .maxwidth {
+        width: 100%;
+      }
+
+      .number { color: var(--paper-blue-600); }
+      .light { color: var(--paper-grey-600); }
+      .good { color: var(--paper-green-700); }
+      .error { color: var(--paper-red-800); }
+    </style>
+    
+    <table class="maxwidth">
+        <col width="20px">
+        <thead>
+            <tr>
+                <th><iron-icon class="inline" icon="[[expandIcon]]" on-click="invertExpanded"></iron-icon>
+                <th>
+                    Revision <span class="number">[[revisionLabel]]</span> <code>[[revision.symbolicName]]</code> <code class="number">[[revision.version]]</code>
+                </th>
+            </tr>
+        </thead>
+    </table>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class BundleRevision extends Polymer.Element {
+      static get is() { return 'bundle-revision'; }
+      static get properties() {
+          return {
+              revision: Object,
+              index: Number,
+              revisionLabel: {
+                  type: String,
+                  computed: 'computeRevisionLabel(index)'
+              },
+              expanded: Boolean,
+              showExpanded: {
+                  type: Boolean,
+                  computed: 'computeShowExpanded(index, expanded)'
+              },
+              expandIcon: {
+                  type: String,
+                  computed: 'computeExpandIcon(index, expanded)'
+              }
+          };
+      }
+      computeRevisionLabel(index) {
+          var label = "#" + index;
+          if (index == 0) {
+              label += " [Current]";
+          }
+          return label;
+      }
+      computeShowExpanded(index, expanded) {
+          return index == 0 || expanded;
+      }
+      computeExpandIcon(index, expanded) {
+          return this.computeShowExpanded(index, expanded) ? "vaadin:chevron-down-small" : "vaadin:chevron-right-small";
+      }
+      
+      invertExpanded() {
+          this.expanded = !this.expanded;
+      }
+    }
+    window.customElements.define(BundleRevision.is, BundleRevision);
+  </script>
+</dom-module>

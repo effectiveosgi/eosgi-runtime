@@ -4,6 +4,8 @@
 <link rel="import" href="../vaadin-icons/vaadin-icons.html">
 <link rel="import" href="../paper-tooltip/paper-tooltip.html">
 
+<link rel="import" href="../eosgi-components-util/property-table.html">
+
 <link rel="import" href="scr-component-description.html">
 
 <dom-module id="scr-component-unconfigured">
@@ -37,7 +39,7 @@
         <paper-card>
             <div class="card-content">
                 <table class="maxwidth">
-                    <col width="20px">
+                    <col width="30px">
                     <thead>
                         <tr class="header-bar">
                             <th><iron-icon icon="[[expandIcon]]" on-click="invertExpanded"></iron-icon></th>
@@ -58,7 +60,7 @@
                             <td><scr-component-description component-description="[[componentDescription]]"></scr-component-description></td>
                         </tr>
                         <tr><td></td>
-                            <td><property-table properties="[[componentDescription.properties]]"></property-table></td>
+                            <td><property-table properties="[[componentDescription.properties]]" label="component properties"></property-table></td>
                         </tr>
                     </tbody>
                 </table>
