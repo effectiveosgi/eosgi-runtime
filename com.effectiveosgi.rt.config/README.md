@@ -47,5 +47,10 @@ Note that the `ArtifactInstaller` interface is exported by a File Install API
 package, `org.apache.felix.fileinstall`. However, this bundle also exports that
 package (substitutably) to allow for use without the File Install bundle.
 
+Installation
+------------
+
+See the [general installation instructions](../README.md).
+
 [1]: https://felix.apache.org/documentation/subprojects/apache-felix-file-install.html
      "Apache Felix File Install"
