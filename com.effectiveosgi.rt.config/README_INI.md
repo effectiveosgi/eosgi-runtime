@@ -25,14 +25,15 @@ record inside a Factory Configuration.
 A file using this format must be named with the `.ini` extension. The PID or the
 Factory PID is derived from the filename by dropping the extension.
 
-### Property Value Types
+Property Value Types
+--------------------
 
-The Ini file reader loads each property value either as a string
-(`java.lang.String` or a string array (`java.lang.String[]`). No other property
-types are supported — if more flexible types are needed then it is recommended
-to use the Configurator JSON format (see [below](#configurator-json-format)).
+The Ini file reader loads each property value either as a string or a string
+array. No other property types are supported — if more flexible types are needed
+then it is recommended to use either the [Configurator JSON
+format](README_JSON.md) or the [YAML format](README_YAML.md).
 
-To create a String array value, simply repeat the property name, e.g.:
+To create a string array value, simply repeat the property name, e.g.:
 
 ```INI
 languages=en
@@ -44,7 +45,8 @@ The `languages` property will have the value `{"en", "fr", "de"}`. It is not
 possible to create a single-element string array as this will always be
 interpreted as a simple string.
 
-### Property Substitution
+Property Substitution
+---------------------
 
 Property substitution is supported using the format
 `${section/property[index]}`, which can be embedded anywhere in a property
@@ -93,7 +95,8 @@ accessLog=${?/log.dir}/access.log
 * `server2/accessLog` resolves to the user's home directory plus
   `.myapp/logs/access.log`.
 
-### Acknowledgement
+Acknowledgement
+---------------
 
 The Ini file format reader is implemented with [\[ini4j\]][1], which is embedded
 under the terms of the Apache License Version 2.0.

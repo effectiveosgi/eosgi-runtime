@@ -32,5 +32,7 @@ Note that this format explicitly supports comments, both single line using `//`
 and multi-line using `/*...*/`, even though comments are not strictly supported
 in standard JSON.
 
+A file using this format must be named with the `.json` extension.
+
 [1]: https://www.osgi.org/developer/specifications/drafts/
      "OSGi Compendium Release 7 Specification"
