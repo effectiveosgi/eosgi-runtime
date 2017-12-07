@@ -7,13 +7,13 @@ specification is currently in draft and subject to change.
 
 Example:
 
-```json
+```json5
 {
   // A singleton config with PID org.example.server
   "org.example.server" : {
     "key" : "val",
     "my_long" : 123,             // Parsed as a java.lang.Long
-    "my_double", : 123.4         // Parsed as a java.lang.Double
+    "my_double" : 123.4,         // Parsed as a java.lang.Double
     "my_float:float", 123.4      // Parsed as a java.lang.Float
 
     "my_array:int[]" : [1,2,3],
