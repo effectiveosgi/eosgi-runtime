@@ -1,8 +1,6 @@
 -conditionalpackage: \
 	com.google.gson.*
 
--includeresource: {src/main/processed-resources}
-
 polymerVersion: 2.2.0
 polymerVersionNext: ${versionmask;+;${polymerVersion}}
 

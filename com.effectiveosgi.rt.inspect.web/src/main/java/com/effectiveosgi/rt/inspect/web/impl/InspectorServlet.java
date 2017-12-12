@@ -37,10 +37,7 @@ import com.google.gson.stream.JsonWriter;
 @Component(
 		property = {
 				HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "=/api/*",
-				HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_NAME + "=Inspector Runtime Service",
-				HttpWhiteboardConstants.HTTP_WHITEBOARD_RESOURCE_PATTERN + "=/inspector/*",
-				HttpWhiteboardConstants.HTTP_WHITEBOARD_RESOURCE_PREFIX + "=/web"
-
+				HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_NAME + "=Inspector Runtime Service"
 		})
 public class InspectorServlet extends HttpServlet implements Servlet {
 

@@ -1,4 +1,3 @@
-<!--
 @license
 Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -83,27 +82,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-location
         route="{{route}}"
-        url-space-regex="^[[rootPath]]"
-        use-hash-as-path
-        on-route-changed="_routeChanged">
+        url-space-regex="^[[rootPath]]">
     </app-location>
-
-    <!-- 
     <app-route
         route="{{route}}"
-        pattern=":category/:page"
+        pattern="[[rootPath]]:category/:component"
         data="{{routeData}}"
         tail="{{subroute}}">
     </app-route>
-     -->
 
     <app-drawer-layout fullbleed narrow="{{narrow}}">
       <!-- Drawer content -->
       <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="eosgi-components-bundle/bundle-list" href="#eosgi-components-bundle/bundle-list">Bundles</a>
-          <a name="eosgi-components-scr/scr-component-list" href="#eosgi-components-scr/scr-component-list">Service Components</a>
+          <a name="eosgi-components-bundle/bundle-list" href="[[rootPath]]eosgi-components-bundle/bundle-list">Bundles</a>
+          <a name="eosgi-components-scr/scr-component-list" href="[[rootPath]]eosgi-components-scr/scr-component-list">Service Components</a>
         </iron-selector>
       </app-drawer>
 
@@ -144,15 +138,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
+          routeData: Object,
           subroute: String,
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
         };
       }
-
-      _routeChanged(event,detail) {
-          this.page = detail.value.path || "eosgi-components-bundle/bundle-list";
+      
+      static get observers() {
+          return [
+              '_routePageChanged(routeData.category, routeData.component)',
+          ];
+      }
+      
+      _routePageChanged(category, component) {
+          this.page = category + "/" + component || "eosgi-components-bundle/bundle-list";
 
           // Close a non-persistent drawer when the page & route are changed.
           if (!this.$.drawer.persistent) {
