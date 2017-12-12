@@ -44,11 +44,11 @@ configuration. The name of the file is not significant.
 
 The top level of the document must be an associative array.
 
-The **key** of each top-level element indicates the PID and/or Factory PID of the
-configuration record. If the key contains a hyphen character then everything
-before the hyphen is the Factory PID and everything after the hyphen is the PID.
-If there is no hyphen character then the whole key is the PID of a singleton
-configuration.
+The **key** of each top-level element indicates the PID and/or Factory PID of
+the configuration record. If the key contains a tilde character ("~") then
+everything before the tilde is the Factory PID and everything after the tilde is
+the PID. If there is no tilde character then the whole key is the PID of a
+singleton configuration.
 
 The **content** of each top-level must be an associative array. These are the
 property fields that will populate the configuration map. Note that implicit
