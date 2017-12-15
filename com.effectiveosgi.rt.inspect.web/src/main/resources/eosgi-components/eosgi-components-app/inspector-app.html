@@ -153,7 +153,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       
       _routePageChanged(category, component) {
-          this.page = category + "/" + component || "eosgi-components-bundle/bundle-list";
+          if (typeof(category) == "undefined" || typeof(component) == "undefined")
+              this.page = "eosgi-components-bundle/bundle-list";
+          else
+              this.page = category + "/" + component;
 
           // Close a non-persistent drawer when the page & route are changed.
           if (!this.$.drawer.persistent) {

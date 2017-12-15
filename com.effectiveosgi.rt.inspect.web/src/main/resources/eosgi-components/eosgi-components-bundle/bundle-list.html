@@ -1,5 +1,7 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-location/iron-location.html">
+<link rel="import" href="../iron-location/iron-query-params.html">
 
 <link rel="import" href="bundle-card.html">
 
@@ -9,18 +11,33 @@
       :host {
         display: block;
       }
+      
+      bundle-card.highlight {
+        --bundle-card-background: var(--paper-purple-50);
+      }
     </style>
+    
+    <iron-location
+        query="{{queryString}}">
+    </iron-location>
+    <iron-query-params
+        params-string="[[queryString]]"
+        params-object="{{queryParams}}">
+    </iron-query-params>
 
     <iron-ajax auto
       url="/api/bundles"
       handle-as="json"
       last-response="{{ajaxResponse}}"
       debounce-duration="300"
+      on-last-response-changed="bundlesLoaded"
     ></iron-ajax>
     
     <h2>Bundles</h2>
     <template is="dom-repeat" items="[[ajaxResponse]]">
-      <p><bundle-card bundle="[[item]]"></bundle-card></p>
+      <p>
+        <bundle-card id$="bundle-card-[[item.id]]" bundle="[[item]]" class$="[[calculateClass(item.id)]]"></bundle-card>
+      </p>
     </template>
   </template>
 
@@ -31,6 +48,38 @@
      */
     class BundleListComponent extends Polymer.Element {
       static get is() { return 'bundle-list'; }
+      static get properties() {
+          return {
+            bundles: Array,
+            queryParams: Object,
+            queryString: String,
+            highlightedBundleId: {
+                type: Number,
+                computed: 'computeHighlightedBundleId(queryParams)'
+            }
+          };
+      }
+      
+      computeHighlightedBundleId(queryParams) {
+          var highlighted = -1;
+          if (typeof(queryParams) != "undefined")
+              highlighted = queryParams.bundleId;
+          if (typeof(highlighted != "undefined"))
+              return highlighted;
+          return -1;
+      }
+      
+      calculateClass(index) {
+          return index == this.highlightedBundleId ? "highlight" : "";
+      }
+      
+      bundlesLoaded(event, details) {
+          console.log("Bundles loaded!");
+          if (typeof(highlightedBundleId) != "undefined") {
+              var elementId = "bundle-card-" + highlightedBundleId;
+              document.getElementById(elementId).scrollIntoView();
+          }
+      }
     }
     window.customElements.define(BundleListComponent.is, BundleListComponent);
   </script>
