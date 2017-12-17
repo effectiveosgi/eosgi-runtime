@@ -1,7 +1,9 @@
-package com.effectiveosgi.rt.config.impl;
+package com.effectiveosgi.rt.config.impl.util;
 
 import java.util.Map.Entry;
 import java.util.function.Function;
+
+import com.effectiveosgi.rt.config.impl.EntryImpl;
 
 /**
  * Functions for operating on pairs of values, inspired by <a href="https://hackage.haskell.org/package/base-4.10.0.0/docs/Control-Arrow.html">Haskell Arrows</a>

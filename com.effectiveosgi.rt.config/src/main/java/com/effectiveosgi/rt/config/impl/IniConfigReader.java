@@ -12,13 +12,13 @@ import java.util.stream.Stream;
 import org.ini4j.Config;
 import org.ini4j.Ini;
 import org.ini4j.Profile.Section;
-import org.osgi.service.component.annotations.Component;
 
 import com.effectiveosgi.rt.config.ConfigFileReader;
 import com.effectiveosgi.rt.config.ParsedRecord;
 
-@Component(property = { ConfigFileReader.PROP_FILE_PATTERN + "=.*\\.ini" })
 public class IniConfigReader implements ConfigFileReader {
+	
+	public static final String PATTERN = ".*\\.ini";
 
 	private static final String SUFFIX_INI = ".ini";
 	

@@ -14,20 +14,14 @@ import org.apache.felix.service.command.Descriptor;
 import org.osgi.framework.Constants;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
-@Component(
-	property = {
-		"osgi.command.scope=config",
-		"osgi.command.function=list",
-		"osgi.command.function=info",
-		"osgi.converter.classes=org.osgi.service.cm.Configuration"
-	})
 public class ConfigurationCommands implements Converter {
 
-	@Reference
-	ConfigurationAdmin configAdmin;
+	private final ConfigurationAdmin configAdmin;
+	
+	public ConfigurationCommands(ConfigurationAdmin configAdmin) {
+		this.configAdmin = configAdmin;
+	}
 
 	@Descriptor("List configurations")
 	public Configuration[] list() throws Exception {

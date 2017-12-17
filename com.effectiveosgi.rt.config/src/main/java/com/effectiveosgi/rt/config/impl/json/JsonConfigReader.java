@@ -12,9 +12,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.codec.binary.Hex;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.log.LogService;
 
 import com.effectiveosgi.rt.config.ConfigFileReader;
@@ -26,10 +23,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
-@Component(property = {
-		ConfigFileReader.PROP_FILE_PATTERN + "=.*\\.json"
-})
 public class JsonConfigReader implements ConfigFileReader {
+	
+	public static final String PATTERN = ".*\\.json";
 
 	/**
 	 * Matches the :configurator:resource-version property.
@@ -40,9 +36,12 @@ public class JsonConfigReader implements ConfigFileReader {
 	private static final String PROP_RESOURCE_VERSION = PROP_PREFIX + "resource-version";
 
 	private final Gson gson = new GsonBuilder().setLenient().create();
+
+	private final LogService log;
 	
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
-	LogService log;
+	public JsonConfigReader(LogService log) {
+		this.log = log;
+	}
 	
 	@Override
 	public Stream<ParsedRecord> load(File artifact) throws IOException {

@@ -20,32 +20,20 @@ import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
 
 import org.apache.felix.fileinstall.ArtifactInstaller;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
-import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.osgi.service.log.LogService;
+import org.osgi.util.tracker.ServiceTracker;
 
 import com.effectiveosgi.rt.config.ConfigFileReader;
 import com.effectiveosgi.rt.config.ParsedRecord;
 import com.effectiveosgi.rt.config.RecordIdentity;
 
-@Component(
-		name = HierarchicalConfigInstaller.PID,
-		property = {
-				"type=hierarchical",
-				"osgi.command.scope=config",
-				"osgi.command.function=install",
-				"osgi.command.function=update",
-				"osgi.command.function=uninstall"
-			})
-public class HierarchicalConfigInstaller implements ArtifactInstaller {
+class HierarchicalConfigInstaller extends ServiceTracker<ConfigFileReader, ConfigFileReader> implements ArtifactInstaller {
 	
 	static final String PID = "com.effectiveosgi.rt.config";
 
@@ -106,24 +94,30 @@ public class HierarchicalConfigInstaller implements ArtifactInstaller {
 	private final SortedSet<RankedReaderService> rankedReaders = new TreeSet<>();
 	private final ReadWriteLock rankedReadersLock = new ReentrantReadWriteLock();
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
-	LogService log;
+	private final LogService log;
+	private final ConfigurationAdmin configAdmin;
 	
-	@Reference
-	ConfigurationAdmin configAdmin;
+	HierarchicalConfigInstaller(BundleContext context, ConfigurationAdmin configAdmin, LogService log) {
+		super(context, ConfigFileReader.class, null);
+		this.configAdmin = configAdmin;
+		this.log = log;
+	}
 	
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	void addReader(ConfigFileReader reader, ServiceReference<ConfigFileReader> ref) {
-		RankedReaderService rankedEntry = new RankedReaderService(reader, ref);
+	@Override
+	public ConfigFileReader addingService(ServiceReference<ConfigFileReader> reference) {
+		ConfigFileReader reader = context.getService(reference);
+		RankedReaderService rankedEntry = new RankedReaderService(reader, reference);
 		rankedReadersLock.writeLock().lock();
 		try {
 			rankedReaders.add(rankedEntry);
 		} finally {
 			rankedReadersLock.writeLock().unlock();
 		}
+		return reader;
 	}
-	void removeReader(ConfigFileReader reader, ServiceReference<ConfigFileReader> ref) {
-		long serviceId = (Long) ref.getProperty(Constants.SERVICE_ID);
+	@Override
+	public void removedService(ServiceReference<ConfigFileReader> reference, ConfigFileReader reader) {
+		long serviceId = (Long) reference.getProperty(Constants.SERVICE_ID);
 		rankedReadersLock.writeLock().lock();
 		try {
 			for (Iterator<RankedReaderService> iter = rankedReaders.iterator(); iter.hasNext(); ) {

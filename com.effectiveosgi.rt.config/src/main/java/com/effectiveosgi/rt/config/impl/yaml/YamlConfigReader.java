@@ -8,19 +8,17 @@ import java.util.Map.Entry;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.osgi.service.component.annotations.Component;
 import org.yaml.snakeyaml.Yaml;
 
 import com.effectiveosgi.rt.config.ConfigFileReader;
 import com.effectiveosgi.rt.config.ParsedRecord;
 import com.effectiveosgi.rt.config.RecordIdentity;
-import com.effectiveosgi.rt.config.impl.Arrows;
 import com.effectiveosgi.rt.config.impl.EntryImpl;
+import com.effectiveosgi.rt.config.impl.util.Arrows;
 
-@Component(property = {
-		ConfigFileReader.PROP_FILE_PATTERN + "=.*\\.yaml"
-})
 public class YamlConfigReader implements ConfigFileReader {
+	
+	public static final String PATTERN = ".*\\.yaml";
 
 	@Override
 	public Stream<ParsedRecord> load(File artifact) throws IOException {

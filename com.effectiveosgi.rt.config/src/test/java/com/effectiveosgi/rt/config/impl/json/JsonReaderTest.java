@@ -23,15 +23,21 @@ import com.effectiveosgi.rt.config.RecordIdentity;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.osgi.service.log.LogService;
+
+import static org.mockito.Mockito.*;
 
 public class JsonReaderTest {
 
 	private File configDir;
+	private LogService log;
     
         @Before
         public void setup() throws Exception {
             configDir = Files.createTempDirectory("load").toFile();
             configDir.deleteOnExit();
+            
+            log = mock(LogService.class);
         }
     
         @After
@@ -51,7 +57,7 @@ public class JsonReaderTest {
         @Test
         public void testReadRecords() throws Exception {
             File configFile = writeConfigFile(JsonReaderTest.class.getClassLoader().getResourceAsStream("sample1.json"), "sample1.json");
-            List<ParsedRecord> records = new JsonConfigReader().load(configFile).collect(Collectors.toList());
+            List<ParsedRecord> records = new JsonConfigReader(log).load(configFile).collect(Collectors.toList());
             assertEquals(3, records.size());
             
             Iterator<ParsedRecord> recordIter = records.iterator();

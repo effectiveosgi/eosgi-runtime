@@ -4,6 +4,8 @@ Import-Package: \
 	org.apache.felix.service.command; resolution:=optional,\
 	*
 
+Bundle-Activator: com.effectiveosgi.rt.config.impl.Activator
+
 -conditionalpackage: \
 	com.google.gson.*,\
 	org.apache.commons.codec.*,\
