@@ -1,5 +1,7 @@
 package com.effectiveosgi;
 
+import java.text.ChoiceFormat;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -79,10 +81,17 @@ public class ComponentCommands implements Converter {
             Collection<ComponentConfigurationDTO> children = scr.getComponentConfigurationDTOs(dto);
             if (children == null) children = Collections.emptyList();
 
-            builder.append(String.format("%s in bundle [%d] (%s:%s) %s, %d instances", dto.name, dto.bundle.id, dto.bundle.symbolicName, dto.bundle.version, dto.defaultEnabled ? "enabled" : "disabled", children.size()));
+            builder.append(MessageFormat.format("{0} in bundle [{1}] ({2}:{3}) {4}, {5,choice,0#0 instances|1#1 instance|1<{5} instances}.",
+                dto.name,
+                dto.bundle.id,
+                dto.bundle.symbolicName,
+                dto.bundle.version,
+                dto.defaultEnabled ? "enabled" : "disabled",
+                children.size()
+            ));
 
             for (ComponentConfigurationDTO child : children) {
-                builder.append("\n    # ").append(escape.format(child, Converter.LINE, escape));
+                builder.append("\n    ").append(escape.format(child, Converter.LINE, escape));
             }
             break;
         case Converter.INSPECT:
@@ -126,7 +135,7 @@ public class ComponentCommands implements Converter {
             result = builder;
             break;
         case Converter.LINE:
-            result = String.format("id=%d state=%s", dto.id, stateToString(dto.state));
+            result = String.format("%d %s", dto.id, stateToString(dto.state));
             break;
         case Converter.PART:
         default:
@@ -177,16 +186,16 @@ public class ComponentCommands implements Converter {
                 string = "active";
                 break;
             case ComponentConfigurationDTO.SATISFIED:
-                string = "satisfied";
+                string = "inactive";
                 break;
             case ComponentConfigurationDTO.UNSATISFIED_CONFIGURATION:
-                string = "unsatisfied-config";
+                string = "unsatisfied configuration";
                 break;
             case ComponentConfigurationDTO.UNSATISFIED_REFERENCE:
-                string = "unsatisfied-reference";
+                string = "unsatisfied reference";
                 break;
             default:
-                string = "unknown";
+                string = "<<unknown>>";
         }
         return string;
     }
