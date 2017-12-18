@@ -40,7 +40,7 @@ public class Activator implements BundleActivator {
 			private ConfigurationAdmin configAdmin;
 			private HierarchicalConfigInstaller configInstaller;
 			private ServiceRegistration<ArtifactInstaller> configInstallerReg;
-			private ServiceRegistration<Converter> commandsReg;
+			private ServiceRegistration<?> commandsReg;
 			@Override
 			public synchronized ConfigurationAdmin addingService(ServiceReference<ConfigurationAdmin> reference) {
 				Dictionary<String, Object> svcProps;
@@ -62,8 +62,14 @@ public class Activator implements BundleActivator {
 				svcProps.put("osgi.command.scope", "config");
 				svcProps.put("osgi.command.function", new String[] { "list", "info" });
 				svcProps.put("osgi.converter.classes", Configuration.class.getName());
-				commandsReg = context.registerService(Converter.class, new ConfigurationCommands(configAdmin), svcProps);
 				
+				try {
+					// Test whether the optional import of org.apache.felix.service.command was wired
+					context.getBundle().loadClass("org.apache.felix.service.command.Converter");
+					commandsReg = context.registerService(Converter.class.getName(), new ConfigurationCommands(configAdmin), svcProps);
+				} catch (ClassNotFoundException e) {
+				}
+
 				return configAdmin;
 			}
 			@Override
@@ -72,7 +78,7 @@ public class Activator implements BundleActivator {
 			@Override
 			public synchronized void removedService(ServiceReference<ConfigurationAdmin> reference, ConfigurationAdmin configAdmin) {
 				if (this.configAdmin == configAdmin) {
-					commandsReg.unregister();
+					if (commandsReg != null) commandsReg.unregister();
 					configInstallerReg.unregister();
 					configInstaller.close();
 					configAdmin = null;
