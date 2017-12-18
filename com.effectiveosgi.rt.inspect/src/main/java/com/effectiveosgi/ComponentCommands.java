@@ -50,15 +50,26 @@ class ComponentCommands implements Converter {
     @Override
     public CharSequence format(Object target, int level, Converter escape) throws Exception {
         final CharSequence result;
-        if (target instanceof ComponentDescriptionDTO) {
+        if (target instanceof ComponentDescriptionDTO[]) {
+            result = format((ComponentDescriptionDTO[]) target, level, escape);
+        } else if (target instanceof ComponentDescriptionDTO) {
             result = format((ComponentDescriptionDTO) target, level, escape);
         } else if (target instanceof ComponentConfigurationDTO) {
             result = format((ComponentConfigurationDTO) target, level, escape);
         } else {
-        	result = null;
+            result = null;
         }
         return result;
     }
+
+	private CharSequence format(ComponentDescriptionDTO[] dtoArray, int level, Converter escape) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (ComponentDescriptionDTO dto : dtoArray) {
+			sb.append(escape.format(dto, Converter.LINE, escape)).append("\n");
+		}
+		sb.append(MessageFormat.format(">> Found {0} component {0,choice,0#descriptions|1#description|1<descriptions}.", dtoArray.length));
+		return sb;
+	}
 
     private CharSequence format(ComponentDescriptionDTO dto, int level, Converter escape) throws Exception {
         final StringBuilder builder = new StringBuilder();
