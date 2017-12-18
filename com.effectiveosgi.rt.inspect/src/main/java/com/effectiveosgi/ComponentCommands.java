@@ -24,18 +24,17 @@ import org.osgi.service.component.runtime.dto.UnsatisfiedReferenceDTO;
 
 class ComponentCommands implements Converter {
 
-    private final BundleContext context;
-    private final ServiceComponentRuntime scr;
-    
-    ComponentCommands(BundleContext context, ServiceComponentRuntime scr) {
+	private final BundleContext context;
+	private final ServiceComponentRuntime scr;
+
+	ComponentCommands(BundleContext context, ServiceComponentRuntime scr) {
 		this.context = context;
 		this.scr = scr;
 	}
 
-    public ComponentDescriptionDTO[] list() {
-        return scr.getComponentDescriptionDTOs().toArray(new ComponentDescriptionDTO[0]);
-    }
-
+	public ComponentDescriptionDTO[] list() {
+		return scr.getComponentDescriptionDTOs().toArray(new ComponentDescriptionDTO[0]);
+	}
 
 	public ComponentDescriptionDTO info(String name) {
 		String lowerName = name.toLowerCase();
@@ -65,25 +64,25 @@ class ComponentCommands implements Converter {
 		return null;
 	}
 
-    @Override
-    public Object convert(Class<?> desiredType, Object in) throws Exception {
-        throw new UnsupportedOperationException("Not implemented");
-    }
+	@Override
+	public Object convert(Class<?> desiredType, Object in) throws Exception {
+		throw new UnsupportedOperationException("Not implemented");
+	}
 
-    @Override
-    public CharSequence format(Object target, int level, Converter escape) throws Exception {
-        final CharSequence result;
-        if (target instanceof ComponentDescriptionDTO[]) {
-            result = format((ComponentDescriptionDTO[]) target, level, escape);
-        } else if (target instanceof ComponentDescriptionDTO) {
-            result = format((ComponentDescriptionDTO) target, level, escape);
-        } else if (target instanceof ComponentConfigurationDTO) {
-            result = format((ComponentConfigurationDTO) target, level, escape);
-        } else {
-            result = null;
-        }
-        return result;
-    }
+	@Override
+	public CharSequence format(Object target, int level, Converter escape) throws Exception {
+		final CharSequence result;
+		if (target instanceof ComponentDescriptionDTO[]) {
+			result = format((ComponentDescriptionDTO[]) target, level, escape);
+		} else if (target instanceof ComponentDescriptionDTO) {
+			result = format((ComponentDescriptionDTO) target, level, escape);
+		} else if (target instanceof ComponentConfigurationDTO) {
+			result = format((ComponentConfigurationDTO) target, level, escape);
+		} else {
+			result = null;
+		}
+		return result;
+	}
 
 	private CharSequence format(ComponentDescriptionDTO[] dtoArray, int level, Converter escape) throws Exception {
 		StringBuilder sb = new StringBuilder();
@@ -94,144 +93,152 @@ class ComponentCommands implements Converter {
 		return sb;
 	}
 
-    private CharSequence format(ComponentDescriptionDTO dto, int level, Converter escape) throws Exception {
-        final StringBuilder builder = new StringBuilder();
-        switch (level) {
-        case Converter.LINE:
-            Collection<ComponentConfigurationDTO> children = scr.getComponentConfigurationDTOs(dto);
-            if (children == null) children = Collections.emptyList();
+	private CharSequence format(ComponentDescriptionDTO dto, int level, Converter escape) throws Exception {
+		final StringBuilder builder = new StringBuilder();
+		switch (level) {
+		case Converter.LINE:
+			Collection<ComponentConfigurationDTO> children = scr.getComponentConfigurationDTOs(dto);
+			if (children == null)
+				children = Collections.emptyList();
 
-            builder.append(MessageFormat.format("{0} in bundle [{1}] ({2}:{3}) {4}, {5,choice,0#0 instances|1#1 instance|1<{5} instances}.",
-                dto.name,
-                dto.bundle.id,
-                dto.bundle.symbolicName,
-                dto.bundle.version,
-                dto.defaultEnabled ? "enabled" : "disabled",
-                children.size()
-            ));
+			builder.append(MessageFormat.format("{0} in bundle [{1}] ({2}:{3}) {4}, {5,choice,0#0 instances|1#1 instance|1<{5} instances}.",
+				dto.name,
+				dto.bundle.id,
+				dto.bundle.symbolicName,
+				dto.bundle.version,
+				dto.defaultEnabled ? "enabled" : "disabled",
+				children.size()
+			));
 
-            for (ComponentConfigurationDTO child : children) {
-                builder.append("\n    ").append(escape.format(child, Converter.LINE, escape));
-            }
-            break;
-        case Converter.INSPECT:
-            builder.append(String.format("Name: %s", dto.name));
-            builder.append(String.format("%nClass: %s", dto.implementationClass));
-            builder.append(String.format("%nService: %s", arrayToString(dto.serviceInterfaces)));
-            builder.append(String.format("%nConfig (Policy=%s): %s", dto.configurationPolicy, arrayToString(dto.configurationPid)));
-            builder.append(String.format("%nProperties (%d entries):", dto.properties.size()));
-            for (Entry<String, Object> propEntry : dto.properties.entrySet())
-                builder.append(String.format("%n\t%s=%s", propEntry.getKey(), propEntry.getValue()));
-            break;
-        case Converter.PART:
-        default:
-            break;
-        }
-        return builder;
-    }
+			for (ComponentConfigurationDTO child : children)
+				builder.append("\n    ").append(escape.format(child, Converter.LINE, escape));
+			break;
+		case Converter.INSPECT:
+			builder.append(String.format("Name: %s", dto.name));
+			builder.append(String.format("%nClass: %s", dto.implementationClass));
+			builder.append(String.format("%nService: %s", arrayToString(dto.serviceInterfaces)));
+			builder.append(String.format("%nConfig (Policy=%s): %s", dto.configurationPolicy,arrayToString(dto.configurationPid)));
+			builder.append(String.format("%nProperties (%d entries):", dto.properties.size()));
+			for (Entry<String, Object> propEntry : dto.properties.entrySet())
+				builder.append(String.format("%n\t%s=%s", propEntry.getKey(), propEntry.getValue()));
+			break;
+		case Converter.PART:
+		default:
+			break;
+		}
+		return builder;
+	}
 
-    private CharSequence format(ComponentConfigurationDTO dto, int level, Converter escape) throws Exception {
-        final CharSequence result;
-        switch (level) {
-        case Converter.INSPECT:
-            final StringBuilder builder = new StringBuilder();
+	private CharSequence format(ComponentConfigurationDTO dto, int level, Converter escape) throws Exception {
+		final CharSequence result;
+		switch (level) {
+		case Converter.INSPECT:
+			final StringBuilder builder = new StringBuilder();
 
-            builder.append(String.format("Id: %d", dto.id));
-            builder.append(String.format("%nState: %s", stateToString(dto.state)));
-            ComponentDescriptionDTO desc = dto.description;
-            builder.append(format(desc, Converter.INSPECT, escape));
+			builder.append(String.format("Id: %d", dto.id));
+			builder.append(String.format("%nState: %s", stateToString(dto.state)));
+			ComponentDescriptionDTO desc = dto.description;
+			builder.append(format(desc, Converter.INSPECT, escape));
 
-            // Print References
-            final Map<String, ReferenceDTO> refDtoMap = new HashMap<>();
-            if (desc != null && desc.references != null) for (ReferenceDTO refDto : desc.references) {
-                refDtoMap.put(refDto.name, refDto);
-            }
-            int refCount = (dto.satisfiedReferences != null ? dto.satisfiedReferences.length : 0) + (dto.unsatisfiedReferences != null ? dto.unsatisfiedReferences.length : 0);
-            builder.append(String.format("%nReferences (total %d):", refCount));
-            // builder.append(repeat(20, '-')).append(repeatForDigits(refCount, '-')).append("\n");
-            if (dto.unsatisfiedReferences != null) for (UnsatisfiedReferenceDTO refDto : dto.unsatisfiedReferences) {
-            	builder.append(format(refDto, refDtoMap.get(refDto.name), Converter.LINE, escape));
-            }
-            if (dto.satisfiedReferences != null) for (SatisfiedReferenceDTO refDto : dto.satisfiedReferences) {
-                builder.append(format(refDto, refDtoMap.get(refDto.name), Converter.LINE, escape));
-            }
+			// Print References
+			final Map<String, ReferenceDTO> refDtoMap = new HashMap<>();
+			if (desc != null && desc.references != null) {
+				for (ReferenceDTO refDto : desc.references)
+					refDtoMap.put(refDto.name, refDto);
+			}
+			int refCount = (dto.satisfiedReferences != null ? dto.satisfiedReferences.length : 0)
+					+ (dto.unsatisfiedReferences != null ? dto.unsatisfiedReferences.length : 0);
+			builder.append(String.format("%nReferences (total %d):", refCount));
+			if (dto.unsatisfiedReferences != null) {
+				for (UnsatisfiedReferenceDTO refDto : dto.unsatisfiedReferences)
+					builder.append(format(refDto, refDtoMap.get(refDto.name), Converter.LINE, escape));
+			}
+			if (dto.satisfiedReferences != null) {
+				for (SatisfiedReferenceDTO refDto : dto.satisfiedReferences)
+					builder.append(format(refDto, refDtoMap.get(refDto.name), Converter.LINE, escape));
+			}
 
-            result = builder;
-            break;
-        case Converter.LINE:
-            result = String.format("%d %s", dto.id, stateToString(dto.state));
-            break;
-        case Converter.PART:
-        default:
-            result = "";
-        }
-        return result;
-    }
-    
-    private String arrayToString(String[] array) {
-    	return array == null || array.length == 0 ? "<<none>>" : Arrays.stream(array).collect(Collectors.joining(", "));
-    }
+			result = builder;
+			break;
+		case Converter.LINE:
+			result = String.format("%d %s", dto.id, stateToString(dto.state));
+			break;
+		case Converter.PART:
+		default:
+			result = "";
+		}
+		return result;
+	}
 
-    private CharSequence format(SatisfiedReferenceDTO satisfiedRefDto, ReferenceDTO refDto, int level, Converter escape) {
-    	return formatReference(satisfiedRefDto.name, refDto.interfaceName, "SATISFIED", refDto.target, refDto.cardinality, refDto.policy, refDto.policyOption, satisfiedRefDto.boundServices != null ? satisfiedRefDto.boundServices : new ServiceReferenceDTO[0]);
-    }
+	private String arrayToString(String[] array) {
+		return array == null || array.length == 0 ? "<<none>>" : Arrays.stream(array).collect(Collectors.joining(", "));
+	}
 
-    private CharSequence format(UnsatisfiedReferenceDTO unsatisfiedRefDto, ReferenceDTO refDto, int level, Converter escape) {
-    	return formatReference(unsatisfiedRefDto.name, refDto.interfaceName, "UNSATISFIED", refDto.target, refDto.cardinality, refDto.policy, refDto.policyOption, null);
-    }
-    
-    private CharSequence formatReference(String name, String objectClass, String state, String target, String cardinality, String policy, String policyOption, ServiceReferenceDTO[] bindings) {
-    	StringBuilder result = new StringBuilder();
+	private CharSequence format(SatisfiedReferenceDTO satisfiedRefDto, ReferenceDTO refDto, int level, Converter escape) {
+		return formatReference(satisfiedRefDto.name, refDto.interfaceName, "SATISFIED", refDto.target,
+				refDto.cardinality, refDto.policy, refDto.policyOption,
+				satisfiedRefDto.boundServices != null ? satisfiedRefDto.boundServices : new ServiceReferenceDTO[0]);
+	}
 
-    	StringBuilder policyWithOption = new StringBuilder().append(policy);
-    	if (!"reluctant".equals(policyOption)) policyWithOption.append('+').append(policyOption);
+	private CharSequence format(UnsatisfiedReferenceDTO unsatisfiedRefDto, ReferenceDTO refDto, int level, Converter escape) {
+		return formatReference(unsatisfiedRefDto.name, refDto.interfaceName, "UNSATISFIED", refDto.target,
+				refDto.cardinality, refDto.policy, refDto.policyOption, null);
+	}
 
-    	result.append(String.format("%n  %s: %s %s" // name, objectClass, state
-    			+ "%n      %s %s target=%s" // cardinality, policy+option, target
-    			, name, objectClass, state, cardinality, policyWithOption, target == null ? "(*)" : target));
-    	
-    	if (bindings != null) {
-    		if (bindings.length == 0) {
-    			result.append('\n').append("      Unbound");
-    		} else {
-    			for (ServiceReferenceDTO svcDto : bindings) {
-    	            Bundle provider = context.getBundle(svcDto.bundle);
-    	            result.append(String.format("%n      Bound to [%d] from bundle [%d] %s:%s", svcDto.id, svcDto.bundle, provider.getSymbolicName(), provider.getVersion()));
-    			}
-    		}
-    	}
-    	return result;
-    }
+	private CharSequence formatReference(String name, String objectClass, String state, String target, String cardinality, String policy, String policyOption, ServiceReferenceDTO[] bindings) {
+		StringBuilder result = new StringBuilder();
 
-    static final String stateToString(int state) {
-        final String string;
-        switch (state) {
-            case ComponentConfigurationDTO.ACTIVE: 
-                string = "active";
-                break;
-            case ComponentConfigurationDTO.SATISFIED:
-                string = "inactive";
-                break;
-            case ComponentConfigurationDTO.UNSATISFIED_CONFIGURATION:
-                string = "unsatisfied configuration";
-                break;
-            case ComponentConfigurationDTO.UNSATISFIED_REFERENCE:
-                string = "unsatisfied reference";
-                break;
-            default:
-                string = "<<unknown>>";
-        }
-        return string;
-    }
+		StringBuilder policyWithOption = new StringBuilder().append(policy);
+		if (!"reluctant".equals(policyOption))
+			policyWithOption.append('+').append(policyOption);
 
-    static final String repeat(int count, char character) {
-        char[] array = new char[count];
-        Arrays.fill(array, character);
-        return new String(array);
-    }
-    static final String repeatForDigits(int number, char character) {
-        return repeat((int) Math.floor(Math.log10(number)) + 1, character);
-    }
-    
+		result.append(String.format("%n  %s: %s %s" // name, objectClass, state
+				+ "%n      %s %s target=%s" // cardinality, policy+option, target
+				, name, objectClass, state
+				, cardinality, policyWithOption, target == null ? "(*)" : target));
+
+		if (bindings != null) {
+			if (bindings.length == 0) {
+				result.append('\n').append("      Unbound");
+			} else {
+				for (ServiceReferenceDTO svcDto : bindings) {
+					Bundle provider = context.getBundle(svcDto.bundle);
+					result.append(String.format("%n      Bound to [%d] from bundle [%d] %s:%s", svcDto.id, svcDto.bundle, provider.getSymbolicName(), provider.getVersion()));
+				}
+			}
+		}
+		return result;
+	}
+
+	static final String stateToString(int state) {
+		final String string;
+		switch (state) {
+		case ComponentConfigurationDTO.ACTIVE:
+			string = "active";
+			break;
+		case ComponentConfigurationDTO.SATISFIED:
+			string = "inactive";
+			break;
+		case ComponentConfigurationDTO.UNSATISFIED_CONFIGURATION:
+			string = "unsatisfied configuration";
+			break;
+		case ComponentConfigurationDTO.UNSATISFIED_REFERENCE:
+			string = "unsatisfied reference";
+			break;
+		default:
+			string = "<<unknown>>";
+		}
+		return string;
+	}
+
+	static final String repeat(int count, char character) {
+		char[] array = new char[count];
+		Arrays.fill(array, character);
+		return new String(array);
+	}
+
+	static final String repeatForDigits(int number, char character) {
+		return repeat((int) Math.floor(Math.log10(number)) + 1, character);
+	}
 
 }
