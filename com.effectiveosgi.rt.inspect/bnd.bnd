@@ -1,0 +1,3 @@
+-conditionalpackage: com.effectiveosgi.lib.*
+
+Bundle-Activator: com.effectiveosgi.Activator

@@ -1,6 +1,5 @@
 package com.effectiveosgi;
 
-import java.text.ChoiceFormat;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,10 +12,6 @@ import org.apache.felix.service.command.Converter;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.dto.ServiceReferenceDTO;
-import org.osgi.service.cm.Configuration;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.runtime.ServiceComponentRuntime;
 import org.osgi.service.component.runtime.dto.ComponentConfigurationDTO;
 import org.osgi.service.component.runtime.dto.ComponentDescriptionDTO;
@@ -24,27 +19,18 @@ import org.osgi.service.component.runtime.dto.ReferenceDTO;
 import org.osgi.service.component.runtime.dto.SatisfiedReferenceDTO;
 import org.osgi.service.component.runtime.dto.UnsatisfiedReferenceDTO;
 
-@Component(
-    property = {
-        "osgi.command.scope=comp",
-        "osgi.command.function=list",
-        "osgi.command.function=info",
-        Converter.CONVERTER_CLASSES + "=org.osgi.service.component.runtime.dto.ComponentConfigurationDTO"
-    })
-public class ComponentCommands implements Converter {
+class ComponentCommands implements Converter {
 
-    private BundleContext context;
+    private final BundleContext context;
+    private final ServiceComponentRuntime scr;
+    
+    ComponentCommands(BundleContext context, ServiceComponentRuntime scr) {
+		this.context = context;
+		this.scr = scr;
+	}
 
-    @Reference
-    ServiceComponentRuntime scr;
-
-    @Activate
-    void activate(BundleContext context) {
-        this.context = context;
-    }
-
-    public Collection<ComponentDescriptionDTO> list() {
-        return scr.getComponentDescriptionDTOs();
+    public ComponentDescriptionDTO[] list() {
+        return scr.getComponentDescriptionDTOs().toArray(new ComponentDescriptionDTO[0]);
     }
 
     public ComponentConfigurationDTO info(long id) {
