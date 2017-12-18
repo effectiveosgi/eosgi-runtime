@@ -5,7 +5,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.apache.felix.service.command.Converter;
@@ -33,15 +36,35 @@ class ComponentCommands implements Converter {
         return scr.getComponentDescriptionDTOs().toArray(new ComponentDescriptionDTO[0]);
     }
 
-    public ComponentConfigurationDTO info(long id) {
-    	for (ComponentDescriptionDTO descDto : scr.getComponentDescriptionDTOs()) {
-    		for (ComponentConfigurationDTO configDto : scr.getComponentConfigurationDTOs(descDto)) {
-    			if (configDto.id == id) return configDto;
-    		}
-    	}
-    	return null;
-    }
-    
+
+	public ComponentDescriptionDTO info(String name) {
+		String lowerName = name.toLowerCase();
+		List<ComponentDescriptionDTO> partialMatches = new LinkedList<>();
+		for (ComponentDescriptionDTO dto : scr.getComponentDescriptionDTOs()) {
+			if (dto.name.equalsIgnoreCase(name))
+				return dto;
+			if (dto.name.toLowerCase().contains(lowerName))
+				partialMatches.add(dto);
+		}
+		
+		if (partialMatches.isEmpty()) {
+			throw new IllegalArgumentException(MessageFormat.format("No component description matching \"{0}\".", name));
+		} else if (partialMatches.size() > 1) {
+			throw new IllegalArgumentException(MessageFormat.format("Multiple components matching \"{0}\": [{1}]", name,  partialMatches.stream().map(dto -> dto.name).collect(Collectors.joining(", "))));
+		}
+		return partialMatches.get(0);
+	}
+
+	public ComponentConfigurationDTO info(long id) {
+		for (ComponentDescriptionDTO descDto : scr.getComponentDescriptionDTOs()) {
+			for (ComponentConfigurationDTO configDto : scr.getComponentConfigurationDTOs(descDto)) {
+				if (configDto.id == id)
+					return configDto;
+			}
+		}
+		return null;
+	}
+
     @Override
     public Object convert(Class<?> desiredType, Object in) throws Exception {
         throw new UnsupportedOperationException("Not implemented");
@@ -92,6 +115,13 @@ class ComponentCommands implements Converter {
             }
             break;
         case Converter.INSPECT:
+            builder.append(String.format("Name: %s", dto.name));
+            builder.append(String.format("%nClass: %s", dto.implementationClass));
+            builder.append(String.format("%nService: %s", arrayToString(dto.serviceInterfaces)));
+            builder.append(String.format("%nConfig (Policy=%s): %s", dto.configurationPolicy, arrayToString(dto.configurationPid)));
+            builder.append(String.format("%nProperties (%d entries):", dto.properties.size()));
+            for (Entry<String, Object> propEntry : dto.properties.entrySet())
+                builder.append(String.format("%n\t%s=%s", propEntry.getKey(), propEntry.getValue()));
             break;
         case Converter.PART:
         default:
@@ -106,21 +136,18 @@ class ComponentCommands implements Converter {
         case Converter.INSPECT:
             final StringBuilder builder = new StringBuilder();
 
+            builder.append(String.format("Id: %d", dto.id));
+            builder.append(String.format("%nState: %s", stateToString(dto.state)));
             ComponentDescriptionDTO desc = dto.description;
-            builder.append(String.format("Id: %d Name: %s%n", dto.id, desc.name));
-            builder.append(String.format("State: %s%n", stateToString(dto.state)));
-            
-            builder.append(String.format("Class: %s%n", desc.implementationClass));
-            builder.append(String.format("Service: %s%n", arrayToString(desc.serviceInterfaces)));
-            builder.append(String.format("Config (Policy=%s): %s%n", desc.configurationPolicy, arrayToString(desc.configurationPid)));
+            builder.append(format(desc, Converter.INSPECT, escape));
 
             // Print References
             final Map<String, ReferenceDTO> refDtoMap = new HashMap<>();
-			if (desc != null && desc.references != null) for (ReferenceDTO refDto : desc.references) {
+            if (desc != null && desc.references != null) for (ReferenceDTO refDto : desc.references) {
                 refDtoMap.put(refDto.name, refDto);
             }
             int refCount = (dto.satisfiedReferences != null ? dto.satisfiedReferences.length : 0) + (dto.unsatisfiedReferences != null ? dto.unsatisfiedReferences.length : 0);
-            builder.append(String.format("References (total %d):%n", refCount));
+            builder.append(String.format("%nReferences (total %d):", refCount));
             // builder.append(repeat(20, '-')).append(repeatForDigits(refCount, '-')).append("\n");
             if (dto.unsatisfiedReferences != null) for (UnsatisfiedReferenceDTO refDto : dto.unsatisfiedReferences) {
             	builder.append(format(refDto, refDtoMap.get(refDto.name), Converter.LINE, escape));
@@ -159,17 +186,17 @@ class ComponentCommands implements Converter {
     	StringBuilder policyWithOption = new StringBuilder().append(policy);
     	if (!"reluctant".equals(policyOption)) policyWithOption.append('+').append(policyOption);
 
-    	result.append(String.format("  %s: %s %s%n" // name, objectClass, state
-    			+ "      %s %s target=%s%n" // cardinality, policy+option, target
+    	result.append(String.format("%n  %s: %s %s" // name, objectClass, state
+    			+ "%n      %s %s target=%s" // cardinality, policy+option, target
     			, name, objectClass, state, cardinality, policyWithOption, target == null ? "(*)" : target));
     	
     	if (bindings != null) {
     		if (bindings.length == 0) {
-    			result.append("      Unbound").append('\n');
+    			result.append('\n').append("      Unbound");
     		} else {
     			for (ServiceReferenceDTO svcDto : bindings) {
     	            Bundle provider = context.getBundle(svcDto.bundle);
-    	            result.append(String.format("      Bound to [%d] from bundle [%d] %s:%s%n", svcDto.id, svcDto.bundle, provider.getSymbolicName(), provider.getVersion()));
+    	            result.append(String.format("%n      Bound to [%d] from bundle [%d] %s:%s", svcDto.id, svcDto.bundle, provider.getSymbolicName(), provider.getVersion()));
     			}
     		}
     	}
