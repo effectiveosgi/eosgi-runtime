@@ -7,6 +7,7 @@ Import-Package: \
 Bundle-Activator: com.effectiveosgi.rt.config.impl.Activator
 
 -conditionalpackage: \
+	com.effectiveosgi.lib.*,\
 	com.google.gson.*,\
 	org.apache.commons.codec.*,\
 	org.ini4j.*,\

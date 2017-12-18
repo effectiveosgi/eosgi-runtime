@@ -10,11 +10,11 @@ import java.util.stream.StreamSupport;
 
 import org.yaml.snakeyaml.Yaml;
 
+import com.effectiveosgi.lib.functional.Arrows;
+import com.effectiveosgi.lib.functional.MapEntry;
 import com.effectiveosgi.rt.config.ConfigFileReader;
 import com.effectiveosgi.rt.config.ParsedRecord;
 import com.effectiveosgi.rt.config.RecordIdentity;
-import com.effectiveosgi.rt.config.impl.EntryImpl;
-import com.effectiveosgi.rt.config.impl.util.Arrows;
 
 public class YamlConfigReader implements ConfigFileReader {
 	
@@ -54,7 +54,7 @@ public class YamlConfigReader implements ConfigFileReader {
 		if (recordEntry.getValue() instanceof Map) {
 			@SuppressWarnings("unchecked")
 			Map<String, Object> map = (Map<String, Object>) recordEntry.getValue();
-			resultEntry = new EntryImpl<>(recordEntry.getKey(), map);
+			resultEntry = new MapEntry<>(recordEntry.getKey(), map);
 		} else {
 			throw new IllegalArgumentException(String.format("Record '%s' was not an associative array, actual type was: %s", recordEntry.getKey(), recordEntry.getValue() != null ? recordEntry.getValue().getClass().getSimpleName() : "<null>"));
 		}

@@ -1,11 +1,11 @@
-package com.effectiveosgi.rt.config.impl;
+package com.effectiveosgi.lib.functional;
 
 import java.util.Map;
 
-public final class EntryImpl<K,V> implements Map.Entry<K,V> {
+public final class MapEntry<K,V> implements Map.Entry<K,V> {
     private final K key;
     private V value;
-    public EntryImpl(K key, V value) {
+    public MapEntry(K key, V value) {
         this.key = key; this.value = value;
     }
     @Override

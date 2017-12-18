@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.effectiveosgi.rt.config.impl.EntryImpl;
+import com.effectiveosgi.lib.functional.MapEntry;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -31,7 +31,7 @@ final class TypeUtils {
             typeName = label.substring(colonIndex + 1);
         }
         Type<?> type = findType(typeName);
-        return new EntryImpl<String, Object>(name, type.parse(element));
+        return new MapEntry<String, Object>(name, type.parse(element));
     }
 
     static class Type<T> {

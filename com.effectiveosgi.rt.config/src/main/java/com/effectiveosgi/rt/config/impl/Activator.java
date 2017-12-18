@@ -14,10 +14,10 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
+import com.effectiveosgi.lib.osgi.LogServiceTracker;
+import com.effectiveosgi.lib.osgi.SingletonServiceTracker;
 import com.effectiveosgi.rt.config.ConfigFileReader;
 import com.effectiveosgi.rt.config.impl.json.JsonConfigReader;
-import com.effectiveosgi.rt.config.impl.util.LogServiceTracker;
-import com.effectiveosgi.rt.config.impl.util.SingletonServiceTracker;
 import com.effectiveosgi.rt.config.impl.yaml.YamlConfigReader;
 
 public class Activator implements BundleActivator {

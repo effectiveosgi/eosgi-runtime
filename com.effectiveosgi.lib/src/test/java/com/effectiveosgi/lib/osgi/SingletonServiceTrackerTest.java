@@ -1,4 +1,4 @@
-package com.effectiveosgi.rt.config.impl.util;
+package com.effectiveosgi.lib.osgi;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;

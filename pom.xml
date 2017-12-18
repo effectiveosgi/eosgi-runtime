@@ -47,6 +47,7 @@
     <module>_distro</module>
     <module>_index</module>
     <module>_assembly</module>
+    <module>com.effectiveosgi.lib</module>
     <module>com.effectiveosgi.rt.config</module>
     <module>com.effectiveosgi.rt.config.test</module>
     <module>com.effectiveosgi.rt.aws</module>

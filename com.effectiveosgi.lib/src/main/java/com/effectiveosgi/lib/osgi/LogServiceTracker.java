@@ -1,4 +1,4 @@
-package com.effectiveosgi.rt.config.impl.util;
+package com.effectiveosgi.lib.osgi;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
