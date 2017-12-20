@@ -3,10 +3,13 @@
 -runfw: org.apache.felix.framework;version=5.6
 -runee: JavaSE-1.8
 -runprovidedcapabilities: ${native_capability}
+x-runvm: "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=7001"
+
 -runproperties:\
 	felix.fileinstall.noInitialDelay=true,\
 	felix.fileinstall.log.level=4,\
-	org.osgi.service.http.port=-1
+	org.osgi.service.http.port=-1,\
+	org.osgi.framework.bootdelegation=*
 
 -resolve.effective: active; skip:="osgi.service"
 
@@ -16,7 +19,7 @@
 	osgi.identity;filter:='(osgi.identity=com.effectiveosgi.rt.config)',\
 	bnd.identity;id='org.apache.felix.log',\
 	bnd.identity;id='org.apache.felix.gogo.command',\
-	bnd.identity;id='org.apache.felix.gogo.shell'
+	bnd.identity;id='org.apache.felix.gogo.jline
 
 -runbundles: \
 	com.effectiveosgi.rt.config;version='[0.1.0,0.1.1)',\
@@ -25,7 +28,8 @@
 	org.apache.felix.fileinstall;version='[3.6.0,3.6.1)',\
 	org.apache.felix.gogo.command;version='[1.0.2,1.0.3)',\
 	org.apache.felix.gogo.runtime;version='[1.0.6,1.0.7)',\
-	org.apache.felix.gogo.shell;version='[1.0.0,1.0.1)',\
 	org.apache.felix.log;version='[1.1.0,1.1.1)',\
 	org.apache.felix.scr;version='[2.1.0,2.1.1)',\
-	org.osgi.service.cm;version='[1.6.0,1.6.1)'
+	org.osgi.service.cm;version='[1.6.0,1.6.1)',\
+	org.apache.felix.gogo.jline;version='[1.0.10,1.0.11)',\
+	org.jline;version='[3.2.0,3.2.1)'
