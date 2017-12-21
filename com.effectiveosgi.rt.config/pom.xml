@@ -22,7 +22,7 @@
 			<artifactId>osgi.annotation</artifactId>
 		</dependency>
         <dependency>
-            <groupId>${groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>com.effectiveosgi.lib</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
