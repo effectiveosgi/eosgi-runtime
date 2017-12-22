@@ -8,6 +8,13 @@
 	</parent>
 	<artifactId>com.effectiveosgi.rt.config</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
+
+	<scm>
+		<connection>scm:git:git@github.com:effectiveosgi/eosgi-runtime.git</connection>
+		<developerConnection>scm:git:git@github.com:effectiveosgi/eosgi-runtime.git</developerConnection>
+		<url>http://github.com/effectiveosgi/eosgi-runtime/tree/master</url>
+	</scm>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.osgi</groupId>

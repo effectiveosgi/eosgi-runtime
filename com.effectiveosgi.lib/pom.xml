@@ -9,6 +9,12 @@
   <artifactId>com.effectiveosgi.lib</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
+  <scm>
+    <connection>scm:git:git@github.com:effectiveosgi/eosgi-runtime.git</connection>
+    <developerConnection>scm:git:git@github.com:effectiveosgi/eosgi-runtime.git</developerConnection>
+    <url>http://github.com/effectiveosgi/eosgi-runtime/tree/master</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.osgi</groupId>
