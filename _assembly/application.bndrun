@@ -22,7 +22,7 @@ x-runvm: "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=7001"
 	bnd.identity;id='org.apache.felix.gogo.jline
 
 -runbundles: \
-	com.effectiveosgi.rt.config;version='[1.0.0,1.0.1)',\
+	com.effectiveosgi.rt.config;version='[2.0.0,2.0.1)',\
 	com.effectiveosgi.rt.inspect;version='[0.0.1,0.0.2)',\
 	org.apache.felix.configadmin;version='[1.9.0,1.9.1)',\
 	org.apache.felix.fileinstall;version='[3.6.0,3.6.1)',\

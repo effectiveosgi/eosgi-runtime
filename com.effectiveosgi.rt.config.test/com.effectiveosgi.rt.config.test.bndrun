@@ -13,7 +13,7 @@
 -runblacklist: osgi.identity;filter:='(osgi.identity=org.apache.felix.fileinstall)'
 
 -runbundles: \
-	com.effectiveosgi.rt.config;version='[1.0.0,1.0.1)',\
+	com.effectiveosgi.rt.config;version='[2.0.0,2.0.1)',\
 	com.effectiveosgi.rt.config.test;version='[0.0.1,0.0.2)',\
 	net.bytebuddy.byte-buddy;version='[1.7.4,1.7.5)',\
 	net.bytebuddy.byte-buddy-agent;version='[1.7.4,1.7.5)',\
