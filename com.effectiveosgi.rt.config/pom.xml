@@ -7,7 +7,14 @@
 		<version>0.0.1</version>
 	</parent>
 	<artifactId>com.effectiveosgi.rt.config</artifactId>
-	<version>0.1.0</version>
+	<version>1.0.0</version>
+
+	<scm>
+		<connection>scm:git:git@github.com:effectiveosgi/eosgi-runtime.git</connection>
+		<developerConnection>scm:git:git@github.com:effectiveosgi/eosgi-runtime.git</developerConnection>
+		<url>http://github.com/effectiveosgi/eosgi-runtime/tree/master</url>
+	</scm>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.osgi</groupId>
@@ -22,9 +29,9 @@
 			<artifactId>osgi.annotation</artifactId>
 		</dependency>
         <dependency>
-            <groupId>${groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>com.effectiveosgi.lib</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.1</version>
         </dependency>
         <dependency>
           <groupId>org.apache.felix</groupId>
