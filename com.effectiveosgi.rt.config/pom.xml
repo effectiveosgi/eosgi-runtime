@@ -8,6 +8,7 @@
 	</parent>
 	<artifactId>com.effectiveosgi.rt.config</artifactId>
 	<version>1.0.1-SNAPSHOT</version>
+	<name>Effective OSGi RT Config</name>
 
 	<scm>
 		<connection>scm:git:git@github.com:effectiveosgi/eosgi-runtime.git</connection>

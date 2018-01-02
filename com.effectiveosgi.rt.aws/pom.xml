@@ -11,6 +11,7 @@
 	</parent>
 	<artifactId>com.effectiveosgi.rt.aws</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
+	<name>Effective OSGi RT AWS</name>
 
 	<dependencies>
 		<dependency>

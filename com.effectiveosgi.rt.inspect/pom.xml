@@ -10,6 +10,7 @@
   </parent>
   <artifactId>com.effectiveosgi.rt.inspect</artifactId>
   <version>0.0.2-SNAPSHOT</version>
+	<name>Effective OSGi RT Inspect</name>
 
   <dependencies>
     <dependency>
