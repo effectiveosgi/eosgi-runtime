@@ -26,12 +26,12 @@
     <dependency>
 	    	<groupId>${project.groupId}</groupId>
 	    	<artifactId>com.effectiveosgi.rt.config</artifactId>
-	    	<version>1.0.0</version>
+	    	<version>1.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
     		<groupId>${project.groupId}</groupId>
     		<artifactId>com.effectiveosgi.rt.inspect</artifactId>
-    		<version>0.0.1</version>
+    		<version>0.0.2-SNAPSHOT</version>
     </dependency>
     <!-- TODO: reference your workspace projects to be indexed here -->
 
