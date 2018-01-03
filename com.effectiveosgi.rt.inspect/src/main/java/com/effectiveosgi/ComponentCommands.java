@@ -21,15 +21,18 @@ import org.osgi.service.component.runtime.dto.ComponentDescriptionDTO;
 import org.osgi.service.component.runtime.dto.ReferenceDTO;
 import org.osgi.service.component.runtime.dto.SatisfiedReferenceDTO;
 import org.osgi.service.component.runtime.dto.UnsatisfiedReferenceDTO;
+import org.osgi.service.log.LogService;
 
 class ComponentCommands implements Converter {
 
 	private final BundleContext context;
 	private final ServiceComponentRuntime scr;
+	private final LogService log;
 
-	ComponentCommands(BundleContext context, ServiceComponentRuntime scr) {
+	ComponentCommands(BundleContext context, ServiceComponentRuntime scr, LogService log) {
 		this.context = context;
 		this.scr = scr;
+		this.log = log;
 	}
 
 	public ComponentDescriptionDTO[] list() {
@@ -137,6 +140,19 @@ class ComponentCommands implements Converter {
 
 			builder.append(String.format("Id: %d", dto.id));
 			builder.append(String.format("%nState: %s", stateToString(dto.state)));
+
+			// TODO: ComponentConfigurationDTO.FAILED_ACTIVATION state (==16) added in DS 1.4. Replace with non-reflective calls.
+			if (dto.state == 16) {
+				String failure;
+				try {
+					failure = (String) dto.getClass().getField("failure").get(dto);
+				} catch (Exception e) {
+					failure = "<<unknown>>";
+					log.log(LogService.LOG_ERROR, "Unable to get failure message for Component Configuration ID " + dto.id, e);
+				}
+				builder.append("\nFailure: ").append(failure);
+			}
+
 			ComponentDescriptionDTO desc = dto.description;
 			builder.append(format(desc, Converter.INSPECT, escape));
 
@@ -225,8 +241,12 @@ class ComponentCommands implements Converter {
 		case ComponentConfigurationDTO.UNSATISFIED_REFERENCE:
 			string = "unsatisfied reference";
 			break;
+		case 16:
+			// TODO: state ComponentConfigurationDTO.FAILED_ACTIVATION added in DS 1.4
+			string = "failed activation";
+			break;
 		default:
-			string = "<<unknown>>";
+			string = String.format("<<unknown: %d>>", state);
 		}
 		return string;
 	}
