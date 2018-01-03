@@ -11,9 +11,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import com.effectiveosgi.lib.PropertiesUtil;
 import org.apache.felix.service.command.Converter;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.dto.ServiceReferenceDTO;
 import org.osgi.service.component.runtime.ServiceComponentRuntime;
 import org.osgi.service.component.runtime.dto.ComponentConfigurationDTO;
@@ -89,10 +91,14 @@ class ComponentCommands implements Converter {
 
 	private CharSequence format(ComponentDescriptionDTO[] dtoArray, int level, Converter escape) throws Exception {
 		StringBuilder sb = new StringBuilder();
-		for (ComponentDescriptionDTO dto : dtoArray) {
-			sb.append(escape.format(dto, Converter.LINE, escape)).append("\n");
+		if (dtoArray == null || dtoArray.length == 0) {
+			sb.append("No component descriptions found");
+		} else {
+			for (int i = 0; i < dtoArray.length; i++) {
+				if (i > 0) sb.append('\n');
+				sb.append(escape.format(dtoArray[i], Converter.LINE, escape));
+			}
 		}
-		sb.append(MessageFormat.format(">> Found {0} component {0,choice,0#descriptions|1#description|1<descriptions}.", dtoArray.length));
 		return sb;
 	}
 
@@ -121,17 +127,15 @@ class ComponentCommands implements Converter {
 			builder.append(String.format("%nClass: %s", dto.implementationClass));
 			builder.append(String.format("%nService: %s", arrayToString(dto.serviceInterfaces)));
 			builder.append(String.format("%nConfig (Policy=%s): %s", dto.configurationPolicy,arrayToString(dto.configurationPid)));
-			builder.append(String.format("%nProperties (%d entries):", dto.properties.size()));
-			for (Entry<String, Object> propEntry : dto.properties.entrySet())
-				builder.append(String.format("%n\t%s=%s", propEntry.getKey(), propEntry.getValue()));
+			appendProperties("\nBase Properties", dto.properties, builder);
 			break;
-		case Converter.PART:
-		default:
+			case Converter.PART:
+			default:
 			break;
 		}
 		return builder;
 	}
-
+	
 	private CharSequence format(ComponentConfigurationDTO dto, int level, Converter escape) throws Exception {
 		final CharSequence result;
 		switch (level) {
@@ -146,7 +150,11 @@ class ComponentCommands implements Converter {
 			}
 
 			ComponentDescriptionDTO desc = dto.description;
+			// Inspect base Descriptor
 			builder.append(format(desc, Converter.INSPECT, escape));
+
+			// Print Configuration Propertiesa
+			appendProperties("\nConfiguration Properties", dto.properties, builder);
 
 			// Print References
 			final Map<String, ReferenceDTO> refDtoMap = new HashMap<>();
@@ -169,7 +177,8 @@ class ComponentCommands implements Converter {
 			result = builder;
 			break;
 		case Converter.LINE:
-			result = String.format("%d %s", dto.id, stateToString(dto.state));
+		    String[] pids = PropertiesUtil.getStringArray(dto.properties, Constants.SERVICE_PID, new String[0]);
+			result = String.format("Id: % 2d, State: %s, Pid(s): %s", dto.id, stateToString(dto.state), Arrays.toString(pids));
 			break;
 		case Converter.PART:
 		default:
@@ -222,22 +231,22 @@ class ComponentCommands implements Converter {
 		final String string;
 		switch (state) {
 		case ComponentConfigurationDTO.ACTIVE:
-			string = "active";
+			string = "ACTIVE";
 			break;
 		case ComponentConfigurationDTO.SATISFIED:
-			string = "inactive";
+			string = "INACTIVE";
 			break;
 		case ComponentConfigurationDTO.UNSATISFIED_CONFIGURATION:
-			string = "unsatisfied configuration";
+			string = "UNSATISFIED CONFIGURATION";
 			break;
 		case ComponentConfigurationDTO.UNSATISFIED_REFERENCE:
-			string = "unsatisfied reference";
+			string = "UNSATISFIED REFERENCE";
 			break;
 		case ComponentConfigurationDTO.FAILED_ACTIVATION:
-			string = "failed activation";
+			string = "FAILED ACTIVATION";
 			break;
 		default:
-			string = String.format("<<unknown: %d>>", state);
+			string = String.format("<<UNKNOWN: %d>>", state);
 		}
 		return string;
 	}
@@ -250,6 +259,17 @@ class ComponentCommands implements Converter {
 
 	static final String repeatForDigits(int number, char character) {
 		return repeat((int) Math.floor(Math.log10(number)) + 1, character);
+	}
+
+	static void appendProperties(String header, Map<String, ?> props, StringBuilder builder) {
+        builder.append(String.format("%s (%d entries)", header, props.size()));
+        if (!props.isEmpty()) {
+            builder.append(":\n\t").append(props.entrySet().stream()
+                    .map(e -> String.format("%s<%s> = %s", e.getKey(), e.getValue() != null ? e.getValue().getClass().getSimpleName() : "<<null>>", e.getValue()))
+                    .sorted()
+                    .collect(Collectors.joining("\n\t"))
+            );
+        }
 	}
 
 }
