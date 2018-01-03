@@ -6,7 +6,7 @@
     <version>0.0.1</version>
   </parent>
   <artifactId>com.effectiveosgi.lib</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2-SNAPSHOT</version>
 
   <scm>
     <connection>scm:git:git@github.com:effectiveosgi/eosgi-runtime.git</connection>
