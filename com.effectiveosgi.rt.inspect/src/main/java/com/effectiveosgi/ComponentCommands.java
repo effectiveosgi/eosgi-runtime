@@ -141,16 +141,8 @@ class ComponentCommands implements Converter {
 			builder.append(String.format("Id: %d", dto.id));
 			builder.append(String.format("%nState: %s", stateToString(dto.state)));
 
-			// TODO: ComponentConfigurationDTO.FAILED_ACTIVATION state (==16) added in DS 1.4. Replace with non-reflective calls.
-			if (dto.state == 16) {
-				String failure;
-				try {
-					failure = (String) dto.getClass().getField("failure").get(dto);
-				} catch (Exception e) {
-					failure = "<<unknown>>";
-					log.log(LogService.LOG_ERROR, "Unable to get failure message for Component Configuration ID " + dto.id, e);
-				}
-				builder.append("\nFailure: ").append(failure);
+			if (dto.failure != null) {
+				builder.append("\nFailure: ").append(dto.failure);
 			}
 
 			ComponentDescriptionDTO desc = dto.description;
@@ -241,8 +233,7 @@ class ComponentCommands implements Converter {
 		case ComponentConfigurationDTO.UNSATISFIED_REFERENCE:
 			string = "unsatisfied reference";
 			break;
-		case 16:
-			// TODO: state ComponentConfigurationDTO.FAILED_ACTIVATION added in DS 1.4
+		case ComponentConfigurationDTO.FAILED_ACTIVATION:
 			string = "failed activation";
 			break;
 		default:
