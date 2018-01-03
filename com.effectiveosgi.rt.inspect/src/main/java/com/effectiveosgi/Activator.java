@@ -3,6 +3,7 @@ package com.effectiveosgi;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import com.effectiveosgi.lib.osgi.LogServiceTracker;
 import org.apache.felix.service.command.Converter;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -17,15 +18,19 @@ import com.effectiveosgi.lib.osgi.SingletonServiceTracker;
 
 public class Activator implements BundleActivator {
 
+	private LogServiceTracker logTracker;
 	private SingletonServiceTracker<ServiceComponentRuntime, ServiceRegistration<Converter>> tracker;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
+		logTracker = new LogServiceTracker(context);
+		logTracker.open();
+
 		tracker = new SingletonServiceTracker<>(context, ServiceComponentRuntime.class, new ServiceTrackerCustomizer<ServiceComponentRuntime, ServiceRegistration<Converter>>() {
 			@Override
 			public ServiceRegistration<Converter> addingService(ServiceReference<ServiceComponentRuntime> reference) {
 				ServiceComponentRuntime scr = context.getService(reference);
-				ComponentCommands commands = new ComponentCommands(context, scr);
+				ComponentCommands commands = new ComponentCommands(context, scr, logTracker);
 
 				Dictionary<String, Object> props = new Hashtable<>();
 				props.put("osgi.command.scope", "comp");
@@ -51,6 +56,7 @@ public class Activator implements BundleActivator {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		tracker.close();
+		logTracker.close();
 	}
 
 }
