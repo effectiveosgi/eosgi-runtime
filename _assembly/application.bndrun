@@ -32,9 +32,9 @@ x-runvm: "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=7001"
         bnd.identity;id=org.osgi.service.component
 
 -runbundles: \
-        com.effectiveosgi.rt.aws;version='[0.0.2,0.0.3)',\
+        com.effectiveosgi.rt.aws;version='[2.0.0,2.0.1)',\
         com.effectiveosgi.rt.config;version='[2.0.0,2.0.1)',\
-        com.effectiveosgi.rt.inspect;version='[0.0.2,0.0.3)',\
+        com.effectiveosgi.rt.inspect;version='[2.0.0,2.0.1)',\
         com.fasterxml.jackson.core.jackson-annotations;version='[2.6.0,2.6.1)',\
         com.fasterxml.jackson.core.jackson-core;version='[2.6.6,2.6.7)',\
         com.fasterxml.jackson.core.jackson-databind;version='[2.6.6,2.6.7)',\
