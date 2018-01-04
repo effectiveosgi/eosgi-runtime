@@ -1,5 +1,5 @@
-Effective OSGi Runtime: INI Configuration
-=========================================
+Effective OSGi Runtime: JSON Configuration
+==========================================
 
 This file format is specified by the [OSGi Compendium Release 7][1]
 specification, Chapter 150 ("Configurator"). **N.B.:** The Configurator
