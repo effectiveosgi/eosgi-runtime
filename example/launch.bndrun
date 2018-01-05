@@ -1,0 +1,22 @@
+-standalone: target/index.xml
+
+-runfw: org.apache.felix.framework;version=5.6
+-runee: JavaSE-1.8
+#-runvm: "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=7001"
+-runprovidedcapabilities: ${native_capability}
+
+-resolve.effective: active; skip:="osgi.service"
+
+-runrequires: \
+        bnd.identity;id=org.apache.felix.gogo.command,\
+        bnd.identity;id=org.apache.felix.gogo.shell,\
+        bnd.identity;id=org.apache.felix.log,\
+        bnd.identity;id=example
+
+-runbundles: \
+        org.apache.felix.gogo.runtime,\
+        org.apache.felix.gogo.command,\
+        org.apache.felix.gogo.shell,\
+        org.apache.felix.log,\
+        org.apache.felix.scr,\
+        example

@@ -52,6 +52,7 @@
     <module>com.effectiveosgi.rt.config.test</module>
     <module>com.effectiveosgi.rt.aws</module>
     <module>com.effectiveosgi.rt.inspect</module>
+    <module>example</module>
   </modules>
 
   <properties>
