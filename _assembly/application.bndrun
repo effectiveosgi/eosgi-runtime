@@ -34,5 +34,5 @@
 	org.apache.felix.gogo.runtime;version='[1.0.6,1.0.7)',\
 	org.apache.felix.gogo.shell;version='[1.0.0,1.0.1)',\
 	org.apache.felix.log;version='[1.0.1,1.0.2)',\
-	org.apache.felix.scr;version='[2.0.10,2.0.11)',\
+	org.apache.felix.scr;version='[2.0.14,2.0.15)',\
 	org.apache.servicemix.bundles.aws-java-sdk;version='[1.11.136,1.11.137)'
