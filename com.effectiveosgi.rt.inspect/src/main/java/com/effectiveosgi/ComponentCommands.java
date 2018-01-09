@@ -6,10 +6,7 @@ import java.util.stream.Collectors;
 
 import com.effectiveosgi.lib.PropertiesUtil;
 import org.apache.felix.service.command.Converter;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
-import org.osgi.framework.ServiceReference;
+import org.osgi.framework.*;
 import org.osgi.framework.dto.ServiceReferenceDTO;
 import org.osgi.service.component.ComponentConstants;
 import org.osgi.service.component.runtime.ServiceComponentRuntime;
@@ -21,6 +18,8 @@ import org.osgi.service.component.runtime.dto.UnsatisfiedReferenceDTO;
 import org.osgi.service.log.LogService;
 
 class ComponentCommands implements Converter {
+
+	private static final String INDENT = "  ";
 
 	private final BundleContext context;
 	private final ServiceComponentRuntime scr;
@@ -49,7 +48,7 @@ class ComponentCommands implements Converter {
 		if (partialMatches.isEmpty()) {
 			throw new IllegalArgumentException(MessageFormat.format("No component description matching \"{0}\".", name));
 		} else if (partialMatches.size() > 1) {
-			throw new IllegalArgumentException(MessageFormat.format("Multiple components matching \"{0}\": [{1}]", name,  partialMatches.stream().map(dto -> dto.name).collect(Collectors.joining(", "))));
+			throw new IllegalArgumentException(MessageFormat.format("Multiple components matching \"{0}\": [{1}]", name, partialMatches.stream().map(dto -> dto.name).collect(Collectors.joining(", "))));
 		}
 		return partialMatches.get(0);
 	}
@@ -99,12 +98,12 @@ class ComponentCommands implements Converter {
 
 	private CharSequence format(ComponentDescriptionDTO dto, int level, Converter escape) throws Exception {
 		final StringBuilder builder = new StringBuilder();
-		switch (level) {
-		case Converter.LINE:
-			Collection<ComponentConfigurationDTO> children = scr.getComponentConfigurationDTOs(dto);
-			if (children == null)
-				children = Collections.emptyList();
+		Collection<ComponentConfigurationDTO> children = scr.getComponentConfigurationDTOs(dto);
+		if (children == null)
+			children = Collections.emptyList();
 
+		switch (level) {
+			case Converter.LINE:
 			builder.append(MessageFormat.format("{0} in bundle [{1}] ({2}:{3}) {4}, {5,choice,0#0 instances|1#1 instance|1<{5} instances}.",
 				dto.name,
 				dto.bundle.id,
@@ -115,24 +114,10 @@ class ComponentCommands implements Converter {
 			));
 
 			for (ComponentConfigurationDTO child : children)
-				builder.append("\n    ").append(escape.format(child, Converter.LINE, escape));
+				builder.append("\n").append(INDENT).append(INDENT).append(escape.format(child, Converter.LINE, escape));
 			break;
 		case Converter.INSPECT:
-			Map<String, String> out = new LinkedHashMap<>();
-			out.put("Class", dto.implementationClass);
-			out.put("Bundle", String.format("%d (%s:%s)", dto.bundle.id, dto.bundle.symbolicName, dto.bundle.version));
-			if (dto.factory != null) {
-				out.put("Factory", dto.factory);
-			}
-			out.put("Enabled", Boolean.toString(dto.defaultEnabled));
-			out.put("Immediate", Boolean.toString(dto.immediate));
-			out.put("Services", arrayToString(dto.serviceInterfaces));
-			if (dto.scope != null) {
-				out.put("Scope", dto.scope);
-			}
-			out.put("Config PID(s)", String.format("%s, Policy: %s", arrayToString(dto.configurationPid), dto.configurationPolicy));
-			out.put("Base Props", printProperties(dto.properties));
-			printColumnsAligned(String.format("Component Description: %s", dto.name), out, builder);
+			printComponentDescriptionAndConfigs(dto, children.toArray(new ComponentConfigurationDTO[0]), builder);
 			break;
 		case Converter.PART:
 			break;
@@ -144,43 +129,7 @@ class ComponentCommands implements Converter {
 		final StringBuilder builder = new StringBuilder();
 		switch (level) {
 		case Converter.INSPECT:
-
-			// Inspect base descriptor DTO
-			ComponentDescriptionDTO desc = dto.description;
-			builder.append(format(desc, Converter.INSPECT, escape));
-
-			// Blank line separator
-			builder.append("\n\n");
-
-			// Inspect configuration DTO
-			final Map<String, String> out = new LinkedHashMap<>();
-			String title = String.format("Component Configuration Id: %d", dto.id);
-			out.put("State", stateToString(dto.state));
-
-			// Print service registration
-			ServiceReference<?>[] serviceRefs = context.getAllServiceReferences(null, String.format("(%s=%d)", ComponentConstants.COMPONENT_ID, dto.id));
-			if (serviceRefs != null && serviceRefs.length > 0) {
-				out.put("Service Id", printPublishedService(serviceRefs[0]));
-			}
-
-			// Print Configuration Properties
-			out.put("Config Props", printProperties(dto.properties));
-
-			// Print References
-			out.put("References", printServiceReferences(dto.satisfiedReferences, dto.unsatisfiedReferences, desc.references));
-
-			// TODO: ComponentConfigurationDTO.FAILED_ACTIVATION state (==16) added in DS 1.4. Replace with non-reflective calls.
-			if (dto.state == 16) {
-				String failure;
-				try {
-					failure = (String) dto.getClass().getField("failure").get(dto);
-				} catch (Exception e) {
-					failure = "<<unknown>>";
-					log.log(LogService.LOG_ERROR, "Unable to get failure message for Component Configuration ID " + dto.id, e);
-				}
-				out.put("Failure", failure);
-			}
-			printColumnsAligned(title, out, builder);
+			printComponentDescriptionAndConfigs(dto.description, new ComponentConfigurationDTO[] { dto }, builder);
 			break;
 		case Converter.LINE:
 			builder.append("Id: ").append(dto.id);
@@ -196,6 +145,66 @@ class ComponentCommands implements Converter {
 		return builder;
 	}
 
+	void printComponentDescriptionAndConfigs(ComponentDescriptionDTO descDto, ComponentConfigurationDTO[] configs, StringBuilder builder) {
+		final Map<String, String> out = new LinkedHashMap<>();
+
+		// Component Description
+		out.put("Class", descDto.implementationClass);
+		out.put("Bundle", String.format("%d (%s:%s)", descDto.bundle.id, descDto.bundle.symbolicName, descDto.bundle.version));
+		if (descDto.factory != null) {
+			out.put("Factory", descDto.factory);
+		}
+		out.put("Enabled", Boolean.toString(descDto.defaultEnabled));
+		out.put("Immediate", Boolean.toString(descDto.immediate));
+		out.put("Services", arrayToString(descDto.serviceInterfaces));
+		if (descDto.scope != null) {
+			out.put("Scope", descDto.scope);
+		}
+		out.put("Config PID(s)", String.format("%s, Policy: %s", arrayToString(descDto.configurationPid), descDto.configurationPolicy));
+		out.put("Base Props", printProperties(descDto.properties));
+		printColumnsAligned(String.format("Component Description: %s", descDto.name), out, '=', builder);
+
+		if (configs != null) for (ComponentConfigurationDTO configDto : configs) {
+			out.clear();;
+
+			// Blank line separator
+			builder.append("\n\n");
+
+			// Inspect configuration DTO
+			String title = String.format("Component Configuration Id: %d", configDto.id);
+			out.put("State", stateToString(configDto.state));
+
+			// Print service registration
+			try {
+				ServiceReference<?>[] serviceRefs = context.getAllServiceReferences(null, String.format("(%s=%d)", ComponentConstants.COMPONENT_ID, configDto.id));
+				if (serviceRefs != null && serviceRefs.length > 0) {
+					out.put("Service Id", printPublishedService(serviceRefs[0]));
+				}
+			} catch (InvalidSyntaxException e) {
+				// Shouldn't happen...
+			}
+
+			// Print Configuration Properties
+			out.put("Config Props", printProperties(configDto.properties));
+
+			// Print References
+			out.put("References", printServiceReferences(configDto.satisfiedReferences, configDto.unsatisfiedReferences, descDto.references));
+
+			// TODO: ComponentConfigurationDTO.FAILED_ACTIVATION state (==16) added in DS 1.4. Replace with non-reflective calls.
+			if (configDto.state == 16) {
+				String failure;
+				try {
+					failure = (String) configDto.getClass().getField("failure").get(configDto);
+				} catch (Exception e) {
+					failure = "<<unknown>>";
+					log.log(LogService.LOG_ERROR, "Unable to get failure message for Component Configuration ID " + configDto.id, e);
+				}
+				out.put("Failure", failure);
+			}
+			printColumnsAligned(title, out, '~', builder);
+		}
+	}
+
 	String printPublishedService(ServiceReference<?> serviceRef) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(serviceRef.getProperty(Constants.SERVICE_ID));
@@ -203,7 +212,7 @@ class ComponentCommands implements Converter {
 
 		Bundle[] consumers = serviceRef.getUsingBundles();
 		if (consumers != null) for (Bundle consumer : consumers) {
-			sb.append("\n\t").append(String.format("Bound by bundle [%d] (%s:%s)", consumer.getBundleId(), consumer.getSymbolicName(), consumer.getVersion()));
+			sb.append("\n").append(INDENT).append(String.format("Used by bundle [%d] (%s:%s)", consumer.getBundleId(), consumer.getSymbolicName(), consumer.getVersion()));
 		}
 
 		return sb.toString();
@@ -251,14 +260,14 @@ class ComponentCommands implements Converter {
 		StringBuilder builder = new StringBuilder();
 		int size = props.size();
 		builder.append('(').append(Integer.toString(size)).append(' ').append(size == 1 ? "entry" : "entries").append(')');
-        if (size > 0) {
-            builder.append("\n\t").append(props.entrySet().stream()
-                    .map(e -> String.format("%s<%s> = %s", e.getKey(), e.getValue() != null ? e.getValue().getClass().getSimpleName() : "<<null>>", e.getValue()))
-                    .sorted()
-                    .collect(Collectors.joining("\n\t"))
-            );
-        }
-        return builder.toString();
+		if (size > 0) {
+			builder.append("\n").append(INDENT).append(props.entrySet().stream()
+					.map(e -> String.format("%s<%s> = %s", e.getKey(), e.getValue() != null ? e.getValue().getClass().getSimpleName() : "<<null>>", e.getValue()))
+					.sorted()
+					.collect(Collectors.joining("\n" + INDENT))
+			);
+		}
+		return builder.toString();
 	}
 
 	String printServiceReferences(SatisfiedReferenceDTO[] satisfiedReferences, UnsatisfiedReferenceDTO[] unsatisfiedReferences, ReferenceDTO[] references) {
@@ -273,67 +282,43 @@ class ComponentCommands implements Converter {
 		builder.append("(total ").append(Integer.toString(refCount)).append(")");
 		if (unsatisfiedReferences != null) {
 			for (UnsatisfiedReferenceDTO refDto : unsatisfiedReferences)
-				printUnsatisfiedReference(refDto, refDtoMap.get(refDto.name), builder);
+				printServiceReference(refDtoMap.get(refDto.name), "UNSATISFIED", null, builder);
 		}
 		if (satisfiedReferences != null) {
 			for (SatisfiedReferenceDTO refDto : satisfiedReferences)
-				printSatisfiedReference(refDto, refDtoMap.get(refDto.name), builder);
+				printServiceReference(refDtoMap.get(refDto.name), "SATISFIED", refDto.boundServices != null ? refDto.boundServices : new ServiceReferenceDTO[0], builder);
 		}
 		return builder.toString();
 	}
 
-	void printReference(String name, String objectClass, String state, String target, String cardinality, String policy, String policyOption, ServiceReferenceDTO[] bindings, StringBuilder builder) {
-		StringBuilder policyWithOption = new StringBuilder().append(policy);
-		if (!"reluctant".equals(policyOption))
-			policyWithOption.append('+').append(policyOption);
+	void printServiceReference(ReferenceDTO reference, String state, ServiceReferenceDTO[] bindings, StringBuilder builder) {
+		StringBuilder policyWithOption = new StringBuilder().append(reference.policy);
+		if (!"reluctant".equals(reference.policyOption))
+			policyWithOption.append('+').append(reference.policyOption);
 
-		builder.append(String.format("%n\t%s: %s %s" // name, objectClass, state
-						+ "%n\t\t%s %s target=%s" // cardinality, policy+option, target
-				, name, objectClass, state
-				, cardinality, policyWithOption, target == null ? "(*)" : target));
+		builder.append(String.format("%n" + INDENT + "%s: %s %s", reference.name, reference.interfaceName, state));
+		builder.append(String.format("%n" + INDENT + INDENT + "%s %s target=%s scope=%s", reference.cardinality, policyWithOption, reference.target == null ? "(*)" : reference.target, reference.scope == null ? "bundle" : reference.scope));
 
 		if (bindings != null) {
 			if (bindings.length == 0) {
-				builder.append('\n').append("      Unbound");
+				builder.append('\n').append(INDENT).append(INDENT).append("Unbound");
 			} else {
 				for (ServiceReferenceDTO svcDto : bindings) {
 					Bundle provider = context.getBundle(svcDto.bundle);
-					builder.append(String.format("%n\tBound to [%d] from bundle [%d] %s:%s", svcDto.id, svcDto.bundle, provider.getSymbolicName(), provider.getVersion()));
+					builder.append(String.format("%n" + INDENT + INDENT + "Bound to [%d] from bundle [%d] %s:%s", svcDto.id, svcDto.bundle, provider.getSymbolicName(), provider.getVersion()));
 				}
 			}
 		}
 	}
 
-	void printSatisfiedReference(SatisfiedReferenceDTO satisfiedRefDto, ReferenceDTO refDto, StringBuilder builder) {
-		printReference(satisfiedRefDto.name, refDto.interfaceName, "SATISFIED", refDto.target,
-				refDto.cardinality, refDto.policy, refDto.policyOption,
-				satisfiedRefDto.boundServices != null ? satisfiedRefDto.boundServices : new ServiceReferenceDTO[0], builder);
-	}
+	static void printColumnsAligned(String title, Map<String, String> properties, char underlineChar, StringBuilder builder) {
+		builder.append(title);
 
-	void printUnsatisfiedReference(UnsatisfiedReferenceDTO unsatisfiedRefDto, ReferenceDTO refDto, StringBuilder builder) {
-		printReference(unsatisfiedRefDto.name, refDto.interfaceName, "UNSATISFIED", refDto.target,
-				refDto.cardinality, refDto.policy, refDto.policyOption, null, builder);
-	}
-
-	static String underlined(String string, char underlineChar) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(string);
-		sb.append('\n');
-
-		char[] carray = new char[string.length()];
-		Arrays.fill(carray, '=');
-		sb.append(carray);
-		return sb.toString();
-	}
-
-	static String printColumnsAligned(String title, Map<String, String> properties) {
-		StringBuilder sb = new StringBuilder();
-		printColumnsAligned(title, properties, sb);
-		return sb.toString();
-	}
-
-	static void printColumnsAligned(String title, Map<String, String> properties, StringBuilder builder) {
-		builder.append(underlined(title, '='));
+		// Generate the title underline
+		char[] carray = new char[title.length()];
+		Arrays.fill(carray, underlineChar);
+		builder.append('\n');
+		builder.append(carray);
 
 		int widestHeader = properties.keySet()
 				.stream()
