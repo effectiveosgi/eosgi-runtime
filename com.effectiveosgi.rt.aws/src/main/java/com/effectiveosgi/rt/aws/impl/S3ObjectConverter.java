@@ -15,7 +15,7 @@ public class S3ObjectConverter implements Converter {
 
 	@Override
 	public Object convert(Class<?> desiredType, Object in) throws Exception {
-		throw new UnsupportedOperationException(String.format("Conversion from %s to %s is not supported", in != null ? in.getClass().getName() : "<null>", desiredType.getName()));
+		return null;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class S3ObjectConverter implements Converter {
 				throw new IllegalArgumentException("Unknown formatting level " + level);
 			}
 		} else {
-			throw new UnsupportedOperationException(String.format("Conversion from %s to String is not supported", target != null ? target.getClass().getName() : "<null>"));
+			return null;
 		}
 		return result;
 	}
