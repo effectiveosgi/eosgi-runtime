@@ -8,6 +8,7 @@ import java.util.Dictionary;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.dto.BundleDTO;
+import org.osgi.framework.wiring.BundleWiring;
 import org.osgi.framework.wiring.dto.BundleRevisionDTO;
 import org.osgi.framework.wiring.dto.BundleWiringDTO;
 
@@ -55,6 +56,9 @@ class BundleJsonSerializer implements JsonSerializer<Bundle> {
 		// Add the bundle headers
 		Dictionary<String, String> headers = bundle.getHeaders();
 		object.add("headers", jsonContext.serialize(headers, BundleHeadersJsonSerializer.TYPE));
+		
+		// Get the bundle wiring
+		object.add("wiring", jsonContext.serialize(bundle.adapt(BundleWiring.class), BundleWiringJsonSerializer.TYPE));
 		
 		return object;
 	}

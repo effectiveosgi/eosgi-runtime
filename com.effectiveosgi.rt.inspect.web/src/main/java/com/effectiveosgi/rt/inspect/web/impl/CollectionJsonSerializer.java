@@ -10,7 +10,6 @@ import com.google.gson.JsonSerializer;
 
 class CollectionJsonSerializer<T> implements JsonSerializer<Collection<? extends T>> {
 	
-
 	private final Class<? extends T> componentClass;
 
 	CollectionJsonSerializer(Class<? extends T> componentClass) {
@@ -25,5 +24,5 @@ class CollectionJsonSerializer<T> implements JsonSerializer<Collection<? extends
 		}
 		return array;
 	}
-
+	
 }

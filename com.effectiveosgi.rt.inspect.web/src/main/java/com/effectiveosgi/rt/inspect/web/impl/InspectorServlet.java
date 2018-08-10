@@ -57,13 +57,15 @@ public class InspectorServlet extends HttpServlet implements Servlet {
 	@Activate
 	void activate(BundleContext context) {
 		this.context = context;
-		this.gson = new GsonBuilder()
+		GsonBuilder gsonBuilder = new GsonBuilder()
 			.setPrettyPrinting()
 			.registerTypeAdapter(ServiceReferenceDTO.class, new ServiceReferenceDTOJsonSerializer(context))
 			.registerTypeAdapter(BundleJsonSerializer.TYPE, new BundleJsonSerializer(context))
-			.registerTypeAdapter(BUNDLES_RETURN_TYPE, bundlesSerializer)
-			 .registerTypeAdapter(BundleHeadersJsonSerializer.TYPE, new BundleHeadersJsonSerializer())
-			.create();
+			.registerTypeAdapter(BUNDLES_RETURN_TYPE, bundlesSerializer);
+		BundleHeadersJsonSerializer.register(gsonBuilder);
+		BundleWiringJsonSerializer.register(gsonBuilder);
+		VersionJsonSerializer.register(gsonBuilder);
+		this.gson = gsonBuilder.create();
 	}
 
 	@Override
