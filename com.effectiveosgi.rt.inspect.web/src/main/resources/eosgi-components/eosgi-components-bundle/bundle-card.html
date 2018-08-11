@@ -7,6 +7,7 @@
 
 <link rel="import" href="../eosgi-components-util/property-table.html">
 <link rel="import" href="provides-list.html">
+<link rel="import" href="requires-list.html">
  
  
  <!-- 
@@ -104,6 +105,12 @@
                     <tr><td></td>
                     	<td>
                     		<provides-list provides="[[bundle.wiring.provides]]" label="provided capabilities"></package-list>
+                    	</td>
+                    </tr>
+                    <!-- Provided Capabilities -->
+                    <tr><td></td>
+                    	<td>
+                    		<requires-list requires="[[bundle.wiring.requires]]" label="required capabilities"></requires-list>
                     	</td>
                     </tr>
                 </tbody>
