@@ -77,6 +77,19 @@
       <plugin>
         <groupId>biz.aQute.bnd</groupId>
         <artifactId>bnd-indexer-maven-plugin</artifactId>
+        <version>${bnd.maven.version}</version>
+        <configuration>
+          <includeJar>true</includeJar>
+          <localURLs>${local.index.policy}</localURLs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>default-index</id>
+            <goals>
+              <goal>index</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
