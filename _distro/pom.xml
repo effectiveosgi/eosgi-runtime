@@ -6,10 +6,10 @@
   <parent>
     <artifactId>eosgi-runtime-parent</artifactId>
     <groupId>com.effectiveosgi</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
   </parent>
   <artifactId>_distro</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <dependencies>

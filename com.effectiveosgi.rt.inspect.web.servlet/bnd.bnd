@@ -1,0 +1,9 @@
+Require-Capability:\
+	osgi.implementation; \
+		filter:="(&(osgi.implementation=osgi.http)(version>=1.0)(!(version>=2.0)))", \
+	com.effectiveosgi.rt.nanoweb.servlet; \
+		filter:="(com.effectiveosgi.rt.nanoweb.servlet=/inspector)", \
+	com.effectiveosgi.rt.nanoweb.servlet; \
+		filter:="(com.effectiveosgi.rt.nanoweb.servlet=/api/bundles)", \
+	com.effectiveosgi.rt.nanoweb.servlet; \
+		filter:="(com.effectiveosgi.rt.nanoweb.servlet=/api/scr)"

@@ -6,18 +6,18 @@
   <parent>
     <groupId>com.effectiveosgi</groupId>
     <artifactId>eosgi-runtime-parent</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
   </parent>
   <artifactId>_index</artifactId>
   <packaging>pom</packaging>
-  <version>0.0.1</version>
+  <version>0.0.2-SNAPSHOT</version>
 
   <dependencies>
     <!-- Distribution Dependency -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>_distro</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2-SNAPSHOT</version>
       <scope>runtime</scope>
       <type>pom</type>
     </dependency>
@@ -45,11 +45,6 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>com.effectiveosgi.rt.inspect</artifactId>
-      <version>0.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>com.effectiveosgi.rt.inspect.web</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
@@ -60,12 +55,12 @@
     </dependency>
     <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>com.effectiveosgi.rt.webresource.polymer</artifactId>
+        <artifactId>com.effectiveosgi.rt.inspect.web.servlet</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>com.effectiveosgi.rt.webresource.vaadin-elements</artifactId>
+        <artifactId>com.effectiveosgi.rt.inspect.web.standalone</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <!-- TODO: reference your workspace projects to be indexed here -->

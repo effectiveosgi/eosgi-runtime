@@ -23,12 +23,12 @@ public class WebResourceServletTest {
 	@Test
 	public void testFindWebResource() throws Exception {
 		Bundle targetBundle = findBundle("com.effectiveosgi.rt.web.test1");
-		String url = String.format("http://localhost:8080/osgi.enroute.webresource/%s/%s/polymer/LICENSE.txt", targetBundle.getSymbolicName(), targetBundle.getVersion());
-		
+		String url = String.format("http://localhost:8080/osgi.enroute.webresource/%s/%s/testing.txt", targetBundle.getSymbolicName(), targetBundle.getVersion());
+
 		try (InputStream stream = new URL(url).openStream()) {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 			String firstLine = reader.readLine();
-			assertEquals("// Copyright (c) 2017 The Polymer Authors. All rights reserved.", firstLine);
+			assertEquals("This file served from bundle com.effectiveosgi.rt.web.test1", firstLine);
 		}
 	}
 

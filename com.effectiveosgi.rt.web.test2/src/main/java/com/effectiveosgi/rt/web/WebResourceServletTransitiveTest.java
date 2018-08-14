@@ -32,18 +32,6 @@ public class WebResourceServletTransitiveTest {
 		}
 	}
 
-	@Test
-	public void testFindWebResourceTransitive() throws Exception {
-		Bundle targetBundle = findBundle("com.effectiveosgi.rt.web.test2");
-		String url = String.format("http://localhost:8080/osgi.enroute.webresource/%s/%s/polymer/LICENSE.txt", targetBundle.getSymbolicName(), targetBundle.getVersion());
-		
-		try (InputStream stream = new URL(url).openStream()) {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-			String firstLine = reader.readLine();
-			assertEquals("// Copyright (c) 2017 The Polymer Authors. All rights reserved.", firstLine);
-		}
-	}
-
 	private Bundle findBundle(String bsn) {
 		List<Bundle> matches = Arrays.stream(context.getBundles())
 				.filter(b -> bsn.equals(b.getSymbolicName()))

@@ -6,7 +6,7 @@
   <parent>
     <artifactId>eosgi-runtime-parent</artifactId>
     <groupId>com.effectiveosgi</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
   </parent>
   <artifactId>com.effectiveosgi.rt.inspect.web</artifactId>
   <version>0.0.1-SNAPSHOT</version>
@@ -26,11 +26,6 @@
       <artifactId>osgi.annotation</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.http.servlet-api</artifactId>
-      <version>1.1.2</version>
-    </dependency>
-    <dependency>
         <groupId>org.osgi</groupId>
         <artifactId>org.osgi.service.component</artifactId>
         <version>1.3.0</version>
@@ -41,12 +36,17 @@
         <version>2.8.0</version>
         <scope>provided</scope> <!-- Embedding -->
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.effectiveosgi.rt.nanoweb</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
 
     <!-- Runtime dependencies -->
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
       <artifactId>_distro</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2-SNAPSHOT</version>
       <scope>runtime</scope>
       <type>pom</type>
     </dependency>

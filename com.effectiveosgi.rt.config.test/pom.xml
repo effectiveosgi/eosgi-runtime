@@ -6,7 +6,7 @@
   <parent>
     <artifactId>eosgi-runtime-parent</artifactId>
     <groupId>com.effectiveosgi</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
   </parent>
   <artifactId>com.effectiveosgi.rt.config.test</artifactId>
 
@@ -40,7 +40,7 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>_distro</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2-SNAPSHOT</version>
       <scope>runtime</scope>
       <type>pom</type>
     </dependency>

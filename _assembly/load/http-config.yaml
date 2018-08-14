@@ -1,5 +1,2 @@
 org.apache.felix.http~primary:
   org.osgi.service.http.port: 8081
-
-com.effectiveosgi.rt.webresource.cache:
-  enabled: false

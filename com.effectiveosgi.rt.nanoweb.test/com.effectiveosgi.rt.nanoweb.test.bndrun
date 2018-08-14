@@ -1,0 +1,17 @@
+-standalone: target/index.xml
+
+-runsystempackages: sun.reflect
+-runfw: org.apache.felix.framework
+-runee: JavaSE-1.8
+-resolve.effective: active; skip:='osgi.service'
+
+-runrequires: \
+        osgi.identity;filter:='(osgi.identity=com.effectiveosgi.rt.nanoweb)',\
+        osgi.identity;filter:='(osgi.identity=com.effectiveosgi.rt.nanoweb.test)'
+
+-runbundles: \
+	org.apache.servicemix.bundles.junit;version='[4.12.0,4.12.1)',\
+	org.apache.felix.scr;version='[2.1.0,2.1.1)',\
+	com.effectiveosgi.rt.nanoweb;version='[0.0.1,0.0.2)',\
+	com.effectiveosgi.rt.nanoweb.test;version='[0.0.1,0.0.2)',\
+	com.effectiveosgi.rt.nanoweb.api;version='[0.0.1,0.0.2)'

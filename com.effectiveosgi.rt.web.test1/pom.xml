@@ -6,7 +6,7 @@
   <parent>
     <artifactId>eosgi-runtime-parent</artifactId>
     <groupId>com.effectiveosgi</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
   </parent>
   <artifactId>com.effectiveosgi.rt.web.test1</artifactId>
   <version>0.0.1-SNAPSHOT</version>
@@ -31,18 +31,12 @@
       <artifactId>com.effectiveosgi.rt.web</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>com.effectiveosgi.rt.webresource.polymer</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-
 
     <!-- Runtime dependencies -->
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
       <artifactId>_distro</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2-SNAPSHOT</version>
       <scope>runtime</scope>
       <type>pom</type>
     </dependency>

@@ -1,0 +1,55 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-location/iron-location.html">
+<link rel="import" href="../../bower_components/iron-location/iron-query-params.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner-lite.html">
+
+<link rel="import" href="bundle-card.html">
+
+<dom-module id="bundle-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      bundle-card {
+        width: 100%;
+        margin-top: var(--bundle-list-margin-between, 10px);
+      }
+    </style>
+    
+    <iron-ajax auto
+      url="/api/bundles"
+      handle-as="json"
+      last-response="{{ajaxResponse}}"
+      debounce-duration="300"
+      loading="{{_loading}}"
+    ></iron-ajax>
+
+    <span hidden$="[[!_loading]]"><paper-spinner-lite active></paper-spinner-lite></span>
+    <template is="dom-repeat" items="[[ajaxResponse]]">
+        <a id$="bundle-card-[[item.id]]">
+        <bundle-card bundle="[[item]]"></bundle-card>
+        </a>
+    </template>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class BundleListComponent extends Polymer.Element {
+      static get is() { return 'bundle-list'; }
+      static get properties() {
+          return {
+            bundles: Array,
+            queryParams: Object,
+            queryString: String,
+            _loading: Boolean
+          };
+      }
+    }
+    window.customElements.define(BundleListComponent.is, BundleListComponent);
+  </script>
+</dom-module>

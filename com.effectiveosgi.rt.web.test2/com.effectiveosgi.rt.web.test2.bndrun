@@ -15,7 +15,6 @@
 	com.effectiveosgi.rt.web;version='[0.0.1,0.0.2)',\
 	com.effectiveosgi.rt.web.test1;version='[0.0.1,0.0.2)',\
 	com.effectiveosgi.rt.web.test2;version='[0.0.1,0.0.2)',\
-	com.effectiveosgi.rt.webresource.polymer;version='[0.0.1,0.0.2)',\
 	org.apache.felix.configadmin;version='[1.9.4,1.9.5)',\
 	org.apache.felix.eventadmin;version='[1.5.0,1.5.1)',\
 	org.apache.felix.http.jetty;version='[3.4.6,3.4.7)',\
