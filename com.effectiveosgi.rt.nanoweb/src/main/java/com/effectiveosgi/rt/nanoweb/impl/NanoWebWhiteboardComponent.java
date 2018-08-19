@@ -31,9 +31,9 @@ import fi.iki.elonen.NanoHTTPD.Response.Status;
 @Component
 public class NanoWebWhiteboardComponent {
 
-	private static final String PROP_HOST = "host";
+	public static final String PROP_HOST = "host";
 
-	private static final String PROP_PORT = "port";
+	public static final String PROP_PORT = "port";
 
 	public static final int DEFAULT_PORT = 8080;
 

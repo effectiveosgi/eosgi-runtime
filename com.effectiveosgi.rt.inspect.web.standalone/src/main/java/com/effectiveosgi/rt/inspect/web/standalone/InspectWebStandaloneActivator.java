@@ -2,7 +2,10 @@ package com.effectiveosgi.rt.inspect.web.standalone;
 
 import java.util.Collections;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.Optional;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -15,6 +18,9 @@ import com.effectiveosgi.rt.nanoweb.NanoServlet;
 import com.effectiveosgi.rt.nanoweb.impl.NanoWebWhiteboardComponent;
 
 public class InspectWebStandaloneActivator implements BundleActivator {
+
+	private static final String SYS_PROP_PORT = "inspect.web.standalone.port";
+	private static final String SYS_PROP_HOST = "inspect.web.standalone.host";
 
 	private ResourcesNanoServlet appServlet;
 	private ServiceRegistration<NanoServlet> appServletReg;
@@ -58,6 +64,9 @@ public class InspectWebStandaloneActivator implements BundleActivator {
 			e.printStackTrace();
 		}
 
+		final Map<String, Object> config = new HashMap<>();
+		Optional.ofNullable(System.getProperty(SYS_PROP_PORT)).ifPresent(p -> config.put(NanoWebWhiteboardComponent.PROP_PORT, p));
+		Optional.ofNullable(System.getProperty(SYS_PROP_HOST)).ifPresent(p -> config.put(NanoWebWhiteboardComponent.PROP_HOST, p));
 		nanoWeb.activate(Collections.emptyMap());
 	}
 
