@@ -1,4 +1,4 @@
--standalone: ../_index/target/index.xml
+-standalone: target/index.xml
 
 -runfw: org.apache.felix.framework;version='[6.0.0,6.0.0]'
 -runee: JavaSE-1.8

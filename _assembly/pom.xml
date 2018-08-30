@@ -12,17 +12,75 @@
   <packaging>jar</packaging>
 
   <dependencies>
+    <!-- Distribution Dependency -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>_index</artifactId>
-      <version>${project.version}</version>
-      <type>pom</type>
+      <artifactId>_distro</artifactId>
+      <version>0.0.2-SNAPSHOT</version>
       <scope>runtime</scope>
+      <type>pom</type>
     </dependency>
+
+    <!-- Workspace Dependencies -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.effectiveosgi.rt.aws</artifactId>
+      <version>0.0.2-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+	    	<groupId>${project.groupId}</groupId>
+	    	<artifactId>com.effectiveosgi.rt.config</artifactId>
+	    	<version>1.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.effectiveosgi.rt.config</artifactId>
+      <version>0.1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.effectiveosgi.rt.inspect.web</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.effectiveosgi.rt.web</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>com.effectiveosgi.rt.inspect.web.servlet</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>com.effectiveosgi.rt.inspect.web.standalone</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <!-- TODO: reference your workspace projects to be indexed here -->
+  
   </dependencies>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-indexer-maven-plugin</artifactId>
+        <version>${bnd.maven.version}</version>
+        <configuration>
+          <includeJar>true</includeJar>
+          <localURLs>${local.index.policy}</localURLs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>default-index</id>
+            <goals>
+              <goal>index</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>biz.aQute.bnd</groupId>
         <artifactId>bnd-export-maven-plugin</artifactId>

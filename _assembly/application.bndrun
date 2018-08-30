@@ -1,4 +1,4 @@
--standalone: ../_index/target/index.xml
+-standalone: target/index.xml
 
 -runfw: org.apache.felix.framework
 -runee: JavaSE-1.8
