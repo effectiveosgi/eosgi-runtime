@@ -1,4 +1,4 @@
 language: java
-install: ./mvnw -Dmaven.repo.local=target/m2 clean verify
+script: ./mvnw -Dmaven.repo.local=target/m2 clean verify
 jdk:
   - openjdk8
