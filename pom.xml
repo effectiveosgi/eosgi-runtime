@@ -51,7 +51,6 @@
     <module>com.effectiveosgi.rt.config</module>
     <module>com.effectiveosgi.rt.config.test</module>
     <module>com.effectiveosgi.rt.aws</module>
-    <module>com.effectiveosgi.rt.inspect</module>
     <module>com.effectiveosgi.rt.nanoweb</module>
     <module>com.effectiveosgi.rt.nanoweb.test</module>
     <module>com.effectiveosgi.rt.inspect.web</module>

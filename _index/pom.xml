@@ -34,11 +34,6 @@
 	    	<version>1.0.1</version>
     </dependency>
     <dependency>
-    		<groupId>${project.groupId}</groupId>
-    		<artifactId>com.effectiveosgi.rt.inspect</artifactId>
-    		<version>0.0.3-SNAPSHOT</version>
-    </dependency>
-    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>com.effectiveosgi.rt.config</artifactId>
       <version>0.1.0</version>
