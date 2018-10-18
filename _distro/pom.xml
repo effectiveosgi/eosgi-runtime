@@ -72,6 +72,12 @@
       <artifactId>org.apache.felix.gogo.command</artifactId>
       <version>1.0.2</version>
       <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.compendium</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.felix</groupId>
