@@ -50,15 +50,12 @@
     <module>com.effectiveosgi.rt.config</module>
     <module>com.effectiveosgi.rt.config.test</module>
     <module>com.effectiveosgi.rt.aws</module>
-    <module>com.effectiveosgi.rt.nanoweb</module>
-    <module>com.effectiveosgi.rt.nanoweb.test</module>
     <module>com.effectiveosgi.rt.inspect.web</module>
+    <module>com.effectiveosgi.rt.inspect.web.standalone</module>
     <module>com.effectiveosgi.rt.inspect.web.servlet</module>
     <module>com.effectiveosgi.rt.web</module>
     <module>com.effectiveosgi.rt.web.test1</module>
     <module>com.effectiveosgi.rt.web.test2</module>
-    <module>com.effectiveosgi.rt.inspect.web.standalone</module>
-    <module>com.effectiveosgi.rt.nanoweb.api</module>
   </modules>
 
   <properties>

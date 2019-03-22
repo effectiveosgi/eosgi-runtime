@@ -11,38 +11,30 @@ import java.util.stream.Collectors;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.dto.ServiceReferenceDTO;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.runtime.ServiceComponentRuntime;
 import org.osgi.service.component.runtime.dto.ComponentConfigurationDTO;
 import org.osgi.service.component.runtime.dto.ComponentDescriptionDTO;
 
-import com.effectiveosgi.rt.nanoweb.NanoServlet;
-import com.effectiveosgi.rt.nanoweb.NanoServletException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonWriter;
 
-@Component(property = NanoServlet.PROP_PATTERN + "=" + SCRInspectorNanoServlet.URI_PREFIX)
 public class SCRInspectorNanoServlet implements NanoServlet {
 	
 	public static final String URI_PREFIX = "/api/scr";
 
 	private static final Type SCR_RETURN_TYPE = new TypeToken<Map<String, Collection<Object>>>() {}.getType();
 
-	private Gson gson;
+	private final Gson gson;
+	private final ServiceComponentRuntime scr;
 	
-	@Reference
-	ServiceComponentRuntime scr;
-
-	@Activate
-	public void activate(BundleContext context) {
-		gson = new GsonBuilder()
-				.setPrettyPrinting()
-				.registerTypeAdapter(ServiceReferenceDTO.class, new ServiceReferenceDTOJsonSerializer(context))
-				.create();
+	public SCRInspectorNanoServlet(BundleContext context, ServiceComponentRuntime scr) {
+		this.scr = scr;
+		this.gson = new GsonBuilder()
+			.setPrettyPrinting()
+			.registerTypeAdapter(ServiceReferenceDTO.class, new ServiceReferenceDTOJsonSerializer(context))
+			.create();
 	}
 	
 	@Override

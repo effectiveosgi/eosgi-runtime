@@ -18,20 +18,28 @@
       <groupId>org.osgi</groupId>
       <artifactId>osgi.core</artifactId>
     </dependency>
+
+    <!-- PROVIDED (embedding) -->
     <dependency>
-      <groupId>com.effectiveosgi</groupId>
-      <artifactId>com.effectiveosgi.rt.nanoweb.api</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>com.effectiveosgi</groupId>
-      <artifactId>com.effectiveosgi.rt.nanoweb</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <groupId>org.nanohttpd</groupId>
+      <artifactId>nanohttpd</artifactId>
+      <version>2.3.1</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.effectiveosgi</groupId>
       <artifactId>com.effectiveosgi.rt.inspect.web</artifactId>
       <version>0.0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- RUNTIME -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>_distro</artifactId>
+      <version>0.0.2-SNAPSHOT</version>
+      <type>pom</type>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 </project>

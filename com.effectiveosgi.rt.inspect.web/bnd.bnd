@@ -1,7 +1,4 @@
-Provide-Capability: \
-	com.effectiveosgi.rt.nanoweb.servlet; com.effectiveosgi.rt.nanoweb.servlet=/inspector,\
-	com.effectiveosgi.rt.nanoweb.servlet; com.effectiveosgi.rt.nanoweb.servlet=/api/bundles,\
-	com.effectiveosgi.rt.nanoweb.servlet; com.effectiveosgi.rt.nanoweb.servlet=/api/scr
-
 -conditionalpackage: \
 	com.google.gson.*
+
+Require-Capability: osgi.unresolvable; filter:="(&(must.not.resolve=*)(!(must.not.resolve=*)))"

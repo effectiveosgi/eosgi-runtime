@@ -1,90 +1,55 @@
 package com.effectiveosgi.rt.inspect.web.standalone;
 
-import java.util.Collections;
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
+import org.osgi.util.tracker.ServiceTracker;
 
-import com.effectiveosgi.rt.inspect.web.impl.ResourcesNanoServlet;
 import com.effectiveosgi.rt.inspect.web.impl.BundleInspectorNanoServlet;
-import com.effectiveosgi.rt.inspect.web.impl.SCRInspectorNanoServlet;
-import com.effectiveosgi.rt.nanoweb.NanoServlet;
-import com.effectiveosgi.rt.nanoweb.impl.NanoWebWhiteboardComponent;
+import com.effectiveosgi.rt.inspect.web.impl.ResourcesNanoServlet;
 
 public class InspectWebStandaloneActivator implements BundleActivator {
 
+	private static final String DEFAULT_HOST = "0.0.0.0";
 	private static final String SYS_PROP_PORT = "inspect.web.standalone.port";
 	private static final String SYS_PROP_HOST = "inspect.web.standalone.host";
+	private static final int DEFAULT_PORT = 8080;
 
-	private ResourcesNanoServlet appServlet;
-	private ServiceRegistration<NanoServlet> appServletReg;
-
-	private BundleInspectorNanoServlet bundleInspectorServlet;
-	private ServiceRegistration<NanoServlet> bundleInspectorServletReg;
-
-	private ServiceRegistration<NanoServlet> scrInspectorServletReg;
-
-	private NanoWebWhiteboardComponent nanoweb;
-	private SCRInspectorNanoServlet scrInspectorServlet;
+	private NanoServletServer server;
+	private ServiceTracker<?, ?> scrTracker;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
-		final NanoWebWhiteboardComponent nanoWeb = new NanoWebWhiteboardComponent();
+		// Get server host and port from system props
+		final int port = Optional.ofNullable(System.getProperty(SYS_PROP_PORT))
+				.map(Integer::parseInt)
+				.orElse(DEFAULT_PORT);
+		final String host = Optional.ofNullable(System.getProperty(SYS_PROP_HOST))
+				.orElse(DEFAULT_HOST);
 
-		appServlet = new ResourcesNanoServlet();
-		appServlet.activate(context);
-		final Dictionary<String, Object> appServletProps = new Hashtable<>();
-		appServletProps.put(NanoServlet.PROP_PATTERN, ResourcesNanoServlet.URI_PATTERN);
-		appServletReg = context.registerService(NanoServlet.class, appServlet, appServletProps);
-		nanoWeb.addService(appServlet, appServletReg.getReference());
+		// Create the server
+		final NanoServletServer server = new NanoServletServer(new InetSocketAddress(InetAddress.getByName(host), port));
 
-		bundleInspectorServlet = new BundleInspectorNanoServlet();
-		bundleInspectorServlet.activate(context);
-		final Dictionary<String, Object> bundleInspectorServletProps = new Hashtable<>();
-		bundleInspectorServletProps.put(NanoServlet.PROP_PATTERN, BundleInspectorNanoServlet.URI_PREFIX);
-		bundleInspectorServletReg = context.registerService(NanoServlet.class, bundleInspectorServlet, bundleInspectorServletProps);
-		nanoWeb.addService(bundleInspectorServlet, bundleInspectorServletReg.getReference());
+		// Register app and bundle inspector servlets
+		server.addRegistration(Pattern.compile(ResourcesNanoServlet.URI_PATTERN),
+				new ResourcesNanoServlet(context.getBundle()));
+		server.addRegistration(Pattern.compile(BundleInspectorNanoServlet.URI_PREFIX),
+				new BundleInspectorNanoServlet(context));
 
-		// The SCR inspector will fail to load if the relevant package imports
-		// are not bound, e.g. because there is no SCR.
-		try {
-			scrInspectorServlet = new SCRInspectorNanoServlet();
-			scrInspectorServlet.activate(context);
-			final Dictionary<String, Object> scrInspectorServletProps = new Hashtable<>();
-			scrInspectorServletProps.put(NanoServlet.PROP_PATTERN, SCRInspectorNanoServlet.URI_PREFIX);
-			scrInspectorServletReg = context.registerService(NanoServlet.class, scrInspectorServlet, scrInspectorServletProps);
-			nanoWeb.addService(scrInspectorServlet, scrInspectorServletReg.getReference());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// Open a tracker to register the SCR servlet if SCR is present
+		scrTracker = new SCRServiceTracker(context, server::addRegistration, server::removeRegistration);
+		scrTracker.open();
 
-		final Map<String, Object> config = new HashMap<>();
-		Optional.ofNullable(System.getProperty(SYS_PROP_PORT)).ifPresent(p -> config.put(NanoWebWhiteboardComponent.PROP_PORT, p));
-		Optional.ofNullable(System.getProperty(SYS_PROP_HOST)).ifPresent(p -> config.put(NanoWebWhiteboardComponent.PROP_HOST, p));
-		nanoWeb.activate(Collections.emptyMap());
+		server.start();
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		nanoweb.deactivate();
-		safeUnregister(scrInspectorServletReg);
-		safeUnregister(bundleInspectorServletReg);
-		safeUnregister(appServletReg);
-	}
-
-	private static final void safeUnregister(ServiceRegistration<?> reg) {
-		if (reg != null) {
-			try {
-				reg.unregister();
-			} catch (Exception e) {
-				// swallow
-			}
-		}
+		scrTracker.close();
+		server.stop();
 	}
 }

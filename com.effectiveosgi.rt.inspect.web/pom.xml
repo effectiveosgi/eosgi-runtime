@@ -36,11 +36,6 @@
         <version>2.8.0</version>
         <scope>provided</scope> <!-- Embedding -->
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>com.effectiveosgi.rt.nanoweb</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
 
     <!-- Runtime dependencies -->
     <dependency>

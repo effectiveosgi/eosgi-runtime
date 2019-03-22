@@ -9,12 +9,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.runtime.ServiceComponentRuntime;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
-import com.effectiveosgi.rt.nanoweb.NanoServlet;
-import com.effectiveosgi.rt.nanoweb.NanoServletException;
+import com.effectiveosgi.rt.inspect.web.impl.BundleInspectorNanoServlet;
+import com.effectiveosgi.rt.inspect.web.impl.NanoServlet;
+import com.effectiveosgi.rt.inspect.web.impl.NanoServletException;
+import com.effectiveosgi.rt.inspect.web.impl.ResourcesNanoServlet;
+import com.effectiveosgi.rt.inspect.web.impl.SCRInspectorNanoServlet;
 
 @Component(
 		property =  {
@@ -24,15 +30,20 @@ import com.effectiveosgi.rt.nanoweb.NanoServletException;
 public class InspectorAppServlet extends HttpServlet implements Servlet {
 
 	private static final long serialVersionUID = 1L;
-	
-	@Reference(target = "(pattern=/inspector.*)")
-	NanoServlet appServlet;
-	
-	@Reference(target = "(pattern=/api/bundles)")
-	NanoServlet bundleApiServlet;
-	
-	@Reference(target = "(pattern=/api/scr)")
-	NanoServlet scrApiServlet;
+
+	@Reference
+	ServiceComponentRuntime scr;
+
+	private NanoServlet appServlet;
+	private NanoServlet bundleApiServlet;
+	private NanoServlet scrApiServlet;
+
+	@Activate
+	void activate(BundleContext context) {
+		appServlet = new ResourcesNanoServlet(context.getBundle());
+		bundleApiServlet = new BundleInspectorNanoServlet(context);
+		scrApiServlet = new SCRInspectorNanoServlet(context, scr);
+	}
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -67,6 +78,5 @@ public class InspectorAppServlet extends HttpServlet implements Servlet {
 				resp.sendError(e.getCode(), e.getMessage());
 			}
 		}
-
 	}
 }

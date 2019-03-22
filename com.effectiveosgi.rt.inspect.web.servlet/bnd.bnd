@@ -1,9 +1,18 @@
 Require-Capability:\
 	osgi.implementation; \
-		filter:="(&(osgi.implementation=osgi.http)(version>=1.0)(!(version>=2.0)))", \
-	com.effectiveosgi.rt.nanoweb.servlet; \
-		filter:="(com.effectiveosgi.rt.nanoweb.servlet=/inspector)", \
-	com.effectiveosgi.rt.nanoweb.servlet; \
-		filter:="(com.effectiveosgi.rt.nanoweb.servlet=/api/bundles)", \
-	com.effectiveosgi.rt.nanoweb.servlet; \
-		filter:="(com.effectiveosgi.rt.nanoweb.servlet=/api/scr)"
+		filter:="(&(osgi.implementation=osgi.http)(version>=1.0)(!(version>=2.0)))"
+
+-privatepackage: \
+	com.effectiveosgi.rt.inspect.servlet.impl,\
+	com.effectiveosgi.rt.inspect.web.impl, \
+	static.*
+
+-conditionalpackage: \
+	com.google.gson.*
+
+Import-Package: \
+	org.osgi.service.component.runtime.*; resolution:="optional", \
+	*
+
+-removeheaders: \
+	Private-Package

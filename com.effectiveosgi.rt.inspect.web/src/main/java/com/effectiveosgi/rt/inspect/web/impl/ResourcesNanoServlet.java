@@ -6,14 +6,7 @@ import java.io.OutputStream;
 import java.net.URL;
 
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
 
-import com.effectiveosgi.rt.nanoweb.NanoServlet;
-import com.effectiveosgi.rt.nanoweb.NanoServletException;
-
-@Component(property = NanoServlet.PROP_PATTERN + "=" + ResourcesNanoServlet.URI_PATTERN)
 public class ResourcesNanoServlet implements NanoServlet {
 	
 	static final String URI_PATH_PREFIX = "/inspector";
@@ -23,9 +16,8 @@ public class ResourcesNanoServlet implements NanoServlet {
 
 	private Bundle bundle;
 	
-	@Activate
-	public void activate(BundleContext context) {
-		this.bundle = context.getBundle();
+	public ResourcesNanoServlet(Bundle bundle) {
+		this.bundle = bundle;
 	}
 	
 	@Override

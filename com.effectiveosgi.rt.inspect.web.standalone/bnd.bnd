@@ -1,23 +1,17 @@
 Bundle-Activator: com.effectiveosgi.rt.inspect.web.standalone.InspectWebStandaloneActivator
 
 -privatepackage: \
+	com.effectiveosgi.rt.inspect.web.standalone,\
 	com.effectiveosgi.rt.inspect.web.impl, \
-	com.effectiveosgi.rt.nanoweb, \
-	com.effectiveosgi.rt.nanoweb.impl, \
 	static.*
 
 -conditionalpackage: \
-	com.effectiveosgi.rt.nanoweb,\
 	fi.iki.elonen,\
 	com.google.gson.*
 
 Import-Package: \
 	org.osgi.service.component.runtime.*; resolution:="optional", \
 	*
-
-# Suppress generation of Service-Component header and
-# osgi.extender=osgi.component requirement
--dsannotations:
 
 -removeheaders: \
 	Private-Package

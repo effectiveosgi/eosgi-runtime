@@ -9,7 +9,7 @@
     <version>0.0.2-SNAPSHOT</version>
   </parent>
   <artifactId>_assembly</artifactId>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
 
   <dependencies>
     <!-- Distribution Dependency -->
@@ -89,7 +89,6 @@
           <failOnChanges>true</failOnChanges>
           <bndruns>
             <bndrun>application.bndrun</bndrun>
-            <bndrun>inspect.web.standalone.bndrun</bndrun>
           </bndruns>
         </configuration>
       </plugin>

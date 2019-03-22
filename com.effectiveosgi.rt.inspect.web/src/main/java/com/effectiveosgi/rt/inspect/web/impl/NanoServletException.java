@@ -1,4 +1,4 @@
-package com.effectiveosgi.rt.nanoweb;
+package com.effectiveosgi.rt.inspect.web.impl;
 
 public class NanoServletException extends Exception {
 
