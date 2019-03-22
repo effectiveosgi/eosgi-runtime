@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/iron-icons/hardware-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/places-icons.html">
 <link rel="import" href="../../bower_components/vaadin-icons/vaadin-icons.html">
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
 
 <link rel="import" href="../eosgi-components-util/abbrev-span.html">
 
@@ -70,7 +71,8 @@
 										<template is="dom-repeat" items="[[item.consumers]]">
 											<tr>
 												<td class="column-right">
-													<iron-icon class="inline number" icon="vaadin:arrows-long-right"></iron-icon>
+													<iron-icon class="inline number" icon="vaadin:arrows-long-right" id="usedByIcon"></iron-icon>
+													<paper-tooltip for="usedByIcon">Required By...</paper-tooltip>
 													<code>[[item.bsn]]</code>
 													<code class="number">[[item.version]]]</code>
 												</td>

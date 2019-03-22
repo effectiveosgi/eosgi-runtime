@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/iron-icons/hardware-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/places-icons.html">
 <link rel="import" href="../../bower_components/vaadin-icons/vaadin-icons.html">
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
 
 <link rel="import" href="../eosgi-components-util/abbrev-span.html">
 
@@ -71,7 +72,8 @@
 										</tr>
 										<tr hidden$="[[!item.hasProvider]]">
 											<td>
-												<iron-icon class="inline number" icon="vaadin:arrow-long-left""></iron-icon>
+												<iron-icon class="inline number" icon="vaadin:arrow-long-left" id="providedByIcon"></iron-icon>
+												<paper-tooltip for="providedByIcon">Provided By...</paper-tooltip>
 												<code>[[item.provider.bsn]]</code>
 												<code class="number">[[item.provider.version]]</code>
 											</td>
