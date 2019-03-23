@@ -1,6 +1,7 @@
 package com.effectiveosgi.rt.inspect.web.standalone;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import org.osgi.framework.BundleContext;
@@ -19,15 +20,13 @@ public class SCRServiceTracker extends ServiceTracker<ServiceComponentRuntime, N
 	// Don't use the class literal, to avoid NCDFE when the package import is unavailable
 	private static final String SCR_FILTER = "(objectClass=org.osgi.service.component.runtime.ServiceComponentRuntime)";
 
-	private final BiConsumer<Pattern, NanoServlet> adding;
-	private final BiConsumer<Pattern, NanoServlet> removing;
-	private final Pattern pattern;
+	private final Consumer<NanoServlet> adding;
+	private final Consumer<NanoServlet> removing;
 
-	public SCRServiceTracker(BundleContext context, BiConsumer<Pattern, NanoServlet> adding, BiConsumer<Pattern, NanoServlet> removing) {
+	public SCRServiceTracker(BundleContext context, Consumer<NanoServlet> adding, Consumer<NanoServlet> removing) {
 		super(context, buildFilter(), null);
 		this.adding = adding;
 		this.removing = removing;
-		this.pattern = Pattern.compile(SCRInspectorNanoServlet.URI_PREFIX);
 	}
 
 	private static Filter buildFilter() {
@@ -42,14 +41,16 @@ public class SCRServiceTracker extends ServiceTracker<ServiceComponentRuntime, N
 	@Override
 	public NanoServlet addingService(ServiceReference<ServiceComponentRuntime> reference) {
 		final ServiceComponentRuntime scr = context.getService(reference);
-		SCRInspectorNanoServlet servlet = new SCRInspectorNanoServlet(context, scr);
-		adding.accept(pattern, servlet);
+		SCRInspectorNanoServlet servlet = new SCRInspectorNanoServlet(context);
+		servlet.setServiceComponentRuntime(scr);
+
+		adding.accept(servlet);
 		return servlet;
 	}
 
 	@Override
 	public void removedService(ServiceReference<ServiceComponentRuntime> reference, NanoServlet servlet) {
-		removing.accept(pattern, servlet);
+		removing.accept(servlet);
 		context.ungetService(reference);
 	}
 }

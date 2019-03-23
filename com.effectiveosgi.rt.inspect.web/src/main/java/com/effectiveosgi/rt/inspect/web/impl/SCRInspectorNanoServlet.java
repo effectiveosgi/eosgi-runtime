@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.osgi.framework.BundleContext;
@@ -22,42 +25,50 @@ import com.google.gson.stream.JsonWriter;
 
 public class SCRInspectorNanoServlet implements NanoServlet {
 	
-	public static final String URI_PREFIX = "/api/scr";
-
-	private static final Type SCR_RETURN_TYPE = new TypeToken<Map<String, Collection<Object>>>() {}.getType();
+	private static final String PATH_PATTERN = "/api/scr";
+	private static final Type SCR_RETURN_TYPE = new TypeToken<Map<String, Object>>() {}.getType();
 
 	private final Gson gson;
-	private final ServiceComponentRuntime scr;
+	private volatile Optional<ServiceComponentRuntime> scr = Optional.empty();
 	
-	public SCRInspectorNanoServlet(BundleContext context, ServiceComponentRuntime scr) {
-		this.scr = scr;
+	public SCRInspectorNanoServlet(BundleContext context) {
 		this.gson = new GsonBuilder()
 			.setPrettyPrinting()
-			.registerTypeAdapter(ServiceReferenceDTO.class, new ServiceReferenceDTOJsonSerializer(context))
+			.registerTypeAdapter(ServiceReferenceDTO.class, new ServiceReferenceDTOExpandedJsonSerializer(context))
 			.create();
 	}
-	
+
+	@Override
+	public boolean matchPath(String path) {
+		return PATH_PATTERN.equalsIgnoreCase(path);
+	}
+
 	@Override
 	public void doGet(String path, NanoServlet.Session session) throws NanoServletException, IOException {
 		Map<String, Object> result = new HashMap<>();
-		
-		try {
-			List<ComponentConfigurationDTO> configDtos = scr.getComponentDescriptionDTOs().stream()
-					.flatMap(dto -> scr.getComponentConfigurationDTOs(dto).stream())
-					.sorted((a, b) -> (int) (a.id - b.id))
-					.collect(Collectors.toList());
-			result.put("configured", configDtos);
-			
-			List<ComponentDescriptionDTO> unconfigured = scr.getComponentDescriptionDTOs().stream()
-					.filter(dto -> scr.getComponentConfigurationDTOs(dto).isEmpty())
-					.sorted((a,b) -> a.name.compareTo(b.name))
-					.collect(Collectors.toList());
-			result.put("unconfigured", unconfigured);
-			
-		} catch (NoClassDefFoundError e) {
-			throw new NanoServletException(503, "Unavailable");
+		final SCRStatusDTO statusDto = new SCRStatusDTO();
+		final List<ComponentConfigurationDTO> configured;
+		final List<ComponentDescriptionDTO> unconfigured;
+		if (scr.isPresent()) {
+			statusDto.available = true;
+			final Collection<ComponentDescriptionDTO> descriptionDTOs = scr.get().getComponentDescriptionDTOs();
+			configured = descriptionDTOs.stream()
+				.flatMap(dto -> scr.get().getComponentConfigurationDTOs(dto).stream())
+				.sorted(Comparator.comparingLong(dto -> dto.id))
+				.collect(Collectors.toList());
+			unconfigured = descriptionDTOs.stream()
+				.filter(dto -> scr.get().getComponentConfigurationDTOs(dto).isEmpty())
+				.collect(Collectors.toList());
+		} else {
+			statusDto.available = false;
+			configured = Collections.emptyList();
+			unconfigured = Collections.emptyList();
 		}
+		result.put("status", statusDto);
+		result.put("configured", configured);
+		result.put("unconfigured", unconfigured);
 
+		session.putHeader("Content-Type", "application/json");
 		try (PrintWriter out = new PrintWriter(session.getOutputStream())) {
 			JsonWriter jsonWriter = new JsonWriter(out);
 			
@@ -65,5 +76,9 @@ public class SCRInspectorNanoServlet implements NanoServlet {
 			out.flush();
 		}
 	}
-	
+
+	public void setServiceComponentRuntime(ServiceComponentRuntime scr) {
+		this.scr = Optional.ofNullable(scr);
+	}
+
 }

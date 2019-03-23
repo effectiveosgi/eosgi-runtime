@@ -6,32 +6,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.Dictionary;
 
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 import org.osgi.framework.dto.BundleDTO;
 import org.osgi.framework.wiring.BundleWiring;
-import org.osgi.framework.wiring.dto.BundleRevisionDTO;
-import org.osgi.framework.wiring.dto.BundleWiringDTO;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.google.gson.reflect.TypeToken;
 
 class BundleJsonSerializer implements JsonSerializer<Bundle> {
 	
 	public static final Type TYPE = Bundle.class;
 
 	private static final String PROP_LAST_MODIFIED_ISO = "lastModifiedISO";
-
-	private static final Type REVISION_ARRAY_TYPE = new TypeToken<BundleRevisionDTO[]>() {}.getType();
-	private static final Type WIRING_ARRAY_TYPE = new TypeToken<BundleWiringDTO[]>() {}.getType();
-
-	private final BundleContext context;
-
-	BundleJsonSerializer(BundleContext context) {
-		this.context = context;
-	}
 
 	@Override
 	public JsonElement serialize(Bundle bundle, Type typeOfSrc, JsonSerializationContext jsonContext) {

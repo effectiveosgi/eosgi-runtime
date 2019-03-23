@@ -4,22 +4,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.regex.Pattern;
 
 import org.osgi.framework.Bundle;
 
 public class ResourcesNanoServlet implements NanoServlet {
 	
-	static final String URI_PATH_PREFIX = "/inspector";
-	public static final String URI_PATTERN = URI_PATH_PREFIX + ".*";
-	static final String BUNDLE_PATH_PREFIX = "/static";
+	private static final String URI_PATH_PREFIX = "/inspector";
+	private static final Pattern URI_PATTERN = Pattern.compile(URI_PATH_PREFIX + ".*");
+	private static final String BUNDLE_PATH_PREFIX = "/static";
 	private static final String REDIRECT = "bundles.html";
 
-	private Bundle bundle;
+	private final Bundle bundle;
 	
 	public ResourcesNanoServlet(Bundle bundle) {
 		this.bundle = bundle;
 	}
-	
+
+	@Override
+	public boolean matchPath(String path) {
+		return URI_PATTERN.matcher(path).matches();
+	}
+
 	@Override
 	public void doGet(String path, NanoServlet.Session session) throws NanoServletException {
 		String bundlePath = path.substring(URI_PATH_PREFIX.length());

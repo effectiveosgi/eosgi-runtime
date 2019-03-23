@@ -33,6 +33,7 @@
       <groupId>com.effectiveosgi</groupId>
       <artifactId>com.effectiveosgi.rt.inspect.web</artifactId>
       <version>0.0.1-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Runtime dependencies -->
@@ -43,11 +44,26 @@
       <type>pom</type>
       <scope>runtime</scope>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>org.apache.felix</groupId>
       <artifactId>org.apache.felix.http.jetty</artifactId>
       <version>3.4.6</version>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>com.effectiveosgi</groupId>
+      <artifactId>com.effectiveosgi.rt.config</artifactId>
+      <version>1.0.1</version>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-indexer-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 </project>

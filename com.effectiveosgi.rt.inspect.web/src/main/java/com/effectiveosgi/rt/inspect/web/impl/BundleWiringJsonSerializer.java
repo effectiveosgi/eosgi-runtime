@@ -68,6 +68,7 @@ class BundleWiringJsonSerializer implements JsonSerializer<BundleWiring> {
 			for (BundleWire consumerWire : capsToWires.getOrDefault(cap, Collections.emptyList())) {
 				BundleRevision consumer = consumerWire.getRequirer();
 				JsonObject consumerObj = new JsonObject();
+				consumerObj.addProperty("id", consumer.getBundle().getBundleId());
 				consumerObj.addProperty("bsn", consumer.getSymbolicName());
 				consumerObj.addProperty("version", consumer.getVersion().toString());
 				consumerObj.addProperty("revision", consumer.getBundle().adapt(BundleRevisions.class).getRevisions().indexOf(consumer));
@@ -87,6 +88,7 @@ class BundleWiringJsonSerializer implements JsonSerializer<BundleWiring> {
 			if (providerWire != null) {
 				BundleRevision provider = providerWire.getProvider();
 				JsonObject providerObj = new JsonObject();
+				providerObj.addProperty("id", provider.getBundle().getBundleId());
 				providerObj.addProperty("bsn", provider.getSymbolicName());
 				providerObj.addProperty("version", provider.getVersion().toString());
 				providerObj.addProperty("revision", provider.getBundle().adapt(BundleRevisions.class).getRevisions().indexOf(provider));

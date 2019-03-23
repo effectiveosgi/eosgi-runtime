@@ -12,8 +12,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-final class ServiceReferenceDTOJsonSerializer implements JsonSerializer<ServiceReferenceDTO> {
-
+class ServiceReferenceDTOJsonSerializer implements JsonSerializer<ServiceReferenceDTO> {
+	
 	private final BundleContext context;
 
 	ServiceReferenceDTOJsonSerializer(BundleContext context) {
@@ -23,14 +23,20 @@ final class ServiceReferenceDTOJsonSerializer implements JsonSerializer<ServiceR
 	@Override
 	public JsonElement serialize(ServiceReferenceDTO dto, Type typeOfSrc, JsonSerializationContext jsonContext) {
 		JsonObject obj = new JsonObject();
-		
+
+		// Add id
 		obj.addProperty("id", dto.id);
-		obj.addProperty("bundle", dto.bundle);
-		
-		Bundle bundle = context.getBundle(dto.bundle);
-		obj.addProperty("bundleSymbolicName", bundle != null ? bundle.getSymbolicName() : "<missing>");
-		obj.addProperty("bundleVersion", bundle != null ? bundle.getVersion().toString() : Version.emptyVersion.toString());
+
+		// Expand provider bundle info to include BSN and version
+		addBundleInfo(dto.bundle, obj);
 
 		return obj;
+	}
+
+	protected void addBundleInfo(long bundleId, JsonObject obj) {
+		obj.addProperty("bundleId", bundleId);
+		Bundle bundle = context.getBundle(bundleId);
+		obj.addProperty("bundleSymbolicName", bundle != null ? bundle.getSymbolicName() : "<missing>");
+		obj.addProperty("bundleVersion", bundle != null ? bundle.getVersion().toString() : Version.emptyVersion.toString());
 	}
 }

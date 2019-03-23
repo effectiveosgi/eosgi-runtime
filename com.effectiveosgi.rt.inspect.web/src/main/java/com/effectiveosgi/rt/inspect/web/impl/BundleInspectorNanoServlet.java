@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.dto.ServiceReferenceDTO;
 import org.osgi.framework.wiring.FrameworkWiring;
 
 import com.google.gson.Gson;
@@ -20,8 +19,7 @@ import com.google.gson.stream.JsonWriter;
 
 public class BundleInspectorNanoServlet implements NanoServlet {
 	
-	public static final String URI_PREFIX = "/api/bundles";
-
+	private static final String PATH_PATTERN = "/api/bundles";
 	private static final Type BUNDLES_RETURN_TYPE = new TypeToken<List<? extends Bundle>>() {}.getType();
 
 	private final CollectionJsonSerializer<Bundle> bundlesSerializer = new CollectionJsonSerializer<>(Bundle.class);
@@ -32,13 +30,17 @@ public class BundleInspectorNanoServlet implements NanoServlet {
 		this.context = context;
 		GsonBuilder gsonBuilder = new GsonBuilder()
 				.setPrettyPrinting()
-				.registerTypeAdapter(ServiceReferenceDTO.class, new ServiceReferenceDTOJsonSerializer(context))
-				.registerTypeAdapter(BundleJsonSerializer.TYPE, new BundleJsonSerializer(context))
+				.registerTypeAdapter(BundleJsonSerializer.TYPE, new BundleJsonSerializer())
 				.registerTypeAdapter(BUNDLES_RETURN_TYPE, bundlesSerializer);
 		BundleHeadersJsonSerializer.register(gsonBuilder);
 		BundleWiringJsonSerializer.register(gsonBuilder);
 		VersionJsonSerializer.register(gsonBuilder);
 		this.gson = gsonBuilder.create();
+	}
+
+	@Override
+	public boolean matchPath(String path) {
+		return PATH_PATTERN.equalsIgnoreCase(path);
 	}
 
 	@Override

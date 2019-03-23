@@ -1,0 +1,38 @@
+{
+	"entrypoint": "bundles.html",
+	"shell": "",
+	"sources": [
+		"src/**.js",
+		"*.html",
+		"package.json"
+	],
+	"extraDependencies": [
+		"node_modules/@webcomponents/webcomponentsjs/*.js",
+		"!node_modules/@webcomponents/webcomponentsjs/gulpfile.js",
+		"node_modules/@webcomponents/webcomponentsjs/bundles/*.js",
+		"node_modules/@polymer/**/*.js",
+		"node_modules/@vaadin/**/*.js"
+	],
+	"builds": [
+		{
+			"name": "es5-bundled",
+			"js": {
+				"minify": false,
+				"compile": "es5",
+				"transformModulesToAmd": false
+			},
+			"css": {
+				"minify": false
+			},
+			"html": {
+				"minify": false
+			},
+			"bundle": true,
+			"addServiceWorker": false,
+			"addPushManifest": false,
+			"preset": "es5-bundled"
+		}
+	],
+	"moduleResolution": "node",
+	"npm": true
+}

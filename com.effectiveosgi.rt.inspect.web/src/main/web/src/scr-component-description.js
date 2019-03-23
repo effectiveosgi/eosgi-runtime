@@ -1,0 +1,99 @@
+import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-icon/iron-icon.js';
+import '@polymer/paper-tooltip/paper-tooltip.js';
+import '@vaadin/vaadin-icons/vaadin-icons.js';
+/**
+ * @customElement
+ * @polymer
+ */
+class ScrComponentDescriptionComponent extends PolymerElement {
+  static get template() {
+    return html`
+    <style>
+      :host {
+        display: block;
+      }
+      .inline {
+        vertical-align: middle;
+      }
+      iron-icon.inline {
+        --iron-icon-width: 16px;
+        --iron-icon-height: 16px;
+      }
+      iron-icon.service-icon {
+        color: var(--paper-yellow-400);
+        transform: rotate(180deg);
+      }
+      .maxwidth {
+        width: 100%;
+      }
+      .number { color: var(--paper-blue-600); }
+      .light { color: var(--paper-grey-600); }
+    </style>
+
+    <table class="maxwidth">
+      <!-- Bundle -->
+      <tr><td>
+        <iron-icon class="inline light" icon="vaadin:cubes" id="bundleIcon"></iron-icon>
+        <paper-tooltip for="bundleIcon">Bundle</paper-tooltip>
+        <code><a href\$="bundles.html#[[componentDescription.bundle.id]]">[[[componentDescription.bundle.id]]]</a> [[componentDescription.bundle.symbolicName]] <span class="number">[[componentDescription.bundle.version]]</span></code>
+      </td></tr>
+
+      <!-- Implementation Class -->
+      <tr><td>
+        <img title="Implementation Class" width="16px" height="16px" class="inline" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAnJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDUuNC4wIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+CiAgICAgICAgIDx0aWZmOllSZXNvbHV0aW9uPjcyPC90aWZmOllSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpDb21wcmVzc2lvbj41PC90aWZmOkNvbXByZXNzaW9uPgogICAgICAgICA8dGlmZjpYUmVzb2x1dGlvbj43MjwvdGlmZjpYUmVzb2x1dGlvbj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5GbHlpbmcgTWVhdCBBY29ybiA1LjYuNDwveG1wOkNyZWF0b3JUb29sPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAxNy0xMS0yNFQyMTozMDowNDwveG1wOk1vZGlmeURhdGU+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgrrwUCnAAACDElEQVQ4EaVTTU8TURQ905nBjxDGFuqyaSUlpPK10B9AVBJxgTEs2ODCJnXHqiElcUVmwYLQHbLyB8DekqZNDGzKD0BCN0Q0EqiGEKTGznTGe29nplTRxHiTN3Pmnnvue3nnjoKrYgkGNDxACAmhHRzARhk5nP1arnQkltEHFSblXtDSOzjAou83aOIVsvjic+0Gy0iRuEBEzCf/8D6kJo+pyXvmQ1LU2jkQT8YnUXhawHHmGLWXNZSelTARm/D7xWQj1gSRxxrycHnltnOu4zjuVZEupqXGq11jvQK+sGuoEdb7jX7sPd+Druoofihi7t0cItcjWB1fxdjtMdStOsKvw2g4DdZa+IGoRlf1kMWcyQxnRGw7NmY3Z3Hy/YTTyG5nMX9vXnDCSGD/dJ+xzk5pdIa4MPQYDA8K3P26G4g5Uf5YliXk5QfZ3LpEL9l7o1fQhXVxueyvOAQeEi+qp1VByVtJsqfdOxVJYePJhqyRvhG/HKwNyYS1hgSlw5KQ0ZtRpIfSgjVFw8L9BUwnpzF1ZwoHZ8F+lqelOs9GJa+4W5+2xMGm03Qrnyvu0bejwFGzYv5moyrbPEKFTjxD2FivrqOnqwej0VHEjTi6u7px3jiHuWNicWeRhsVlCU/jDIqot0d5BXfJkbdEyiirioqB8ADYUj627dos5OgY5XYDpv7rZ+IGfvzD7/wT0DzcDYNnIGoAAAAASUVORK5CYII=">
+        <code>[[componentDescription.implementationClass]]</code>
+      </td></tr>
+
+      <!-- Service Interfaces -->
+      <template is="dom-repeat" items="[[componentDescription.serviceInterfaces]]">
+        <tr><td>
+          <iron-icon icon="vaadin:play" class="inline service-icon"></iron-icon>
+          <code>[[item]]</code>
+        </td></tr>
+      </template>
+
+      <!-- Configuration Policy and PID -->
+      <tr>
+        <td>
+          <iron-icon class="inline light" icon="vaadin:cog" id="configIcon"></iron-icon>
+          <paper-tooltip for="configIcon">Configuration</paper-tooltip>
+          <code>[[componentDescription.configurationPid]]</code>
+          <code class="number">[[componentDescription.configurationPolicy]]</code>
+        </td>
+      </tr>
+    </table>
+`;
+  }
+
+  static get is() { return 'scr-component-description'; }
+  static get properties() {
+      return {
+          componentDescription: Object,
+          
+          shortConfigPolicy: {
+              type: String,
+              computed: 'computeShortConfigPolicy()'
+          }
+      };
+  }
+  computeShortConfigPolicy() {
+      var s;
+      switch (this.componentDescription.configurationPolicy) {
+      case "optional":
+          s = "&#x2460;";
+          break;
+      case "require":
+          s = "&#x229b;";
+          break;
+      case "ignore":
+          s = "&#x20dd;";
+          break;
+      default:
+          s = "<undefined>";
+          break;
+      }
+      return s;
+  }
+}
+window.customElements.define(ScrComponentDescriptionComponent.is, ScrComponentDescriptionComponent);

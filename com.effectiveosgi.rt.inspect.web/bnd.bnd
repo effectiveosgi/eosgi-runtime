@@ -1,2 +1,4 @@
 -conditionalpackage: \
 	com.google.gson.*
+
+Import-Package: sun.misc; resolution:=optional, *

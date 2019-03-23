@@ -5,14 +5,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.regex.Pattern;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.effectiveosgi.rt.inspect.web.impl.NanoServlet;
 import com.effectiveosgi.rt.inspect.web.impl.NanoServletException;
@@ -22,34 +19,27 @@ import fi.iki.elonen.NanoHTTPD.Response.Status;
 
 public class NanoServletServer extends NanoHTTPD {
 
-	private final List<Entry<Pattern, NanoServlet>> registrations = new ArrayList<>();
+	private final List<NanoServlet> servlets = new CopyOnWriteArrayList<>();
 
 	public NanoServletServer(InetSocketAddress address) {
 		super(address.getHostString(), address.getPort());
 	}
 
-	public void addRegistration(Pattern pattern, NanoServlet servlet) {
-		synchronized (registrations) {
-			registrations.add(new AbstractMap.SimpleEntry<>(pattern, servlet));
-		}
+	public void addServlet(NanoServlet servlet) {
+		servlets.add(servlet);
 	}
 
-	public void removeRegistration(Pattern pattern, NanoServlet servlet) {
-		synchronized (registrations) {
-			registrations.remove(new AbstractMap.SimpleEntry<>(pattern, servlet));
-		}
+	public void removeServlet(NanoServlet servlet) {
+		servlets.remove(servlet);
 	}
 
 	@Override
 	public Response serve(IHTTPSession session) {
 		final String path = session.getUri();
 		final Optional<NanoServlet> matched;
-		synchronized (registrations) {
-			matched = registrations.stream()
-					.filter(e -> e.getKey().matcher(path).matches())
-					.map(Entry::getValue)
-					.findFirst();
-		}
+		matched = servlets.stream()
+			.filter(s -> s.matchPath(path))
+			.findFirst();
 		final Map<String, String> responseHeaders = new HashMap<>();
 		if (!matched.isPresent()) {
 			return newFixedLengthResponse(Status.NOT_FOUND, "text/plain", "Not Found");
@@ -66,6 +56,7 @@ public class NanoServletServer extends NanoHTTPD {
 					responseHeaders.put(name, value);
 				}
 			});
+			responseHeaders.put("Access-Control-Allow-Origin", "*");
 			String mimeType = responseHeaders.getOrDefault("Content-Type", "");
 			final byte[] result = out.toByteArray();
 			Response response = newFixedLengthResponse(Status.OK, mimeType, new ByteArrayInputStream(result), result.length);

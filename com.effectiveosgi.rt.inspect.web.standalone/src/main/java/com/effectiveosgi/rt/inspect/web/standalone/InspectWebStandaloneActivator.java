@@ -3,14 +3,16 @@ package com.effectiveosgi.rt.inspect.web.standalone;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Optional;
-import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
 import com.effectiveosgi.rt.inspect.web.impl.BundleInspectorNanoServlet;
+import com.effectiveosgi.rt.inspect.web.impl.LogNanoServlet;
 import com.effectiveosgi.rt.inspect.web.impl.ResourcesNanoServlet;
+import com.effectiveosgi.rt.inspect.web.impl.ServiceInspectorNanoServlet;
 
 public class InspectWebStandaloneActivator implements BundleActivator {
 
@@ -35,13 +37,15 @@ public class InspectWebStandaloneActivator implements BundleActivator {
 		final NanoServletServer server = new NanoServletServer(new InetSocketAddress(InetAddress.getByName(host), port));
 
 		// Register app and bundle inspector servlets
-		server.addRegistration(Pattern.compile(ResourcesNanoServlet.URI_PATTERN),
-				new ResourcesNanoServlet(context.getBundle()));
-		server.addRegistration(Pattern.compile(BundleInspectorNanoServlet.URI_PREFIX),
-				new BundleInspectorNanoServlet(context));
+		Stream.of(
+				new ResourcesNanoServlet(context.getBundle()),
+				new BundleInspectorNanoServlet(context),
+				new ServiceInspectorNanoServlet(context),
+				new LogNanoServlet(context))
+			.forEach(server::addServlet);
 
 		// Open a tracker to register the SCR servlet if SCR is present
-		scrTracker = new SCRServiceTracker(context, server::addRegistration, server::removeRegistration);
+		scrTracker = new SCRServiceTracker(context, server::addServlet, server::removeServlet);
 		scrTracker.open();
 
 		server.start();

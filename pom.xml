@@ -60,7 +60,7 @@
 
   <properties>
     <local.index.policy>REQUIRED</local.index.policy>
-    <bnd.maven.version>4.0.0</bnd.maven.version>
+    <bnd.maven.version>4.2.0</bnd.maven.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
@@ -139,12 +139,17 @@
           </configuration>
           <executions>
             <execution>
-              <id>default-bnd-process</id>
               <goals>
                 <goal>bnd-process</goal>
               </goals>
             </execution>
           </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>biz.aQute.bnd</groupId>
+          <artifactId>bnd-indexer-maven-plugin</artifactId>
+          <version>${bnd.maven.version}</version>
         </plugin>
 
         <plugin>

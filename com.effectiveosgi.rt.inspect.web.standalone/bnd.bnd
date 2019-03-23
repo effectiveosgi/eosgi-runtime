@@ -11,6 +11,8 @@ Bundle-Activator: com.effectiveosgi.rt.inspect.web.standalone.InspectWebStandalo
 
 Import-Package: \
 	org.osgi.service.component.runtime.*; resolution:="optional", \
+	org.osgi.service.cm; resolution:="optional", \
+	org.osgi.service.log; resolution:="optional", \
 	*
 
 -removeheaders: \
