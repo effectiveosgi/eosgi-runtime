@@ -21,7 +21,7 @@ public class ResourcesNanoServlet implements NanoServlet {
 	}
 	
 	@Override
-	public String doGet(String path, NanoServlet.Session session) throws NanoServletException {
+	public void doGet(String path, NanoServlet.Session session) throws NanoServletException {
 		String bundlePath = path.substring(URI_PATH_PREFIX.length());
 		bundlePath = BUNDLE_PATH_PREFIX + (bundlePath.startsWith("/") ? "" : "/") + bundlePath;
 		final URL entry = bundle.getEntry(bundlePath);
@@ -32,6 +32,8 @@ public class ResourcesNanoServlet implements NanoServlet {
 			session.putHeader("Location", redirect);
 			throw new NanoServletException(307, String.format("Redirect to <a href='%s'>.", redirect));
 		}
+
+		session.putHeader("Content-Type", inferMimeType(bundlePath));
 		try (
 				InputStream in = entry.openStream();
 		) {
@@ -43,9 +45,19 @@ public class ResourcesNanoServlet implements NanoServlet {
 				bytesRead = in.read(buffer, 0, 1024);
 			}
 			out.flush();
-			return "text/html";
 		} catch (IOException e) {
 			throw new NanoServletException(500, e.getMessage());
 		}
+	}
+
+	private String inferMimeType(String bundlePath) {
+		final String mimeType;
+		if (bundlePath.endsWith(".html"))
+			mimeType = "text/html";
+		else if (bundlePath.endsWith(".js"))
+			mimeType = "application/javascript";
+		else
+			mimeType = "text/plain";
+		return mimeType;
 	}
 }

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -40,7 +41,7 @@ public class InspectorAppServlet extends HttpServlet implements Servlet {
 
 	@Activate
 	void activate(BundleContext context) {
-		appServlet = new ResourcesNanoServlet(context.getBundle());
+		appServlet = new ResourcesNanoServlet(FrameworkUtil.getBundle(ResourcesNanoServlet.class));
 		bundleApiServlet = new BundleInspectorNanoServlet(context);
 		scrApiServlet = new SCRInspectorNanoServlet(context, scr);
 	}

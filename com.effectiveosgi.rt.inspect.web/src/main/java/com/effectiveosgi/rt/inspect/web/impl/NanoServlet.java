@@ -12,6 +12,6 @@ public interface NanoServlet {
 		void putHeader(String name, String value);
 	}
 
-	String doGet(String path, Session session) throws NanoServletException, IOException;
+	void doGet(String path, Session session) throws NanoServletException, IOException;
 
 }

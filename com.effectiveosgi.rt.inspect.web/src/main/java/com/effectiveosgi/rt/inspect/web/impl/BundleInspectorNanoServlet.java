@@ -42,7 +42,7 @@ public class BundleInspectorNanoServlet implements NanoServlet {
 	}
 
 	@Override
-	public String doGet(String path, NanoServlet.Session session) throws NanoServletException, IOException {
+	public void doGet(String path, NanoServlet.Session session) throws NanoServletException, IOException {
 		FrameworkWiring wiring = context.getBundle(0).adapt(FrameworkWiring.class);
 		List<Bundle> bundles = Stream
 			.concat(
@@ -52,11 +52,11 @@ public class BundleInspectorNanoServlet implements NanoServlet {
 			.distinct()
 			.collect(Collectors.toList());
 		
+		session.putHeader("Content-Type", "application/json");
 		try (PrintWriter out = new PrintWriter(session.getOutputStream())) {
 			JsonWriter writer = new JsonWriter(out);
 			gson.toJson(bundles, BUNDLES_RETURN_TYPE, writer);
 			out.flush();
-			return "application/json";
 		}
 	}
 	

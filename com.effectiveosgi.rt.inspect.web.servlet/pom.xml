@@ -33,7 +33,6 @@
       <groupId>com.effectiveosgi</groupId>
       <artifactId>com.effectiveosgi.rt.inspect.web</artifactId>
       <version>0.0.1-SNAPSHOT</version>
-      <scope>provided</scope> <!-- embedding -->
     </dependency>
 
     <!-- Runtime dependencies -->

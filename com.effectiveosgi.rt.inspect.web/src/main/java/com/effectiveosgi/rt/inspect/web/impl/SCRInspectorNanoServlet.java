@@ -38,7 +38,7 @@ public class SCRInspectorNanoServlet implements NanoServlet {
 	}
 	
 	@Override
-	public String doGet(String path, NanoServlet.Session session) throws NanoServletException, IOException {
+	public void doGet(String path, NanoServlet.Session session) throws NanoServletException, IOException {
 		Map<String, Object> result = new HashMap<>();
 		
 		try {
@@ -63,7 +63,6 @@ public class SCRInspectorNanoServlet implements NanoServlet {
 			
 			gson.toJson(result, SCR_RETURN_TYPE, jsonWriter);
 			out.flush();
-			return "application/json";
 		}
 	}
 	

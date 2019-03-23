@@ -1,4 +1,2 @@
 -conditionalpackage: \
 	com.google.gson.*
-
-Require-Capability: osgi.unresolvable; filter:="(&(must.not.resolve=*)(!(must.not.resolve=*)))"

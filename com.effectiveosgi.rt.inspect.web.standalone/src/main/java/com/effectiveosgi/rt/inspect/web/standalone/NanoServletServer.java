@@ -51,29 +51,31 @@ public class NanoServletServer extends NanoHTTPD {
 					.findFirst();
 		}
 		final Map<String, String> responseHeaders = new HashMap<>();
-		final Response response = matched.map(servlet -> {
-			try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-				final String mimeType = servlet.doGet(path, new NanoServlet.Session() {
-					@Override
-					public OutputStream getOutputStream() throws IOException {
-						return out;
-					}
-
-					@Override
-					public void putHeader(String name, String value) {
-						responseHeaders.put(name, value);
-					}
-				});
-				final byte[] result = out.toByteArray();
-				return newFixedLengthResponse(Status.OK, mimeType, new ByteArrayInputStream(result), result.length);
-			} catch (NanoServletException e) {
-				return newFixedLengthResponse(Status.lookup(e.getCode()), "text/plain", e.getMessage());
-			} catch (Exception e) {
-				return newFixedLengthResponse(Status.INTERNAL_ERROR, "text/plain", e.getMessage());
-			}
-		}).orElse(newFixedLengthResponse(Status.NOT_FOUND, "text/plain", "Not Found"));
-		responseHeaders.forEach(response::addHeader);
-		return response;
+		if (!matched.isPresent()) {
+			return newFixedLengthResponse(Status.NOT_FOUND, "text/plain", "Not Found");
+		}
+		NanoServlet servlet = matched.get();
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			servlet.doGet(path, new NanoServlet.Session() {
+				@Override
+				public OutputStream getOutputStream() throws IOException {
+					return out;
+				}
+				@Override
+				public void putHeader(String name, String value) {
+					responseHeaders.put(name, value);
+				}
+			});
+			String mimeType = responseHeaders.getOrDefault("Content-Type", "");
+			final byte[] result = out.toByteArray();
+			Response response = newFixedLengthResponse(Status.OK, mimeType, new ByteArrayInputStream(result), result.length);
+			responseHeaders.forEach(response::addHeader);
+			return response;
+		} catch (NanoServletException e) {
+			return newFixedLengthResponse(Status.lookup(e.getCode()), "text/plain", e.getMessage());
+		} catch (Exception e) {
+			return newFixedLengthResponse(Status.INTERNAL_ERROR, "text/plain", e.getMessage());
+		}
 	}
 
 }
