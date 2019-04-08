@@ -3,6 +3,7 @@
 -runfw: org.apache.felix.framework
 -runee: JavaSE-1.8
 -runprovidedcapabilities: ${native_capability}
+-runsystempackages: sun.misc
 -runproperties:\
 	org.osgi.service.http.port=-1,\
 	felix.fileinstall.noInitialDelay=true,\

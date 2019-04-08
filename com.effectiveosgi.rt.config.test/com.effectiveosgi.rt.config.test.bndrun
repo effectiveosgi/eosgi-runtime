@@ -1,6 +1,6 @@
 -standalone: target/index.xml
 
--runsystempackages: sun.reflect
+-runsystempackages: sun.reflect, sun.misc
 -runfw: org.apache.felix.framework
 -runee: JavaSE-1.8
 -resolve.effective: active; skip:='osgi.service'
