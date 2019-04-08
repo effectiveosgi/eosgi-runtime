@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.effectiveosgi</groupId>
+    <artifactId>eosgi-runtime-parent</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
+  </parent>
+  <artifactId>com.effectiveosgi.rt.command</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+
+  <dependencies>
+    <dependency>
+      <groupId>biz.aQute.bnd</groupId>
+      <artifactId>biz.aQute.bndlib</artifactId>
+      <version>${bnd.maven.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>biz.aQute.bnd</groupId>
+      <artifactId>biz.aQute.launcher</artifactId>
+      <version>${bnd.maven.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.gogo.runtime</artifactId>
+      <version>1.1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>_distro</artifactId>
+      <version>0.0.2-SNAPSHOT</version>
+      <type>pom</type>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+
+</project>

@@ -57,6 +57,11 @@
         <artifactId>com.effectiveosgi.rt.inspect.web.standalone</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.effectiveosgi.rt.command</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
     <!-- TODO: reference your workspace projects to be indexed here -->
   
   </dependencies>
@@ -89,6 +94,7 @@
           <failOnChanges>true</failOnChanges>
           <bndruns>
             <bndrun>application.bndrun</bndrun>
+            <bndrun>command.bndrun</bndrun>
           </bndruns>
         </configuration>
       </plugin>
