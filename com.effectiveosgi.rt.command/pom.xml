@@ -12,14 +12,17 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>osgi.annotation</artifactId>
+      <version>7.0.0</version>
+    </dependency>
+    <dependency>
       <groupId>biz.aQute.bnd</groupId>
       <artifactId>biz.aQute.bndlib</artifactId>
-      <version>${bnd.maven.version}</version>
     </dependency>
     <dependency>
       <groupId>biz.aQute.bnd</groupId>
       <artifactId>biz.aQute.launcher</artifactId>
-      <version>${bnd.maven.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.felix</groupId>
