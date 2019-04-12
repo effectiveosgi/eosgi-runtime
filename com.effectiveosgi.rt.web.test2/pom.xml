@@ -6,7 +6,7 @@
   <parent>
     <artifactId>eosgi-runtime-parent</artifactId>
     <groupId>com.effectiveosgi</groupId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3</version>
   </parent>
   <artifactId>com.effectiveosgi.rt.web.test2</artifactId>
   <version>0.0.1-SNAPSHOT</version>
