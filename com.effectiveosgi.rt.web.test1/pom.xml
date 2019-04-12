@@ -31,15 +31,6 @@
       <artifactId>com.effectiveosgi.rt.web</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
-
-    <!-- Runtime dependencies -->
-    <dependency>
-      <groupId>${project.parent.groupId}</groupId>
-      <artifactId>_distro</artifactId>
-      <version>0.0.2-SNAPSHOT</version>
-      <scope>runtime</scope>
-      <type>pom</type>
-    </dependency>
   </dependencies>
 
   <build>

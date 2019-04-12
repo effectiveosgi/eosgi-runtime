@@ -36,10 +36,8 @@
     <!-- RUNTIME -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>_distro</artifactId>
+      <artifactId>distro</artifactId>
       <version>0.0.2-SNAPSHOT</version>
-      <type>pom</type>
-      <scope>runtime</scope>
     </dependency>
   </dependencies>
 </project>

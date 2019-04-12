@@ -41,28 +41,15 @@
 
     <!-- RUNTIME -->
     <dependency>
-      <groupId>${project.parent.groupId}</groupId>
-      <artifactId>_distro</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>distro</artifactId>
       <version>0.0.2-SNAPSHOT</version>
-      <scope>runtime</scope>
-      <type>pom</type>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.http.jetty</artifactId>
-      <version>3.4.6</version>
-      <scope>runtime</scope>
     </dependency>
 
   </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>biz.aQute.bnd</groupId>
-        <artifactId>bnd-indexer-maven-plugin</artifactId>
-      </plugin>
-
       <plugin>
         <groupId>biz.aQute.bnd</groupId>
         <artifactId>bnd-baseline-maven-plugin</artifactId>
