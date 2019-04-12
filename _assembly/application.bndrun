@@ -1,5 +1,3 @@
--standalone: target/index.xml
-
 -runfw: org.apache.felix.framework
 -runee: JavaSE-1.8
 -runprovidedcapabilities: ${native_capability}
@@ -12,8 +10,6 @@
 
 -runvm:\
 	-Dsun.zip.disableMemoryMapping=true
-
--resolve.effective: active; skip:="osgi.service"
 
 -runrequires: \
 	bnd.identity;id='org.apache.felix.log',\
@@ -38,11 +34,11 @@
 	org.apache.felix.configadmin;version='[1.9.4,1.9.5)',\
 	org.apache.felix.eventadmin;version='[1.5.0,1.5.1)',\
 	org.apache.felix.fileinstall;version='[3.6.4,3.6.5)',\
-	org.apache.felix.gogo.command;version='[1.0.2,1.0.3)',\
-	org.apache.felix.gogo.runtime;version='[1.1.0,1.1.1)',\
-	org.apache.felix.gogo.shell;version='[1.1.0,1.1.1)',\
 	org.apache.felix.http.jetty;version='[3.4.6,3.4.7)',\
 	org.apache.felix.http.servlet-api;version='[1.1.2,1.1.3)',\
 	org.apache.felix.log;version='[1.2.0,1.2.1)',\
 	org.apache.felix.scr;version='[2.1.0,2.1.1)',\
-	org.apache.servicemix.bundles.aws-java-sdk;version='[1.11.136,1.11.137)'
+	org.apache.servicemix.bundles.aws-java-sdk;version='[1.11.136,1.11.137)',\
+	org.apache.felix.gogo.command;version='[1.1.0,1.1.1)',\
+	org.apache.felix.gogo.runtime;version='[1.0.0,1.0.1)',\
+	org.apache.felix.gogo.shell;version='[1.1.2,1.1.3)'
