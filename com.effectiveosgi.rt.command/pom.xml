@@ -8,7 +8,7 @@
     <version>0.0.3</version>
   </parent>
   <artifactId>com.effectiveosgi.rt.command</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.3</version>
 
   <dependencies>
     <dependency>
