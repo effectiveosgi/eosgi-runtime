@@ -58,7 +58,7 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>com.effectiveosgi.rt.command</artifactId>
-      <version>0.0.4-SNAPSHOT</version>
+      <version>0.0.4</version>
     </dependency>
     <!-- TODO: reference your workspace projects to be indexed here -->
 
