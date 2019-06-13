@@ -9,7 +9,7 @@
   </parent>
   <artifactId>com.effectiveosgi.rt.command</artifactId>
   <name>Effective OSGi RT Command Bridge</name>
-  <version>0.0.4</version>
+  <version>0.0.5-SNAPSHOT</version>
 
   <dependencies>
     <dependency>

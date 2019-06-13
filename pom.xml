@@ -357,6 +357,10 @@
                 </goals>
                 <configuration>
                   <keyname>Neil Bartlett [Fastmail]</keyname>
+                  <gpgArguments>
+                    <gpgArgument>--pinentry-mode</gpgArgument>
+                    <gpgArgument>loopback</gpgArgument>
+                  </gpgArguments>
                 </configuration>
               </execution>
             </executions>

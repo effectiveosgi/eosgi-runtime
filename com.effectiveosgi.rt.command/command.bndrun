@@ -1,6 +1,7 @@
 -runfw: org.apache.felix.framework;version=6
 -runee: JavaSE-1.8
 
+-resolve.effective: active
 -runsystempackages: sun.misc
 
 #-runprogramargs: --quiet
