@@ -42,7 +42,7 @@ The bundle can be installed from Maven:
 <dependency>
     <groupId>com.effectiveosgi</groupId>
     <artifactId>com.effectiveosgi.rt.command</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <scope>runtime</scope>
 </dependency>
 ```
