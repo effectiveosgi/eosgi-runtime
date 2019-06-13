@@ -8,7 +8,8 @@
     <version>0.0.3</version>
   </parent>
   <artifactId>com.effectiveosgi.rt.command</artifactId>
-  <version>0.0.3</version>
+  <name>Effective OSGi RT Command Bridge</name>
+  <version>0.0.4-SNAPSHOT</version>
 
   <dependencies>
     <dependency>
@@ -30,6 +31,24 @@
       <artifactId>org.apache.felix.gogo.runtime</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.effectiveosgi.rt.config</artifactId>
+      <version>1.0.1</version>
+    </dependency>
+
+    <!-- PROVIDED SCOPE (EMBEDDING) -->
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.gogo.shell</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- TEST -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
 
     <!-- RUNTIME -->
     <dependency>
@@ -38,5 +57,19 @@
       <version>0.0.3</version>
     </dependency>
   </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-export-maven-plugin</artifactId>
+        <configuration>
+          <bndruns>
+            <bndrun>command.bndrun</bndrun>
+          </bndruns>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

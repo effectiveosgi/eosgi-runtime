@@ -1,0 +1,3 @@
+-bundleannotations: com.effectiveosgi.rt.*
+
+-includeresource: @org.apache.felix.gogo.shell-*.jar!/org/apache/felix/gogo/*

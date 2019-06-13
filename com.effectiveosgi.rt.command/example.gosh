@@ -1,0 +1,4 @@
+# An example script that can be executed with the -s/--script command line option
+echo Hello World
+echo Here are the bundles:
+lb -s
