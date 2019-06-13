@@ -20,6 +20,10 @@
     </dependency>
     <dependency>
       <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.gogo.jline</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
       <artifactId>org.apache.felix.gogo.command</artifactId>
     </dependency>
     <dependency>

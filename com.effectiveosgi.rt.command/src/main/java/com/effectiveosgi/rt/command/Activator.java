@@ -1,8 +1,11 @@
 package com.effectiveosgi.rt.command;
 
-import java.util.Hashtable;
+import java.util.Optional;
 
 import org.osgi.annotation.bundle.Header;
+import org.osgi.annotation.bundle.Requirement;
+import org.osgi.annotation.bundle.Requirement.Cardinality;
+import org.osgi.annotation.bundle.Requirement.Resolution;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
@@ -10,32 +13,25 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 
 @Header(name = Constants.BUNDLE_ACTIVATOR, value = "${@class}")
-public class CommandsActivator implements BundleActivator {
+public class Activator implements BundleActivator {
 
+	private static final String PROP_DEBUG = "eosgi.rt.command.debug";
+
+	private Optional<ServiceRegistration<?>> exampleCommandsReg = Optional.empty();
 	private ServiceTracker<?,?> tracker;
-	private ServiceRegistration<Object> exampleCommandReg;
 
-	@SuppressWarnings("serial")
 	@Override
 	public void start(BundleContext context) throws Exception {
-		exampleCommandReg = context.registerService(Object.class, new Object() {
-			@SuppressWarnings("unused") // called reflectively by Gogo
-			public String hello(String name) {
-				System.out.println("Generating message...");
-				return "Hello " + name;
-			}
-		}, new Hashtable<String, Object>() {{
-			put("osgi.command.scope", "example");
-			put("osgi.command.function", "hello");
-		}});
-
+		if (Boolean.getBoolean(PROP_DEBUG)) {
+			exampleCommandsReg = Optional.of(new ExampleCommands().register(context));
+		}
 		tracker = new CommandProcessorTracker(context);
 		tracker.open();
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		exampleCommandReg.unregister();
+		exampleCommandsReg.ifPresent(ServiceRegistration::unregister);
 		tracker.close();
 	}
 

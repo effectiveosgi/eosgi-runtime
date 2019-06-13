@@ -1,7 +1,10 @@
 package com.effectiveosgi.rt.command;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import org.apache.felix.service.command.CommandProcessor;
@@ -14,7 +17,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 
-public class CommandArgsTracker extends ServiceTracker<Object, ServiceRegistration<Callable<Integer>>> {
+class CommandArgsTracker extends ServiceTracker<Object, ServiceRegistration<Callable<Integer>>> {
 
 	private final CommandProcessor processor;
 
@@ -33,7 +36,6 @@ public class CommandArgsTracker extends ServiceTracker<Object, ServiceRegistrati
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public ServiceRegistration<Callable<Integer>> addingService(ServiceReference<Object> reference) {
 		final String[] args;
@@ -48,18 +50,53 @@ public class CommandArgsTracker extends ServiceTracker<Object, ServiceRegistrati
 			return null;
 		}
 
-		final ServiceRegistration<Callable<Integer>> registration;
-		if (args != null && args.length > 0) {
-			final Callable<Integer> command;
-			command = new CommandRunner(processor, args);
-			final Dictionary<String, Object> callableProps = new Hashtable<>();
-			callableProps.put("main.thread", true);
-			
-			registration = (ServiceRegistration<Callable<Integer>>)
-				context.registerService(Callable.class.getName(), command, callableProps);
-		} else {
-			registration = null;
+		try {
+			final Callable<Integer> runner;
+			final ControlOptions opts = ControlOptions.parseArgs(args);
+
+			if (opts.isHelp()) {
+				runner = new Callable<Integer>() {
+					@Override
+					public Integer call() throws Exception {
+						opts.usage();
+						return 1;
+					}
+				};
+			} else {
+				final InspectLevel inspectLevel = opts.getInspectLevel()
+						.orElse(InspectLevel.Basic);
+				final String[] commandArgs = opts.getRemainingArgs();
+				final Optional<URI> optScript = opts.getScript();
+
+				if (optScript.isPresent()) {
+					runner = new CommandRunner(processor, inspectLevel, optScript.get());
+				} else if (commandArgs.length > 0) {
+					runner = new CommandRunner(processor, inspectLevel, commandArgs);
+				} else if (opts.isNoShell()) {
+					return null;
+				} else {
+					runner = new ShellRunner(context, opts.isQuiet());
+				}
+			}
+
+			return registerCommand(runner);
+		} catch (IllegalArgumentException | IOException e) {
+			return registerCommand(new Callable<Integer>() {
+				@Override
+				public Integer call() throws Exception {
+					e.printStackTrace();
+					return 1;
+				}
+			});
 		}
+	}
+
+	private ServiceRegistration<Callable<Integer>> registerCommand(final Callable<Integer> command) {
+		final Dictionary<String, Object> callableProps = new Hashtable<>();
+		callableProps.put("main.thread", true);
+		@SuppressWarnings("unchecked")
+		final ServiceRegistration<Callable<Integer>> registration = (ServiceRegistration<Callable<Integer>>)
+			context.registerService(Callable.class.getName(), command, callableProps);
 		return registration;
 	}
 
