@@ -9,9 +9,13 @@
   </parent>
   <artifactId>com.effectiveosgi.rt.command</artifactId>
   <name>Effective OSGi RT Command Bridge</name>
-  <version>0.0.5</version>
+  <version>0.0.6-SNAPSHOT</version>
 
   <dependencies>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>osgi.core</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>osgi.annotation</artifactId>
@@ -19,22 +23,9 @@
       <version>7.0.0</version> <!--$NO-MVN-MAN-VER$-->
     </dependency>
     <dependency>
-      <groupId>biz.aQute.bnd</groupId>
-      <artifactId>biz.aQute.bndlib</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>biz.aQute.bnd</groupId>
-      <artifactId>biz.aQute.launcher</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.felix</groupId>
       <artifactId>org.apache.felix.gogo.runtime</artifactId>
       <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>com.effectiveosgi.rt.config</artifactId>
-      <version>1.0.1</version>
     </dependency>
 
     <!-- PROVIDED SCOPE (EMBEDDING) -->
@@ -52,12 +43,21 @@
 
     <!-- RUNTIME -->
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>distro</artifactId>
-      <version>0.0.3</version>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.framework</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.platform</groupId>
+      <artifactId>org.eclipse.osgi</artifactId>
+      <version>3.13.300</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.gogo.command</artifactId>
     </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -65,8 +65,9 @@
         <artifactId>bnd-export-maven-plugin</artifactId>
         <configuration>
           <bndruns>
-            <bndrun>command.bndrun</bndrun>
+            <bndrun>example.bndrun</bndrun>
           </bndruns>
+          <attach>false</attach>
         </configuration>
       </plugin>
     </plugins>

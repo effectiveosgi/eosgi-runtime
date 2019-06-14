@@ -75,7 +75,7 @@ class CommandArgsTracker extends ServiceTracker<Object, ServiceRegistration<Call
 				} else if (opts.isNoShell()) {
 					return null;
 				} else {
-					runner = new ShellRunner(context, opts.isQuiet());
+					runner = new ShellRunner(context, processor, opts.isQuiet());
 				}
 			}
 

@@ -3,8 +3,10 @@ package com.effectiveosgi.rt.command;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -29,9 +31,19 @@ import org.osgi.framework.wiring.BundleWiring;
 public class Motd {
 	
 	public static final String[] functions = { "motd" };
+
 	static final String NAMESPACE = "eosgi.rt.command.motd";
 	static final String PATH = "path";
+	
+	private static final String MISSING_RESOURCE_MESSAGE
+			= "Bundle ''{0}'' tried to provide a message-of-the-day, but\n"
+			+ "resource path ''{1}'' was missing! SAD :-(";
+	private static final String RESOURCE_READ_ERROR
+			= "Bundle ''{0}'' tried to provide a message-of-the-day, but\n"
+			+ "there was an error reading from path ''{1}''...\n";
+	
 	private static final Random RANDOM = new Random();
+
 	private final BundleContext context;
 	
 	public Motd(BundleContext context) {
@@ -43,18 +55,21 @@ public class Motd {
 		final List<String> motds = Optional.ofNullable(wiring.getRequiredWires(NAMESPACE))
 			.map(Collection::stream).orElse(Stream.empty())
 			.map(BundleWire::getCapability)
-			.flatMap(cap -> {
-				try {
-					final String motdPath = (String) cap.getAttributes().get(PATH);
-					final Bundle provider = cap.getRevision().getBundle();
-					final URL entryPath = provider.getEntry(motdPath);
-
-					String motd = readFully(entryPath);
-					return Stream.of(motd);
-				} catch (IOException e) {
-					// Ignore this entry
-					return Stream.empty();
+			.map(cap -> {
+				final String motdPath = (String) cap.getAttributes().get(PATH);
+				final Bundle provider = cap.getRevision().getBundle();
+				final URL entry = provider.getEntry(motdPath);
+				if (entry != null) {
+					try {
+						return readFully(entry);
+					} catch (IOException e) {
+						ByteArrayOutputStream buf = new ByteArrayOutputStream();
+						e.printStackTrace(new PrintStream(buf));
+						return MessageFormat.format(RESOURCE_READ_ERROR, provider.getSymbolicName(), motdPath)
+								+ new String(buf.toByteArray(), StandardCharsets.UTF_8);
+					}
 				}
+				return MessageFormat.format(MISSING_RESOURCE_MESSAGE, provider.getSymbolicName(), motdPath);
 			})
 			.collect(Collectors.toList());
 		
@@ -77,7 +92,7 @@ public class Motd {
 				read = in.read(buf);
 			}
 		}
-		return out.toString(StandardCharsets.UTF_8.name());
+		return new String(out.toByteArray(), StandardCharsets.UTF_8);
 	}
 
 }

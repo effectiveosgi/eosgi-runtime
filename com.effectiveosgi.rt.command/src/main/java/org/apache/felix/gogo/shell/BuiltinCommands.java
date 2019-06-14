@@ -38,6 +38,9 @@ public class BuiltinCommands {
 		dict.put(CommandProcessor.COMMAND_FUNCTION, Telnet.functions);
 		regs.add(context.registerService(Telnet.class.getName(), new Telnet(processor), dict));
 
+		dict.put(CommandProcessor.COMMAND_FUNCTION, Shell.functions);
+		regs.add(context.registerService(Shell.class.getName(), new Shell(context, processor), dict));
+
 		dict.put(CommandProcessor.COMMAND_FUNCTION, Motd.functions);
 		regs.add(context.registerService(Motd.class.getName(), new Motd(context), dict));
 	}
