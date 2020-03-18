@@ -1,4 +1,5 @@
 language: java
-script: ./mvnw -Dmaven.repo.local=target/m2 clean verify
+script: ./mvnw -Dmaven.repo.local=target/m2 -am -pl _assembly clean verify
 jdk:
   - openjdk8
+  - openjdk11

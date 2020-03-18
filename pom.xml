@@ -57,11 +57,13 @@
     <module>com.effectiveosgi.rt.web.test1</module>
     <module>com.effectiveosgi.rt.web.test2</module>
     <module>com.effectiveosgi.rt.command</module>
+    <module>com.effectiveosgi.rt.bootstrap</module>
+    <module>com.effectiveosgi.rt.bootstrap.native-image</module>
   </modules>
 
   <properties>
     <local.index.policy>REQUIRED</local.index.policy>
-    <bnd.maven.version>4.2.0</bnd.maven.version>
+    <bnd.maven.version>4.3.1</bnd.maven.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
@@ -282,7 +284,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>2.6</version>
+          <version>3.2.0</version>
           <configuration>
             <archive>
               <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
@@ -316,7 +318,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.4</version>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>

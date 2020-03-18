@@ -1,0 +1,14 @@
+-conditionalpackage: \
+	com.effectiveosgi.lib.*, \
+	picocli,\
+	org.yaml.snakeyaml.*,\
+	org.apache.commons.compress.*, \
+
+Import-Package: \
+	javax.crypto.*; resolution:=optional, \
+	org.osgi.framework; resolution:=optional, \
+	!com.github.luben.zstd, \
+	!org.brotli.dec, \
+	!org.tukaani.xz, \
+	!org.fusesource.jansi, \
+	*
