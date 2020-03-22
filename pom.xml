@@ -58,7 +58,6 @@
     <module>com.effectiveosgi.rt.web.test2</module>
     <module>com.effectiveosgi.rt.command</module>
     <module>com.effectiveosgi.rt.bootstrap</module>
-    <module>com.effectiveosgi.rt.bootstrap.native-image</module>
   </modules>
 
   <properties>
@@ -382,6 +381,15 @@
         </plugins>
       </build>
     </profile>
+
+    <!-- Declare a profile for building the GraalVM native image -->
+    <profile>
+      <id>native-image</id>
+      <modules>
+        <module>com.effectiveosgi.rt.bootstrap.native-image</module>
+      </modules>
+    </profile>
+
   </profiles>
 
 </project>
