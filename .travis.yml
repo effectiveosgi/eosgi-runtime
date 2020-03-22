@@ -1,6 +1,6 @@
 language: java
 install: skip
-script: ./mvnw -Dmaven.repo.local=target/m2 -am -pl _assembly clean verify
+script: ./mvnw -Dmaven.repo.local=target/m2 -am -pl _assembly,com.effectiveosgi.rt.bootstrap,com.effectiveosgi.rt.config.test,com.effectiveosgi.rt.web.test1,com.effectiveosgi.rt.web.test2 clean verify
 jdk:
   - openjdk8
   - openjdk11
