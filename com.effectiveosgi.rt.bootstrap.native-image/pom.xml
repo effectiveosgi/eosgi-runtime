@@ -10,6 +10,10 @@
   <artifactId>com.effectiveosgi.rt.bootstrap.native-image</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
+  <properties>
+    <native.image.name>enroute</native.image.name>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -19,7 +23,17 @@
   </dependencies>
 
   <build>
+    <extensions>
+      <!-- Bind OS properties -->
+      <extension>
+        <groupId>kr.motd.maven</groupId>
+        <artifactId>os-maven-plugin</artifactId>
+        <version>1.6.1</version>
+      </extension>
+    </extensions>
+
     <plugins>
+      <!-- Build the GraalVM Native Image -->
       <plugin>
         <groupId>org.graalvm.nativeimage</groupId>
         <artifactId>native-image-maven-plugin</artifactId>
@@ -34,10 +48,34 @@
         </executions>
         <configuration>
           <mainClass>com.effectiveosgi.rt.bootstrap.EnrouteCommand</mainClass>
-          <imageName>enroute</imageName>
+          <imageName>${native.image.name}</imageName>
           <buildArgs>
             --no-fallback
           </buildArgs>
+        </configuration>
+      </plugin>
+
+      <!-- Attach the native image executable to the build output -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <artifacts>
+            <artifact>
+              <file>${project.build.directory}/${native.image.name}</file>
+              <type>native-image</type>
+              <classifier>${os.detected.classifier}</classifier>
+            </artifact>
+          </artifacts>
         </configuration>
       </plugin>
     </plugins>
