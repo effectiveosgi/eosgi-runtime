@@ -1,4 +1,5 @@
 language: java
+install: skip
 script: ./mvnw -Dmaven.repo.local=target/m2 -am -pl _assembly clean verify
 jdk:
   - openjdk8
